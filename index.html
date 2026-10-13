@@ -173,7 +173,7 @@ main.wrap{padding-top:22px;padding-bottom:120px}
 .gauge-legend i{width:8px;height:8px;border-radius:2px;display:inline-block}
 
 /* ---------- Filters ---------- */
-.filters{display:grid;grid-template-columns:repeat(7,minmax(0,1fr)) auto;gap:8px;margin-top:16px;padding:10px;border-radius:var(--r-lg);
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:16px;padding:10px;border-radius:var(--r-lg);
   background:var(--surface);border:1px solid var(--line)}
 @media(max-width:1180px){.filters{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:640px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -589,6 +589,180 @@ table.dm td:first-child b{white-space:normal!important}
 #pgViz .ml .mr .nm{-webkit-line-clamp:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
 #pgViz .pg-list-h{display:grid;grid-template-columns:minmax(0,1fr) 56px auto;min-height:30px;align-items:center;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line)}
 @media(max-width:1060px){#mmViz{padding-right:0}#pgViz .pg{padding-left:0}}
+/* ===== KAPAK ===== */
+body.on-cover #kpis{display:none}
+.cv{background:#fff;border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--shadow);padding:30px 32px;position:relative;overflow:hidden}
+:root[data-theme="dark"] .cv{background:var(--surface)}
+.cv::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:linear-gradient(90deg,#FACC15,#EAB308)}
+.cv-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;padding-bottom:22px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.cv-brand{display:flex;gap:18px;align-items:center;min-width:0}
+.cv-brand img{width:72px;height:72px;border-radius:50%;background:#fff;border:2px solid #FACC15;padding:2px;flex:none}
+.cv-k{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-text)}
+.cv h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:4px 0 10px;line-height:1.1}
+.cv-meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--ink-2)}
+.cv-meta b{color:var(--muted);font-weight:700;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;margin-right:4px}
+.cv-side{display:flex;gap:18px;align-items:center;text-align:right}
+.cv-side small{display:block;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.cv-side b{font-size:13.5px}
+.cv-hero{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:22px}
+@media(max-width:980px){.cv-hero,.cv-risk,.cv-strip{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:560px){.cv-hero,.cv-risk{grid-template-columns:1fr!important}}
+.cv-h{padding:18px;border-radius:16px;background:linear-gradient(160deg,#fffbe8,#fff 70%);border:1px solid rgba(234,179,8,.35)}
+:root[data-theme="dark"] .cv-h{background:var(--surface-3)}
+.cv-h small,.cv-r small,.cv-strip small{display:block;font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.cv-h b{display:block;font-size:30px;font-weight:800;letter-spacing:-.02em;margin:8px 0 8px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-d{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cv-d span{font-size:11.5px;color:var(--muted)}
+.cv-sec{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin:26px 0 12px;display:flex;align-items:center;gap:8px}
+.cv-sec::before{content:"";width:16px;height:3px;border-radius:2px;background:#EAB308}
+.cv-risk{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.cv-r{padding:14px 16px;border-radius:14px;background:var(--surface-3);border-left:4px solid var(--rc)}
+.cv-r b{display:block;font-size:22px;font-weight:800;margin:6px 0 2px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-r>span{display:block;font-size:11.5px;color:var(--ink-2);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-two{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.cv-sec-n{font-size:10.5px;letter-spacing:.04em;text-transform:none;font-weight:700;color:#1f1703;background:#FACC15;border-radius:999px;padding:2px 9px}
+.cv-cbar{margin-bottom:14px}
+.cv-cty{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));gap:16px}
+.cv-c{position:relative;border-radius:18px;border:1px solid rgba(234,179,8,.35);background:var(--surface);cursor:pointer;overflow:hidden;
+  box-shadow:0 1px 2px rgba(15,23,42,.04),0 10px 30px -18px rgba(15,23,42,.35);transition:transform .18s,box-shadow .18s,opacity .18s,border-color .18s}
+.cv-c:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(15,23,42,.05),0 22px 44px -22px rgba(15,23,42,.45)}
+.cv-c.on{border-color:#EAB308;box-shadow:0 0 0 2px #EAB308,0 22px 44px -22px rgba(15,23,42,.45)}
+.cv-c.dim{opacity:.5;filter:saturate(.6)}
+.cv-c-top{position:relative;display:flex;align-items:center;gap:14px;padding:16px 18px;color:var(--ink);
+  background:linear-gradient(160deg,#fffbe8,#fff 70%);border-bottom:1px solid rgba(234,179,8,.35)}
+:root[data-theme="dark"] .cv-c-top{background:var(--surface-3)}
+.cv-ring{flex:none;width:56px;height:56px}
+.cv-ring text{fill:var(--ink);font:800 12px Inter,system-ui,sans-serif}
+.cv-c-id{flex:1;min-width:0}
+.cv-c-k{display:block;font-size:9.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.cv-c-id b{display:block;font-size:20px;font-weight:800;letter-spacing:.02em;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-c-id small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-c-hs{flex:none;text-align:right;padding:8px 12px;border-radius:12px;background:var(--surface);border:1px solid rgba(234,179,8,.35)}
+.cv-c-hs small{display:block;font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.cv-c-hs b{display:inline-block;font-size:22px;font-weight:800;line-height:1.1;margin-top:2px;color:var(--ink)}
+.cv-c-hs span{display:inline-block;margin-left:6px;font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:999px;color:#fff;background:var(--hc);vertical-align:4px}
+.cv-c-body{padding:16px 18px 18px;display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.cv-c-main small,.cv-c-kpi small{display:block;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cv-c-val{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px}
+.cv-c-val b{font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-.01em;font-variant-numeric:tabular-nums;line-height:1.1}
+.cv-c-val .delta,.cv-c-kpi .delta{white-space:nowrap}
+.cv-c-sp{margin-top:10px}
+.cv-c-sp .k-spark{display:block;width:100%;height:38px}
+.cv-c-sp span{display:block;font-size:10.5px;color:var(--muted);margin-top:2px}
+.cv-c-kpi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface-2,var(--surface))}
+.cv-c-kpi>div{position:relative;padding:10px 12px;min-width:0}
+.cv-c-kpi>div+div{border-left:1px solid var(--line)}
+.cv-c-kpi b{display:block;font-size:15px;font-weight:800;color:var(--ink);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.cv-c-kpi small{white-space:nowrap}
+.cv-c-kpi small{letter-spacing:.03em!important}
+.cv-c-kpi em{display:block;font-style:normal;font-size:10.5px;color:var(--muted);margin-top:3px;white-space:nowrap}
+.cv-c-kpi>div[class^="st-"]::before{content:"";position:absolute;right:12px;top:33px;width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.cv-c-kpi .st-ok::before{background:var(--pos)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--pos) 20%,transparent)}
+.cv-c-kpi .st-mid::before{background:var(--warn)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--warn) 22%,transparent)}
+.cv-c-kpi .st-bad::before{background:var(--neg)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--neg) 20%,transparent)}
+.cv-c-rt{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ink);margin-bottom:8px}
+.cv-c-rt span{font-weight:600;letter-spacing:.02em;text-transform:none;color:var(--muted);margin-left:6px}
+.cv-c-r{display:grid;grid-template-columns:104px minmax(40px,1fr) auto 50px;grid-template-rows:auto auto;column-gap:10px;align-items:center;padding:6px 0;border-top:1px dashed var(--line)}
+.cv-c-r:first-of-type{border-top:0}
+.cv-c-r .n{font-size:12px;font-weight:600;color:var(--ink-2,var(--ink));white-space:nowrap}
+.cv-c-r .b{height:7px;border-radius:999px;background:var(--surface-3);overflow:hidden}
+.cv-c-r .b i{display:block;height:100%;border-radius:999px}
+.cv-c-r b{font-size:12.5px;font-weight:800;color:var(--ink);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.cv-c-r em{font-style:normal;font-size:11.5px;font-weight:700;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.cv-c-r small{grid-column:1;font-size:10.5px;color:var(--muted)}
+/* tek ülke: yatay panorama */
+.cv-cty.one{grid-template-columns:minmax(0,1fr)}
+.cv-cty.one .cv-c-body{grid-template-columns:minmax(240px,1fr) minmax(300px,1.15fr) minmax(320px,1.25fr);align-items:start;gap:22px}
+.cv-cty.one .cv-c-kpi{grid-template-columns:1fr;align-self:stretch}
+.cv-cty.one .cv-c-kpi>div+div{border-left:0;border-top:1px solid var(--line)}
+.cv-cty.one .cv-c-kpi>div{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:10px;padding:9px 30px 9px 14px}
+.cv-cty.one .cv-c-kpi>div b{grid-row:span 2;align-self:center;margin:0;font-size:16px}
+.cv-cty.one .cv-c-kpi>div[class^="st-"]::before{top:50%;margin-top:-4px}
+@media(max-width:1100px){.cv-cty.one .cv-c-body{grid-template-columns:1fr}.cv-cty.one .cv-c-kpi{grid-template-columns:repeat(3,minmax(0,1fr))}.cv-cty.one .cv-c-kpi>div{display:block;padding:10px 12px}.cv-cty.one .cv-c-kpi>div+div{border-top:0;border-left:1px solid var(--line)}}
+@media(max-width:560px){.cv-cty{grid-template-columns:1fr}.cv-c-kpi,.cv-cty.one .cv-c-kpi{grid-template-columns:1fr}.cv-c-kpi>div+div,.cv-cty.one .cv-c-kpi>div+div{border-left:0;border-top:1px solid var(--line)}.cv-c-hs small{display:none}.cv-c-r{grid-template-columns:92px minmax(30px,1fr) auto 44px}}
+.cv-c-top{flex-wrap:wrap}
+.cv-c-comp{order:3;flex:1 1 100%;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding-top:12px;margin-top:2px;border-top:1px dashed rgba(234,179,8,.4)}
+.cv-c-comp>div{min-width:0;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;column-gap:6px;row-gap:4px;align-items:center}
+.cv-c-comp span{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-c-comp b{font-size:11.5px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.cv-c-comp i{grid-column:1/-1;height:5px;border-radius:999px;background:rgba(234,179,8,.16);overflow:hidden}
+.cv-c-comp u{display:block;height:100%;border-radius:999px;text-decoration:none}
+.cv-cty.one .cv-c-top{flex-wrap:nowrap}
+.cv-cty.one .cv-c-comp{order:0;flex:1 1 auto;max-width:640px;margin:0 8px 0 auto;padding:0 0 0 18px;border-top:0;border-left:1px dashed rgba(234,179,8,.5);column-gap:14px}
+@media(max-width:1100px){.cv-cty.one .cv-c-top{flex-wrap:wrap}.cv-cty.one .cv-c-comp{order:3;flex-basis:100%;max-width:none;margin:2px 0 0;padding:12px 0 0;border-left:0;border-top:1px dashed rgba(234,179,8,.4)}}
+@media(max-width:560px){.cv-c-comp{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.cv-c-hr{margin-top:4px}
+.cv-rk{display:inline-block;font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:0;padding:1px 6px;border-radius:999px;background:var(--surface-3);color:var(--muted);border:1px solid var(--line);vertical-align:1px;text-transform:none}
+.cv-rk.top{background:#FACC15;color:#1f1703;border-color:#EAB308}
+.cv-rk.low{background:color-mix(in srgb,var(--neg) 12%,transparent);color:var(--neg);border-color:color-mix(in srgb,var(--neg) 30%,transparent)}
+.cv-c-sx{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:2px}
+.cv-c-hl{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px;font-size:11px;color:var(--muted)}
+.cv-c-hl b{color:var(--ink);font-weight:800}
+.cv-c-sp>span{display:none}
+.cv-c-r{grid-template-columns:104px minmax(40px,1fr) auto 50px!important}
+@media(max-width:560px){.cv-c-body{padding:14px}.cv-c-top{padding:14px}.cv-c-r{grid-template-columns:86px minmax(20px,1fr) auto 40px!important;column-gap:6px}.cv-c-r .n{font-size:11.5px}.cv-c-val b{font-size:24px}}
+.cv-c-r .d{grid-column:2/-1;justify-self:end;font-size:10px}
+.cv-c-r .d .delta{font-size:10px;padding:1px 6px}
+.cv-mx{margin-top:18px;padding:16px 18px;border-radius:16px;border:1px solid rgba(234,179,8,.35);background:var(--surface)}
+.cv-mx .cv-lab{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.cv-mx .cv-lab span{font-weight:600;font-size:11px;color:var(--muted)}
+.cv-mxt{width:100%;border-collapse:collapse;font-size:12.5px}
+.cv-mxt th{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.cv-mxt th.num{text-align:right;color:var(--ink);cursor:pointer}
+.cv-mxt td{padding:8px 10px;border-bottom:1px dashed var(--line);white-space:nowrap;color:var(--ink);font-weight:600}
+.cv-mxt td.num{text-align:right;font-variant-numeric:tabular-nums}
+.cv-mxt tr:last-child td{border-bottom:0}
+.cv-mxt td.best{font-weight:800;background:linear-gradient(90deg,transparent,rgba(250,204,21,.22))}
+.cv-mxt td.best i{font-style:normal;color:#EAB308}
+.cv-mxt td.worst{color:var(--neg);font-weight:800}
+.cv-c-dp{padding:0 18px 16px}
+.cv-c-dl{display:grid;grid-template-columns:minmax(0,1fr);column-gap:28px}
+.cv-cty.one .cv-c-dl{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:900px){.cv-cty.one .cv-c-dl{grid-template-columns:minmax(0,1fr)}}
+.cv-c-d{display:grid;grid-template-columns:minmax(90px,1.3fr) minmax(40px,1fr) auto 46px 64px;column-gap:10px;align-items:center;padding:7px 0;border-top:1px dashed var(--line);cursor:pointer}
+.cv-cty:not(.one) .cv-c-d{grid-template-columns:minmax(30px,1fr) auto 46px 64px;grid-template-areas:"n n n n" "b v p d";row-gap:5px}
+.cv-cty:not(.one) .cv-c-d .n{grid-area:n}.cv-cty:not(.one) .cv-c-d .b{grid-area:b}.cv-cty:not(.one) .cv-c-d b{grid-area:v}.cv-cty:not(.one) .cv-c-d em{grid-area:p}.cv-cty:not(.one) .cv-c-d .d{grid-area:d}
+.cv-c-tag{display:inline-block;vertical-align:3px;margin-left:8px;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:var(--surface-3);color:var(--muted);border:1px dashed var(--line-2,var(--line))}
+.cv-c-d:hover .n{color:#b88a00}
+.cv-c-d .n{font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cv-c-d .b{height:7px;border-radius:999px;background:var(--surface-3);overflow:hidden}
+.cv-c-d .b i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#FACC15,#EAB308)}
+.cv-c-d b{font-size:12.5px;font-weight:800;color:var(--ink);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.cv-c-d em{font-style:normal;font-size:11.5px;font-weight:700;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.cv-c-d .d{justify-self:end}.cv-c-d .d .delta{font-size:10px;padding:1px 6px;white-space:nowrap}
+.cv-c-net{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 18px 18px;padding:14px 16px;border-radius:14px;background:var(--surface-3)}
+.cv-c-net small{display:block;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);line-height:1.3}
+.cv-c-net b{display:block;font-size:17px;font-weight:800;color:var(--ink);margin-top:4px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.cv-c-net b.warnc{color:var(--warn)} .cv-c-net b.pos{color:var(--pos)}
+.cv-c-net span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.cv-cty:not(.one) .cv-c-net{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:560px){.cv-c-net{grid-template-columns:repeat(2,minmax(0,1fr));margin:0 14px 14px}.cv-c-dp{padding:0 14px 14px}.cv-cty .cv-c-d{grid-template-columns:minmax(24px,1fr) auto 40px 58px!important;grid-template-areas:"n n n n" "b v p d"!important;row-gap:5px;column-gap:6px}.cv-cty .cv-c-d .n{grid-area:n}.cv-cty .cv-c-d .b{grid-area:b}.cv-cty .cv-c-d b{grid-area:v}.cv-cty .cv-c-d em{grid-area:p}.cv-cty .cv-c-d .d{grid-area:d}}
+@media print{.cv-mx{break-inside:avoid}.cv-c{break-inside:avoid;box-shadow:none}.cv-c-top{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+.src-sample{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--muted);max-width:560px;cursor:pointer}.src-sample b{color:var(--ink)}.src-sample input{margin-top:3px;accent-color:#EAB308}
+.src-grid{display:grid;grid-template-columns:1fr 2.4fr auto;gap:10px;align-items:end}
+@media(max-width:640px){.src-grid{grid-template-columns:1fr}}
+@media(max-width:980px){.cv-two{grid-template-columns:1fr}}
+.cv-box .cv-sec{margin-top:26px}
+.cv-lab{font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:8px}
+.cv-stack{display:flex;height:26px;border-radius:8px;overflow:hidden;gap:2px;background:var(--surface-3)}
+.cv-stack div{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden}
+.cv-leg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px;font-size:11.5px;color:var(--ink-2)}
+.cv-leg span{display:inline-flex;align-items:center;gap:6px}
+.cv-leg i{width:9px;height:9px;border-radius:2px;display:inline-block}
+.cv-leg b{font-variant-numeric:tabular-nums}
+.cv-leg em{font-style:normal;color:var(--muted)}
+.cv-deps{display:grid;gap:7px}
+.cv-dep{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr) 76px 52px;gap:10px;align-items:center;font-size:12.5px}
+.cv-dep .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink-2)}
+.cv-dep .t{height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden}
+.cv-dep .t i{display:block;height:100%;background:linear-gradient(90deg,#FACC15,#EAB308);border-radius:99px}
+.cv-dep b{text-align:right;font-variant-numeric:tabular-nums}
+.cv-dep em{font-style:normal;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.cv-dep[data-xf]:hover .n{color:var(--gold-text);text-decoration:underline}
+.cv-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:26px;padding:16px 18px;border-radius:14px;background:var(--surface-3)}
+.cv-strip b{display:block;font-size:19px;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
+.cv-strip span{font-size:11.5px;color:var(--muted)}
+.cv-foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:24px;padding-top:14px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);letter-spacing:.04em}
 /* diverging movers */
 .movers .bar-row{grid-template-columns:minmax(0,1fr) 56px auto}
 .movers{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -852,7 +1026,10 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
 @media print{
-  .app-header,.tabs,.filters,#chatRoot,.controls,.chart-tools,.no-print{display:none!important}
+  .app-header,.tabs,.filters,#chatRoot,.controls,.chart-tools,.no-print,#kpis,#xfBar,footer.foot{display:none!important}
+  main.wrap{padding:0!important;max-width:none}
+  .cv{border:0!important;box-shadow:none!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body{background:#fff;color:#000}
   .panel{display:none!important} .panel.print-on{display:block!important}
   .card{box-shadow:none;border:1px solid #ddd}
@@ -896,6 +1073,26 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
   </div>
 </div>
 
+<!-- ===================== ÜLKE KAYNAKLARI ===================== -->
+<div class="auth-backdrop" id="srcBackdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="srcTitle">
+    <div class="modal-h">
+      <div><div class="eyebrow">Admin</div><div class="card-t" id="srcTitle">Ülke Veri Kaynakları</div></div>
+      <button class="btn icon ghost" id="srcClose" type="button" title="Kapat">✕</button>
+    </div>
+    <div class="modal-b">
+      <div class="src-grid">
+        <div class="fld" style="margin:0"><label>Ülke / proje</label><input id="srcUlke" type="text" placeholder="örn: EMX" /></div>
+        <div class="fld" style="margin:0"><label>Veri bağlantısı (raw .xlsx / .csv)</label><input id="srcUrl" type="text" placeholder="https://raw.githubusercontent.com/…/data.xlsx" /></div>
+        <button class="btn gold" id="srcAdd" type="button">Ekle / Güncelle</button>
+      </div>
+      <div class="auth-note" id="srcNote">Her ülke kendi veri dosyasıyla eklenir; rapor tüm ülkeleri birleştirir ve ülke bazında ayırır. Dosyada <b>Ülke</b> sütunu varsa o kullanılır.</div>
+      <div class="table-wrap mt16"><table class="dt"><thead><tr><th>Ülke</th><th>Bağlantı</th><th class="num">Satır</th><th>İşlem</th></tr></thead><tbody id="srcTbody"></tbody></table></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap"><label class="src-sample"><input type="checkbox" id="srcSample" /> <span><b>Örnek ülke verisi</b> — gerçek veri gelene kadar EMX ve LIBYA, BMMC yapısından türetilmiş örnek veriyle gösterilir</span></label><button class="btn gold" id="srcReload" type="button">Tümünü yeniden yükle</button></div>
+    </div>
+  </div>
+</div>
+
 <!-- ===================== KULLANICI YÖNETİMİ ===================== -->
 <div class="auth-backdrop" id="userAdminBackdrop" aria-hidden="true">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="uaTitle">
@@ -932,7 +1129,7 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
         <div class="brand-mark"><img src="data:image/png;base64,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" alt="AVESORO amblemi"/></div>
         <div style="min-width:0">
           <div class="brand-t">AVESORO <em>BI</em></div>
-          <div class="brand-s">BMMC Stok Yönetimi · Performans Kokpiti</div>
+          <div class="brand-s" id="brandSub">BMMC Stok Yönetimi · Performans Kokpiti</div>
         </div>
       </div>
       <div class="hactions">
@@ -943,7 +1140,7 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
         <button class="btn" id="btnUpload" title="Excel veya CSV yükleyin">
           <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0-4 4m4-4 4 4M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Veri Yükle
         </button>
-        <button class="btn" id="btnLink" title="Veri bağlantısını (GitHub raw) değiştir">
+        <button class="btn" id="btnLink" title="Ülke veri kaynakları (BMMC, EMX, Libya…)">
           <svg viewBox="0 0 24 24" fill="none"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Kaynak
         </button>
         <button class="btn" id="btnExcel" title="Tüm raporu çok sayfalı Excel olarak indir">
@@ -975,6 +1172,7 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
 
   <!-- FİLTRELER -->
   <div class="filters" id="filters">
+    <div class="ddbox" data-key="Ulke" style="display:none"><button type="button"><b>Ülke</b><span class="lab">Tümü</span></button><div class="dd"></div></div>
     <div class="ddbox" data-key="Donem"><button type="button"><b>Dönem</b><span class="lab">—</span></button><div class="dd"></div></div>
     <div class="ddbox" data-key="DepoSinifi"><button type="button"><b>Depo Sınıfı</b><span class="lab">Tümü</span></button><div class="dd"></div></div>
     <div class="ddbox" data-key="Depo"><button type="button"><b>Depo</b><span class="lab">Tümü</span></button><div class="dd"></div></div>
@@ -993,7 +1191,8 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
 
   <!-- SEKMELER -->
   <nav class="tabs" id="tabs" role="tablist">
-    <button class="tab active" data-tab="overview"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h6V4H4v9Zm10 7h6V11h-6v9ZM4 20h6v-4H4v4ZM14 4v4h6V4h-6Z"/></svg>Yönetici Özeti</button>
+    <button class="tab" data-tab="cover"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5V3Z"/><path d="M8 12h8M8 16h5M8 8h4"/></svg>Kapak</button>
+    <button class="tab" data-tab="overview"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h6V4H4v9Zm10 7h6V11h-6v9ZM4 20h6v-4H4v4ZM14 4v4h6V4h-6Z"/></svg>Yönetici Özeti</button>
     <button class="tab" data-tab="compare"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M17 4v16M3 8h8M13 16h8"/></svg>Karşılaştırmalar</button>
     <button class="tab" data-tab="nomove"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6v12M15 6v12"/></svg>Hareketsiz <span class="badge" id="bdg-nomove" hidden></span></button>
     <button class="tab" data-tab="min"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v12m0 0-5-5m5 5 5-5"/></svg>Min Altı <span class="badge" id="bdg-min" hidden></span></button>
@@ -1005,7 +1204,9 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
   </nav>
 
   <!-- ÖZET -->
-  <section class="panel active" id="panel-overview">
+  <section class="panel" id="panel-cover"><div id="coverWrap"></div></section>
+
+  <section class="panel" id="panel-overview">
     <div class="card">
       <div class="card-h"><div><div class="eyebrow">Yönetici Özeti</div><div class="card-t">Ne oldu · Neden önemli</div></div><span class="chip gold" id="briefChip">—</span></div>
       <div class="brief brief2" id="brief"></div>
@@ -1052,6 +1253,7 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
   </section>
 
   <section class="panel" id="panel-compare">
+    <div class="card" id="cmpCountryCard" hidden><div class="card-h"><div><div class="eyebrow">Karşılaştırma</div><div class="card-t">Ülke</div></div></div><div id="tbl-country"></div></div>
     <div class="card"><div class="card-h"><div><div class="eyebrow">Karşılaştırma</div><div class="card-t">Depo sınıfı</div></div></div><div id="tbl-class"></div></div>
     <div class="card"><div class="card-h"><div><div class="eyebrow">Karşılaştırma</div><div class="card-t">Depo</div></div></div><div id="tbl-ware"></div></div>
     <div class="card"><div class="card-h"><div><div class="eyebrow">Karşılaştırma</div><div class="card-t">MTRL Group</div></div></div><div id="tbl-mtrl"></div></div>
@@ -1418,7 +1620,7 @@ const RAW_URL_KEY = 'AVESORO_RAW_URL_V1';
 const THEME_KEY = 'AVESORO_THEME_V2';
 const AUTO_RAW_ENABLED = true;
 const RAW_DATA_URL_BASE = 'https://raw.githubusercontent.com/Dogan2200/BMMC-Stok-Analiz/main/kamu/data.xlsx';
-const EMPTY_FILTERS = () => ({Donem:[],DepoSinifi:[],Depo:[],FSN:[],MTRL:[],UstGrup:[],AltGrup:[],Departman:[],StokAdi:[]});
+const EMPTY_FILTERS = () => ({Donem:[],Ulke:[],DepoSinifi:[],Depo:[],FSN:[],MTRL:[],UstGrup:[],AltGrup:[],Departman:[],StokAdi:[]});
 
 let RAW = [];
 let ALL = EMPTY_FILTERS();
@@ -1451,6 +1653,7 @@ function normalizeRows(arr){
   Object.keys(arr[0] || {}).forEach(h => {
     const k = deaccent(h).trim();
     if(k.includes('donem') || k === 'ay' || k === 'period') map[h] = 'Donem';
+    else if(k === 'ulke' || k.startsWith('ulke ') || k === 'country' || k === 'proje' || k === 'project' || k === 'sirket' || k === 'company' || k === 'site') map[h] = 'Ulke';
     else if(k.startsWith('depo sinif')) map[h] = 'DepoSinifi';
     else if(k === 'depo' || k.includes('depo adi')) map[h] = 'Depo';
     else if(k.startsWith('ust grup')) map[h] = 'UstGrup';
@@ -1475,7 +1678,7 @@ function normalizeRows(arr){
   const NUMK = ['Devreden','Giren','Cikan','Kalan','DevredenM','GirenM','CikanM','KalanM','MinTutar','MaxTutar','MinMiktar','MaxMiktar'];
   const out = [];
   for(const r of arr){
-    const o = {Donem:'',DepoSinifi:'',Depo:'',UstGrup:'',AltGrup:'',StokAdi:'',MTRL:'',FSN:'',Departman:'',
+    const o = {Donem:'',Ulke:'',DepoSinifi:'',Depo:'',UstGrup:'',AltGrup:'',StokAdi:'',MTRL:'',FSN:'',Departman:'',
       Devreden:0,Giren:0,Cikan:0,Kalan:0,DevredenM:0,GirenM:0,CikanM:0,KalanM:0,MinTutar:0,MaxTutar:0,MinMiktar:0,MaxMiktar:0};
     for(const h of Object.keys(r)){
       const k = map[h]; if(!k) continue;
@@ -1522,28 +1725,65 @@ function parseWorkbook(buf){
   return best;
 }
 
+/* =====================================================================
+   ÜLKE / PROJE KAYNAKLARI — her ülke kendi veri bağlantısıyla gelir (BMMC, EMX, Libya…)
+   ===================================================================== */
+const SRC_KEY = 'AVESORO_SOURCES_V1';
+const DEFAULT_COUNTRY = 'BMMC';
+let MULTI_COUNTRY = false;
+const normCountry = v => String(v || '').trim().toLocaleUpperCase('tr-TR');
+function readSources(){
+  try{ const a = JSON.parse(localStorage.getItem(SRC_KEY) || 'null'); if(Array.isArray(a) && a.length) return a.filter(x => x && x.ulke); }catch(e){}
+  let legacy = null; try{ legacy = localStorage.getItem(RAW_URL_KEY); }catch(e){}
+  return [{ulke:DEFAULT_COUNTRY, url:legacy || RAW_DATA_URL_BASE}];
+}
+function writeSources(a){ try{ localStorage.setItem(SRC_KEY, JSON.stringify(a)); }catch(e){} }
+/* Satırları ülkeyle etiketle; aynı ülkenin eski verisini değiştir, diğer ülkeleri koru */
+function tagCountry(rows, ulke){ const u = normCountry(ulke) || DEFAULT_COUNTRY; rows.forEach(r => { r.Ulke = normCountry(r.Ulke) || u; }); return rows; }
+function mergeCountryRows(rows){
+  const set = new Set(rows.map(r => r.Ulke));
+  return RAW.filter(r => !set.has(r.Ulke)).concat(rows);
+}
+async function loadSources(){
+  const src = readSources().filter(x => x.url);
+  if(!src.length){ msg('Ülke kaynağı tanımlı değil. <b>Kaynak</b> ile ekleyin veya <b>Veri Yükle</b> ile dosya seçin.', true); return false; }
+  msg(`Veri indiriliyor… <b>${src.map(x => esc(x.ulke)).join(', ')}</b>`, true, true);
+  const res = await Promise.allSettled(src.map(x => fetchRows(x.url).then(rows => tagCountry(rows, x.ulke))));
+  const ok = [], bad = [];
+  res.forEach((r, i) => r.status === 'fulfilled' && r.value.length ? ok.push([src[i].ulke, r.value]) : bad.push([src[i].ulke, r.reason?.message || 'boş veri']));
+  if(!ok.length){ msg(`Veri okunamadı — ${bad.map(([u,e]) => esc(u) + ': ' + esc(e)).join(' · ')}. <b>Veri Yükle</b> ile dosya seçebilirsiniz.`, false); return false; }
+  const rows = [].concat(...ok.map(x => x[1]));
+  ingestRows(rows, ok.map(x => x[0]).join(' + ') + (bad.length ? ` · okunamayan: ${bad.map(x => x[0]).join(', ')}` : ''));
+  if(bad.length) toast(`Okunamayan kaynak: ${bad.map(([u,e]) => u + ' (' + e + ')').join(', ')}`);
+  return true;
+}
+
 /* Tek noktadan uzak veri okuma (GitHub raw vb.) — DÜZELTME: çift yükleme yarışı kaldırıldı */
-async function loadFromUrl(url){
-  url = String(url || '').trim(); if(!url) return false;
+async function fetchRows(url){
+  url = String(url || '').trim(); if(!url) throw new Error('bağlantı yok');
   const bust = url + (url.includes('?') ? '&' : '?') + 'v=' + Date.now();
+  const res = await fetch(bust, {cache:'no-store', credentials:'omit'});
+  if(!res.ok) throw new Error('HTTP ' + res.status);
+  const ct = (res.headers.get('content-type') || '').toLowerCase();
+  const clean = url.split('?')[0].toLowerCase();
+  let rows;
+  if(clean.endsWith('.csv')) rows = parseCSV(await res.text());
+  else if(clean.endsWith('.json')) rows = normalizeRows(await res.json());
+  else{
+    const buf = await res.arrayBuffer(); const u8 = new Uint8Array(buf);
+    if(ct.includes('text/html') || !(u8[0] === 0x50 && u8[1] === 0x4B) && !(u8[0] === 0xD0 && u8[1] === 0xCF))
+      throw new Error('Bağlantı Excel dosyası döndürmüyor. raw.githubusercontent.com linki kullanın.');
+    rows = parseWorkbook(buf);
+  }
+  if(!rows.length) throw new Error('Dosyada tanınan satır bulunamadı (başlıkları kontrol edin).');
+  return rows;
+}
+async function loadFromUrl(url, ulke){
+  url = String(url || '').trim(); if(!url) return false;
   msg(`Veri indiriliyor… <b>${esc(url.split('/').pop())}</b>`, true, true);
   try{
-    const res = await fetch(bust, {cache:'no-store', credentials:'omit'});
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const ct = (res.headers.get('content-type') || '').toLowerCase();
-    const clean = url.split('?')[0].toLowerCase();
-    let rows;
-    if(clean.endsWith('.csv')) rows = parseCSV(await res.text());
-    else if(clean.endsWith('.json')) rows = normalizeRows(await res.json());
-    else{
-      const buf = await res.arrayBuffer(); const u8 = new Uint8Array(buf);
-      if(ct.includes('text/html') || !(u8[0] === 0x50 && u8[1] === 0x4B) && !(u8[0] === 0xD0 && u8[1] === 0xCF))
-        throw new Error('Bağlantı Excel dosyası döndürmüyor. raw.githubusercontent.com linki kullanın.');
-      rows = parseWorkbook(buf);
-    }
-    if(!rows.length) throw new Error('Dosyada tanınan satır bulunamadı (başlıkları kontrol edin).');
-    try{ localStorage.setItem(RAW_URL_KEY, url); }catch(e){}
-    ingestRows(rows, 'Bağlantı: ' + url.split('/').slice(-2).join('/'));
+    const rows = tagCountry(await fetchRows(url), ulke || DEFAULT_COUNTRY);
+    ingestRows(ulke ? mergeCountryRows(rows) : rows, 'Bağlantı: ' + url.split('/').slice(-2).join('/'));
     return true;
   }catch(err){
     console.error(err);
@@ -1551,12 +1791,52 @@ async function loadFromUrl(url){
     return false;
   }
 }
+/* =====================================================================
+   ÖRNEK ÜLKE VERİSİ — gerçek EMX / Libya verisi gelene kadar BMMC yapısından türetilir.
+   Gerçek veri yüklenen ülkenin örneği otomatik kalkar. Kaynak penceresinden kapatılabilir.
+   ===================================================================== */
+const SAMPLE_KEY = 'AVESORO_SAMPLE_V1';
+const SAMPLE_DEFS = [
+  {ulke:'EMX',   scale:.58, keep:.72, seed:17, depo:['EMX Central Warehouse','EMX Site Store','EMX Workshop Store','EMX Transit Yard','EMX Camp Store','EMX Spare Parts Store']},
+  {ulke:'LIBYA', scale:.34, keep:.48, seed:41, depo:['Benghazi Main Warehouse','Tripoli Site Store','Misrata Workshop Store','Libya Goods In Transit','Sirte Camp Store','Tobruk Field Store']}];
+let SAMPLE_SET = new Set();
+const sampleOn = () => { try{ return localStorage.getItem(SAMPLE_KEY) !== '0'; }catch(e){ return true; } };
+function setSampleOn(v){ try{ localStorage.setItem(SAMPLE_KEY, v ? '1' : '0'); }catch(e){} }
+function hash01(str, seed){ let h = 2166136261 ^ seed; for(let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return ((h >>> 0) % 100000) / 100000; }
+function synthCountry(base, def){
+  const depos = [...new Set(base.map(r => r.Depo))], dmap = new Map(depos.map((d,i) => [d, def.depo[i % def.depo.length]]));
+  const NUM = ['Devreden','Giren','Cikan','Kalan','DevredenM','GirenM','CikanM','KalanM','MinTutar','MaxTutar','MinMiktar','MaxMiktar'];
+  const out = [];
+  for(const r of base){
+    const key = (r.Depo || '') + '|' + (r.StokAdi || '');
+    if(hash01(key, def.seed) > def.keep) continue;                       // kalemlerin bir kısmı bu ülkede yok
+    const f = def.scale * (0.55 + hash01(key, def.seed + 7) * 0.9);       // kalem bazında sabit ölçek (trend korunur)
+    const m = 0.9 + hash01(key + r.Donem, def.seed + 3) * 0.2;            // aylık küçük oynama
+    const o = Object.assign({}, r, {Ulke:def.ulke, Depo:dmap.get(r.Depo) || r.Depo, Ornek:true});
+    NUM.forEach(k => { const v = (r[k] || 0) * f * (k.startsWith('Min') || k.startsWith('Max') ? 1 : m); o[k] = k.endsWith('M') || k.endsWith('Miktar') ? Math.round(v) : Math.round(v * 100) / 100; });
+    out.push(o);
+  }
+  return out;
+}
+function withSamples(rows){
+  const real = rows.filter(r => !r.Ornek); SAMPLE_SET = new Set();
+  if(!sampleOn() || !real.length) return real;
+  const have = new Set(real.map(r => r.Ulke)), src = real.filter(r => r.Ulke === DEFAULT_COUNTRY);
+  const base = src.length ? src : real.filter(r => r.Ulke === real[0].Ulke);
+  let out = real;
+  SAMPLE_DEFS.filter(d => !have.has(d.ulke)).forEach(d => { const s = synthCountry(base, d); if(s.length){ SAMPLE_SET.add(d.ulke); out = out.concat(s); } });
+  return out;
+}
 
 function ingestRows(rows, sourceLabel){
   RAW = Array.isArray(rows) ? rows : [];
   if(!RAW.length){ msg('Veri seti boş geldi.', false); return; }
+  RAW.forEach(r => { r.Ulke = normCountry(r.Ulke) || DEFAULT_COUNTRY; });   // eski/gömülü veride ülke yoksa varsayılan
+  RAW = withSamples(RAW);
   DATA_SOURCE = sourceLabel || '';
   buildMS();
+  MULTI_COUNTRY = ALL.Ulke.length > 1;
+  paintCountryUI();
   // seçili dönem veri setinde yoksa son aya dön
   FILTERS.Donem = (FILTERS.Donem || []).filter(m => ALL.Donem.includes(m));
   if(!FILTERS.Donem.length && ALL.Donem.length) FILTERS.Donem = [ALL.Donem[ALL.Donem.length-1]];
@@ -1565,14 +1845,14 @@ function ingestRows(rows, sourceLabel){
   buildEntityIndex();
   renderAll();
   saveState();
-  msg(`${esc(sourceLabel || 'Veri')} · <b>${RAW.length.toLocaleString('tr-TR')}</b> satır · ${ALL.Donem.length} dönem`, true);
+  msg(`${esc(sourceLabel || 'Veri')} · <b>${RAW.length.toLocaleString('tr-TR')}</b> satır · ${ALL.Donem.length} dönem${SAMPLE_SET.size ? ` · örnek: ${[...SAMPLE_SET].join(', ')}` : ''}`, true);
   chatOnData();
 }
 
 /* ---------------- Filtreler ---------------- */
 function buildMS(){
   const uniq = arr => [...new Set(arr.filter(Boolean))].sort((a,b) => String(a).localeCompare(String(b),'tr'));
-  ALL = {Donem:uniq(RAW.map(x=>x.Donem)).sort(), DepoSinifi:uniq(RAW.map(x=>x.DepoSinifi)), Depo:uniq(RAW.map(x=>x.Depo)),
+  ALL = {Donem:uniq(RAW.map(x=>x.Donem)).sort(), Ulke:uniq(RAW.map(x=>x.Ulke)), DepoSinifi:uniq(RAW.map(x=>x.DepoSinifi)), Depo:uniq(RAW.map(x=>x.Depo)),
     FSN:uniq(RAW.map(x=>x.FSN)), MTRL:uniq(RAW.map(x=>x.MTRL)), UstGrup:uniq(RAW.map(x=>x.UstGrup)), AltGrup:uniq(RAW.map(x=>x.AltGrup)), Departman:uniq(RAW.map(x=>x.Departman)), StokAdi:uniq(RAW.map(x=>x.StokAdi))};
   $$('.ddbox').forEach(box => {
     const key = box.dataset.key, dd = box.querySelector('.dd'); const list = ALL[key] || [];
@@ -1598,6 +1878,12 @@ function buildMS(){
   });
   updateMSLabels();
 }
+function countryScope(){ const sel = (FILTERS.Ulke || []).filter(u => (ALL.Ulke || []).includes(u)); return sel.length ? sel : (ALL.Ulke || []); }
+function paintCountryUI(){
+  const sc = countryScope(), el = $('#brandSub');
+  if(el) el.textContent = `${sc.length ? sc.join(' · ') : DEFAULT_COUNTRY} Stok Yönetimi · Performans Kokpiti`;
+  const box = $('.ddbox[data-key="Ulke"]'); if(box) box.style.display = (ALL.Ulke || []).length > 1 ? '' : 'none';
+}
 function updateMSLabels(){
   $$('.ddbox').forEach(box => {
     const key = box.dataset.key, sel = FILTERS[key] || [], lab = box.querySelector('.lab');
@@ -1605,10 +1891,10 @@ function updateMSLabels(){
     box.classList.toggle('active', !!sel.length && key !== 'Donem');
   });
 }
-function applyFiltersExceptMonth(rows){
+function applyFiltersExceptMonth(rows, skip){
   const f = FILTERS;
-  const ok = (k, v) => { const s = f[k]; return !s || !s.length || s.includes(v); };
-  return rows.filter(r => ok('DepoSinifi',r.DepoSinifi) && ok('Depo',r.Depo) && ok('FSN',r.FSN) && ok('MTRL',r.MTRL) && ok('UstGrup',r.UstGrup) && ok('AltGrup',r.AltGrup) && ok('Departman',r.Departman) && ok('StokAdi',r.StokAdi));
+  const ok = (k, v) => { if(k === skip) return true; const s = f[k]; return !s || !s.length || s.includes(v); };
+  return rows.filter(r => ok('Ulke',r.Ulke) && ok('DepoSinifi',r.DepoSinifi) && ok('Depo',r.Depo) && ok('FSN',r.FSN) && ok('MTRL',r.MTRL) && ok('UstGrup',r.UstGrup) && ok('AltGrup',r.AltGrup) && ok('Departman',r.Departman) && ok('StokAdi',r.StokAdi));
 }
 
 /* =====================================================================
@@ -1622,7 +1908,8 @@ function getCols(mode = ANALYSIS_MODE){
 function bal(r, c){ const d = r[c.dev]||0, g = r[c.gir]||0, x = r[c.cik]||0, k = r[c.kal]||0; return (d||g||x) ? (d + g - x) : k; }
 const thr = (r, c) => ({min:r[c.minKey]||0, max:r[c.maxKey]||0});
 const isGIT = r => !!r && (deaccent(r.DepoSinifi).includes('goods in transit') || deaccent(r.Depo).includes('goods in transit'));
-const rowKey = r => (r.Depo || '—') + ' • ' + (r.StokAdi || '—');
+// Çok ülkeli veride aynı depo/stok adı farklı ülkelerde çakışmasın diye ülke sona eklenir (görüntülemede ilk iki parça kullanılır)
+const rowKey = r => (r.Depo || '—') + ' • ' + (r.StokAdi || '—') + (MULTI_COUNTRY ? ' • ' + (r.Ulke || '—') : '');
 
 /* =====================================================================
    AYARLAR — Stok Performans Karnesi (ASCM/SCOR KPI tanımları + şirket hedefleri)
@@ -2040,7 +2327,7 @@ function enhanceTable(table){
    ===================================================================== */
 const DIRTY = {};
 function renderAll(){
-  CTX = buildCtx();
+  CTX = buildCtx(); paintCountryUI();
   if(!CTX){ return; }
   renderHero(CTX); renderKPIs(CTX); renderBadges(CTX); renderXfBar();
   $$('.panel').forEach(p => DIRTY[p.id.replace('panel-','')] = true);
@@ -2050,7 +2337,7 @@ function renderAll(){
 function renderPanel(tab){
   if(!CTX || !DIRTY[tab]) return; DIRTY[tab] = false;
   try{
-    ({overview:renderOverview, compare:renderCompare, nomove:() => renderRisk('nomove'), min:() => renderRisk('min'),
+    ({cover:renderCover, overview:renderOverview, compare:renderCompare, nomove:() => renderRisk('nomove'), min:() => renderRisk('min'),
       max:() => renderRisk('max'), excess:() => renderRisk('excess'), pareto:renderPareto, outlier:renderOutlier, ai:renderReport}[tab] || (()=>{}))(CTX);
   }catch(err){ console.error(err); const p = $('#panel-' + tab); if(p) p.insertAdjacentHTML('afterbegin', `<div class="empty">Bu bölüm çizilirken hata oluştu: ${esc(err.message)}</div>`); }
 }
@@ -2468,9 +2755,139 @@ function renderTopLists(ctx){
 }
 
 /* =====================================================================
+   PANEL: Kapak — üst yönetim için yorumsuz, derli toplu özet
+   ===================================================================== */
+function stackHTML(segs, fmt){
+  const T = sum(segs,'v') || 1;
+  return `<div class="cv-stack">${segs.filter(x => x.v > 0).map(x => `<div style="width:${x.v/T*100}%;background:${x.c};color:${x.fg || '#fff'}" data-tip="${tipHTML(x.t, [['Değer', fmt(x.v)], ['Pay', PCT(x.v/T*100)]].concat(x.n != null ? [['Kalem', nf0.format(x.n)]] : []))}">${x.v/T > .08 ? PCT(x.v/T*100, 0) : ''}</div>`).join('')}</div>
+    <div class="cv-leg">${segs.map(x => `<span><i style="background:${x.c}"></i>${esc(x.t)} <b>${esc(fmt(x.v))}</b> <em>${PCT(x.v/T*100)}</em></span>`).join('')}</div>`;
+}
+/* Ülke bazında kırılım — ülke filtresi hariç tüm filtreler uygulanır; seçili ülke vurgulanır */
+const COUNTRY_COL = ['#EAB308','#2f6fd6','#0f8a5f','#7457D6','#d2544a','#0ea5a4','#ea7a08','#64748b'];
+function countryColor(u){ const i = (ALL.Ulke || []).indexOf(u); return COUNTRY_COL[(i < 0 ? 0 : i) % COUNTRY_COL.length]; }
+function countryBreakdown(ctx){
+  const c = ctx.c, rows = applyFiltersExceptMonth(RAW, 'Ulke'), by = new Map();
+  rows.forEach(r => { let m = by.get(r.Ulke); if(!m){ m = new Map(); by.set(r.Ulke, m); } let a = m.get(r.Donem); if(!a){ a = []; m.set(r.Donem, a); } a.push(r); });
+  return (ALL.Ulke || []).map(u => { const bm = by.get(u) || new Map();
+    const M = bm.has(ctx.cur) ? monthMetrics(ctx.cur, bm, ctx.allMonths, c) : null, P = ctx.prev && bm.has(ctx.prev) ? monthMetrics(ctx.prev, bm, ctx.allMonths, c) : null;
+    const trend = ctx.trendMonths.map(m => bm.has(m) ? sum(bm.get(m), r => bal(r,c)) : null);
+    const cr = bm.get(ctx.cur) || [], pr = ctx.prev ? (bm.get(ctx.prev) || []) : [];
+    return {u, M, P, trend, months:bm.size, dep:new Set(cr.map(r => r.Depo)).size, rows:cr, prevRows:pr}; }).filter(x => x.M).sort((a,b) => b.M.kal - a.M.kal);
+}
+function shareRing(p, col){
+  const R = 22, C = 2 * Math.PI * R, v = Math.max(0, Math.min(100, p));
+  return `<svg class="cv-ring" viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="${R}" fill="none" stroke="rgba(234,179,8,.18)" stroke-width="5"/>
+    <circle cx="28" cy="28" r="${R}" fill="none" stroke="${col}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${(v/100*C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 28 28)"/>
+    <text x="28" y="31.5" text-anchor="middle">${nf0.format(Math.round(v))}%</text></svg>`;
+}
+const scoreCol = v => v == null ? 'var(--muted)' : v >= SETTINGS.bands.good ? 'var(--pos)' : v >= SETTINGS.bands.ok ? 'var(--info)' : v >= SETTINGS.bands.warn ? 'var(--warn)' : 'var(--neg)';
+/* sıralama: better = 'low' | 'high' → {rank, n} */
+function rankOf(L, u, f, better){
+  const vals = L.map(x => [x.u, f(x)]).filter(x => x[1] != null && isFinite(x[1]));
+  const me = vals.find(x => x[0] === u); if(!me) return null;
+  const eq = (a, b) => Math.abs(a - b) <= Math.abs(b) * 1e-9;
+  return {r:1 + vals.filter(x => !eq(x[1], me[1]) && (better === 'low' ? x[1] < me[1] : x[1] > me[1])).length, n:vals.length};
+}
+const rankChip = rk => rk && rk.n > 1 ? `<i class="cv-rk${rk.r === 1 ? ' top' : rk.r === rk.n ? ' low' : ''}" title="Ülkeler arası sıra">${rk.r}/${rk.n}</i>` : '';
+function coverCountryHTML(ctx){
+  const L = countryBreakdown(ctx); if(!L.length) return '';
+  const T = sum(L, x => x.M.kal) || 1, sel = FILTERS.Ulke || [], K = SETTINGS.kpi, multi = L.length > 1;
+  const stat = (ok, mid) => ok ? 'ok' : mid ? 'mid' : 'bad';
+  const pc = (x, k) => x.M.kal > 0 ? x.M[k] / x.M.kal * 100 : null;
+  const tile = x => { const {u, M, P, trend, dep} = x;
+    const g = healthGrade(M.health), share = M.kal / T * 100, base = Math.max(M.kal, 1), col = '#EAB308';
+    const risks = [['Min altı açık', M.belowGap, M.belowN, 'var(--neg)', 'belowGap'], ['Max üstü fazla', M.aboveGap, M.aboveN, '#EAB308', 'aboveGap'], ['Hareketsiz', M.deadV, M.deadN, '#ea7a08', 'deadV']];
+    const rmax = Math.max(...risks.map(r => r[1]), 1);
+    const doh = M.doh, turn = M.turn;
+    const tv = trend.map((v,i) => [ctx.trendMonths[i], v]).filter(t => t[1] != null);
+    const hi = tv.reduce((a,b) => b[1] > a[1] ? b : a, tv[0] || [null, null]), lo = tv.reduce((a,b) => b[1] < a[1] ? b : a, tv[0] || [null, null]);
+    const comp = (M.card || []).filter(r => r.score != null);
+    return `<article class="cv-c${sel.includes(u) ? ' on' : ''}${sel.length && !sel.includes(u) ? ' dim' : ''}"${xfAttr([['Ulke', u]])}>
+      <header class="cv-c-top">
+        ${shareRing(share, col)}
+        <div class="cv-c-id"><span class="cv-c-k">Ülke / Proje</span><b>${esc(u)}${SAMPLE_SET.has(u) ? '<span class="cv-c-tag">Örnek veri</span>' : ''}</b><small>${nf0.format(M.items)} kalem · ${nf0.format(dep)} depo</small></div>
+        ${comp.length ? `<div class="cv-c-comp">${comp.map(r => `<div data-tip="${tipHTML(r.def.name, [['Değer', r.v == null ? '—' : r.def.unit === '%' ? PCT(r.v) : r.def.unit === '×' ? nf1.format(r.v) + '×' : nf0.format(Math.round(r.v)) + ' gün'], ['Puan', r.score + ' / 100'], ['Hedef', (r.def.better === 'low' ? '≤ ' : '≥ ') + r.target + (r.def.unit === '%' ? '%' : r.def.unit === '×' ? '×' : ' gün')]])}"><span>${esc(r.def.short)}</span><i><u style="width:${Math.max(3, r.score)}%;background:${scoreCol(r.score)}"></u></i><b>${r.score}</b></div>`).join('')}</div>` : ''}
+        <div class="cv-c-hs" style="--hc:${g.c}"><small>Sağlık skoru</small><b>${M.health != null ? M.health : '—'}</b><span>${esc(g.t)}</span>${multi ? `<div class="cv-c-hr">${rankChip(rankOf(L, u, y => y.M.health, 'high'))}</div>` : ''}</div>
+      </header>
+      <div class="cv-c-body">
+        <div class="cv-c-main">
+          <small>Toplam stok</small>
+          <div class="cv-c-val"><b>${esc(FMT(M.kal))}</b>${deltaBadge(M.kal, P?.kal, 'neutral')}</div>
+          <div class="cv-c-sp">${sparkline(trend, col, 220)}
+            ${tv.length > 1 ? `<div class="cv-c-sx"><span>${esc(fmtMonth(tv[0][0]))}</span><span>${esc(fmtMonth(tv[tv.length-1][0]))}</span></div>
+            <div class="cv-c-hl"><span>En yüksek <b>${esc(FMTc(hi[1]))}</b> · ${esc(fmtMonth(hi[0]))}</span><span>En düşük <b>${esc(FMTc(lo[1]))}</b> · ${esc(fmtMonth(lo[0]))}</span></div>` : ''}</div>
+        </div>
+        <div class="cv-c-kpi">
+          <div><small>Aylık çıkan ${multi ? rankChip(rankOf(L, u, y => y.M.cik, 'high')) : ''}</small><b>${esc(FMTc(M.cik))}</b><em>${deltaBadge(M.cik, P?.cik, 'up')}</em></div>
+          <div class="st-${doh == null ? 'na' : stat(doh <= K.doh.target, doh <= SETTINGS.covMax)}"><small>Gün kapsamı ${multi ? rankChip(rankOf(L, u, y => y.M.doh, 'low')) : ''}</small><b>${doh != null ? nf0.format(Math.round(doh)) + ' gün' : '—'}</b><em>Hedef ≤ ${K.doh.target}${!multi && P?.doh != null && doh != null ? ` · önceki ${nf0.format(Math.round(P.doh))}` : ''}</em></div>
+          <div class="st-${turn == null ? 'na' : stat(turn >= K.turn.target, turn >= K.turn.target / 2)}"><small>Devir hızı ${multi ? rankChip(rankOf(L, u, y => y.M.turn, 'high')) : ''}</small><b>${turn != null ? nf1.format(turn) + '×' : '—'}</b><em>Hedef ≥ ${K.turn.target}×${!multi && P?.turn != null && turn != null ? ` · önceki ${nf1.format(P.turn)}×` : ''}</em></div>
+        </div>
+        <div class="cv-c-risk">
+          <div class="cv-c-rt">Risk maruziyeti <span>stoğa oranı · önceki aya göre</span></div>
+          ${risks.map(([t, v, n, rc, k]) => `<div class="cv-c-r"><span class="n">${t}</span><span class="b"><i style="width:${Math.max(v > 0 ? 3 : 0, v / rmax * 100)}%;background:${rc}"></i></span><b>${esc(FMTc(v))}</b><em>${PCT(v / base * 100)}</em><small>${nf0.format(n)} kalem</small><span class="d">${deltaBadge(v, P?.[k], 'down')}</span></div>`).join('')}
+        </div>
+      </div>
+      ${(() => { const dg = groupAgg(x.rows, 'Depo', ctx.c).filter(d => d.kal > 0 || d.n), pd = new Map(groupAgg(x.prevRows, 'Depo', ctx.c).map(d => [d.Ad, d.kal])), dmx = Math.max(...dg.map(d => d.kal), 1);
+        const ch = itemChanges(Object.assign({}, ctx, {monthRows:x.rows, prevRows:x.prevRows}));
+        return `<div class="cv-c-dp"><div class="cv-c-rt">${esc(u)} depoları <span>değer · ülke içi pay · önceki aya göre</span></div>
+          <div class="cv-c-dl">${dg.map(d => `<div class="cv-c-d"${xfAttr([['Ulke', u], ['Depo', d.Ad]])}><span class="n" title="${esc(d.Ad)}">${esc(d.Ad)}</span><span class="b"><i style="width:${Math.max(d.kal > 0 ? 2 : 0, d.kal / dmx * 100)}%"></i></span><b>${esc(FMTc(d.kal))}</b><em>${PCT(M.kal ? d.kal / M.kal * 100 : 0)}</em><span class="d">${deltaBadge(d.kal, pd.get(d.Ad), 'neutral')}</span></div>`).join('')}</div></div>
+        ${ch ? `<div class="cv-c-net">
+          <div><small>Önceki aya göre net değişim</small><b class="${ch.net > 0 ? 'warnc' : 'pos'}">${ch.net >= 0 ? '+' : '−'}${esc(FMTc(Math.abs(ch.net)))}</b></div>
+          <div><small>Brüt artış</small><b>+${esc(FMTc(ch.grossUp))}</b><span>${nf0.format(ch.up.length)} kalem</span></div>
+          <div><small>Brüt azalış</small><b>−${esc(FMTc(Math.abs(ch.grossDn)))}</b><span>${nf0.format(ch.dn.length)} kalem</span></div>
+          <div><small>Depo sayısı</small><b>${nf0.format(dg.length)}</b><span>${nf0.format(x.rows.length)} satır</span></div></div>` : ''}`; })()}
+    </article>`; };
+  // ülke karşılaştırma matrisi (2+ ülke)
+  const rows = [
+    ['Toplam stok', x => x.M.kal, v => FMTc(v), null],
+    ['Stok payı', x => x.M.kal / T * 100, v => PCT(v), null],
+    ['Aylık çıkan', x => x.M.cik, v => FMTc(v), 'high'],
+    ['Gün kapsamı', x => x.M.doh, v => nf0.format(Math.round(v)) + ' gün', 'low'],
+    ['Devir hızı', x => x.M.turn, v => nf1.format(v) + '×', 'high'],
+    ['Min altı açık / stok', x => pc(x, 'belowGap'), v => PCT(v), 'low'],
+    ['Max üstü fazla / stok', x => pc(x, 'aboveGap'), v => PCT(v), 'low'],
+    ['Hareketsiz / stok', x => pc(x, 'deadV'), v => PCT(v), 'low'],
+    ['Sağlık skoru', x => x.M.health, v => nf0.format(v), 'high']];
+  const matrix = !multi ? '' : `<div class="cv-mx"><div class="cv-lab">Ülke karşılaştırma matrisi <span>★ en iyi · kırmızı en zayıf</span></div>
+    <div class="table-wrap"><table class="cv-mxt"><thead><tr><th>Gösterge</th>${L.map(x => `<th class="num"${xfAttr([['Ulke', x.u]])}>${esc(x.u)}${SAMPLE_SET.has(x.u) ? ' <small class="muted">(örnek)</small>' : ''}</th>`).join('')}</tr></thead><tbody>
+    ${rows.map(([t, f, fm, better]) => { const vals = L.map(f), ok = vals.filter(v => v != null && isFinite(v));
+      const best = better && ok.length > 1 ? (better === 'low' ? Math.min(...ok) : Math.max(...ok)) : null, worst = better && ok.length > 1 ? (better === 'low' ? Math.max(...ok) : Math.min(...ok)) : null;
+      return `<tr><td>${t}</td>${vals.map(v => `<td class="num${v != null && v === best ? ' best' : v != null && v === worst && worst !== best ? ' worst' : ''}">${v == null || !isFinite(v) ? '—' : esc(fm(v))}${v != null && v === best ? ' <i>★</i>' : ''}</td>`).join('')}</tr>`; }).join('')}
+    </tbody></table></div></div>`;
+  return `<div class="cv-sec">Ülke bazında${multi ? ` <span class="cv-sec-n">${L.length} ülke</span>` : ''}</div>
+    ${multi ? `<div class="cv-cbar">${stackHTML(L.map(x => ({t:x.u, v:x.M.kal, c:countryColor(x.u), n:x.M.items})), FMTc)}</div>` : ''}
+    <div class="cv-cty${multi ? '' : ' one'}">${L.map(tile).join('')}</div>${matrix}`;
+}
+function renderCover(ctx){
+  const el = $('#coverWrap'); if(!el) return;
+  const M = ctx.M, P = ctx.P || {}, c = ctx.c, s = readSession(), logo = $('.brand-mark img')?.src || '';
+  const filt = XF_KEYS.filter(k => k !== 'Ulke' && (FILTERS[k]||[]).length).map(k => `${XF_LABEL[k]}: ${FILTERS[k].join(', ')}`);
+  const today = new Date().toLocaleDateString('tr-TR', {day:'2-digit', month:'long', year:'numeric'});
+  const dl = (cur, prev, good, unit) => deltaBadge(cur, prev, good, unit);
+  const hero = [
+    ['Toplam stok', FMT(M.kal), dl(M.kal, P.kal, 'neutral'), `${nf0.format(M.items)} kalem`],
+    ['Aylık tüketim (çıkan)', FMT(M.cik), dl(M.cik, P.cik, 'up'), `Giren ${FMTc(M.gir)}`],
+    ['Stok devir hızı', M.turn != null ? nf1.format(M.turn) + '×' : '—', dl(M.turn, P.turn, 'up', 'x'), `Hedef ≥ ${SETTINGS.kpi.turn.target}×`],
+    ['Stok gün kapsamı', M.doh != null ? nf0.format(Math.round(M.doh)) + ' gün' : '—', dl(M.doh, P.doh, 'down', 'd'), `Hedef ≤ ${SETTINGS.kpi.doh.target} gün`]];
+  el.innerHTML = `<div class="cv">
+    <div class="cv-head">
+      <div class="cv-brand">${logo ? `<img src="${logo}" alt=""/>` : ''}<div><div class="cv-k">AVESORO BI · ${esc(countryScope().join(' · ') || DEFAULT_COUNTRY)} · Stok Yönetimi</div><h1>Stok Performans Raporu</h1>
+        <div class="cv-meta"><span><b>Dönem</b> ${esc(fmtMonth(ctx.cur))}</span><span><b>Karşılaştırma</b> ${ctx.prev ? esc(fmtMonth(ctx.prev)) : '—'}</span><span><b>Ülke</b> ${esc(countryScope().join(', ') || DEFAULT_COUNTRY)}</span><span><b>Görünüm</b> ${tm('Tutarsal','Miktarsal')}</span><span><b>Kapsam</b> ${filt.length ? esc(filt.join(' · ')) : 'Tüm depolar'}</span></div></div></div>
+      <div class="cv-side"><div><small>Rapor tarihi</small><b>${esc(today)}</b></div>${s ? `<div><small>Hazırlayan</small><b>${esc(s.username)}</b></div>` : ''}<button class="btn no-print" type="button" id="cvPrint">Yazdır / PDF</button></div>
+    </div>
+    <div class="cv-hero">${hero.map(([t,v,d,sub]) => `<div class="cv-h"><small>${t}</small><b>${esc(v)}</b><div class="cv-d">${d}<span>${esc(sub)}</span></div></div>`).join('')}</div>
+    ${coverCountryHTML(ctx)}
+    <div class="cv-foot"><span>AVESORO BI · Stok Performans Raporu · ${esc(countryScope().join(' · '))} · ${esc(fmtMonth(ctx.cur))}</span><span>Gizli — yalnızca şirket içi kullanım</span></div>
+  </div>`;
+  $('#cvPrint').onclick = () => { $$('.panel').forEach(p => p.classList.toggle('print-on', p.id === 'panel-cover')); window.print(); };
+}
+
+/* =====================================================================
    PANEL: Karşılaştırmalar
    ===================================================================== */
 function renderCompare(ctx){
+  const multi = (ALL.Ulke || []).length > 1; $('#cmpCountryCard').hidden = !multi;
+  if(multi) compareTable($('#tbl-country'), 'Ulke', ctx);
   [['tbl-class','DepoSinifi'],['tbl-ware','Depo'],['tbl-mtrl','MTRL'],['tbl-dept','Departman']].forEach(([id,key]) => compareTable($('#' + id), key, ctx));
 }
 function compareTable(el, key, ctx){
@@ -2818,7 +3235,7 @@ function exportFullWorkbook(){
   const sheets = [
     ['Özet KPI', kpi],
     ['Aksiyon planı', [['Öncelik','Aksiyon','Sorumlu','Zaman',tm('Finansal etki','Miktar etkisi'),'Açıklama'], ...I.plan.map(p => ['P' + p.pr, p.title, p.owner, p.when, p.impact, p.t.replace(/<[^>]+>/g,'')])]],
-    ['Depo sınıfı', grp('DepoSinifi')], ['Depolar', grp('Depo')], ['MTRL', grp('MTRL')], ['Departman', grp('Departman')],
+    ...((ALL.Ulke || []).length > 1 ? [['Ülkeler', grp('Ulke')]] : []), ['Depo sınıfı', grp('DepoSinifi')], ['Depolar', grp('Depo')], ['MTRL', grp('MTRL')], ['Departman', grp('Departman')],
     ['Min altı', pack(I.packs.mn, [['Min','Min']])], ['Max üstü', pack(I.packs.mxp, [['Max','Max']])],
     ['Hareketsiz', pack(I.packs.nm, [])], ['Aşırı kapsam', pack(I.packs.ex, [['Ort. aylık çıkış','AvgOut'], ['Kapsam (gün)','Doh']])],
     ['Pareto ABC', [['#','Depo · Stok','Sınıf','Çıkan','Kalan','Pay %','Kümülatif %'], ...pl.map(x => [x.Sira, x.Ad, x.Sinif, x.cik, x.kal, +x.Pay.toFixed(2), +x.Kum.toFixed(2)])]],
@@ -2861,8 +3278,8 @@ function countUp(){
 /* =====================================================================
    ÇAPRAZ FİLTRE — rapordaki herhangi bir öğeye tıklayınca tüm rapor süzülür
    ===================================================================== */
-const XF_KEYS = ['DepoSinifi','Depo','FSN','MTRL','UstGrup','AltGrup','Departman','StokAdi'];
-const XF_LABEL = {DepoSinifi:'Depo sınıfı', Depo:'Depo', FSN:'FSN', MTRL:'MTRL', UstGrup:'Üst grup', AltGrup:'Alt grup', Departman:'Departman', StokAdi:'Stok'};
+const XF_KEYS = ['Ulke','DepoSinifi','Depo','FSN','MTRL','UstGrup','AltGrup','Departman','StokAdi'];
+const XF_LABEL = {Ulke:'Ülke', DepoSinifi:'Depo sınıfı', Depo:'Depo', FSN:'FSN', MTRL:'MTRL', UstGrup:'Üst grup', AltGrup:'Alt grup', Departman:'Departman', StokAdi:'Stok'};
 function crossFilter(pairs){
   pairs = pairs.filter(([k,v]) => XF_KEYS.includes(k) && v);
   if(!pairs.length) return;
@@ -2895,7 +3312,7 @@ function wireCrossFilter(){
    Sekmeler, olaylar, açılış
    ===================================================================== */
 function setTab(tab){
-  RISK_UI.tab = tab; saveState();
+  RISK_UI.tab = tab; saveState(); document.body.classList.toggle('on-cover', tab === 'cover');
   $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
   $$('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + tab));
   renderPanel(tab);
@@ -2933,11 +3350,8 @@ function wireUI(){
   $('#btnUpload').onclick = () => $('#file').click();
   $('#btnSave').onclick = exportSingleHTML;
   $('#btnTheme').onclick = () => applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
-  $('#btnLink').onclick = () => {
-    const cur = (() => { try{ return localStorage.getItem(RAW_URL_KEY); }catch(e){ return ''; } })() || RAW_DATA_URL_BASE;
-    const u = prompt('Veri bağlantısı (raw.githubusercontent.com veya doğrudan .xlsx/.csv linki):', cur);
-    if(u && u.trim()) loadFromUrl(u.trim());
-  };
+  $('#btnLink').onclick = openSources;
+  wireSources();
   $('#file').addEventListener('change', async e => {
     const f = e.target.files[0]; if(!f) return;
     try{
@@ -2945,7 +3359,15 @@ function wireUI(){
       const ext = (f.name.split('.').pop() || '').toLowerCase();
       const rows = ext === 'csv' ? parseCSV(await f.text()) : parseWorkbook(await f.arrayBuffer());
       if(!rows.length) throw new Error('Tanınan satır bulunamadı. Başlıkları kontrol edin (Dönem, Depo, Stok Adı, Kalan Tutar…).');
-      FROM_EMBED = false; ingestRows(rows, 'Dosya: ' + f.name);
+      // Dosyada ülke sütunu yoksa hangi ülkeye ait olduğunu sor; aynı ülkenin eski verisi değiştirilir, diğer ülkeler korunur
+      let ulke = '';
+      if(rows.some(r => !r.Ulke)){
+        const guess = (ALL.Ulke || []).length === 1 ? ALL.Ulke[0] : DEFAULT_COUNTRY;
+        ulke = prompt('Bu dosya hangi ülke / projeye ait? (örn: BMMC, EMX, LIBYA)', guess);
+        if(ulke == null) return; ulke = normCountry(ulke) || guess;
+      }
+      tagCountry(rows, ulke || DEFAULT_COUNTRY);
+      FROM_EMBED = false; ingestRows(RAW.length ? mergeCountryRows(rows) : rows, 'Dosya: ' + f.name);
     }catch(err){ console.error(err); msg('Dosya okunamadı: ' + esc(err.message || err), false); }
     finally{ e.target.value = ''; }
   });
@@ -2963,6 +3385,48 @@ function wireUI(){
 }
 function syncModeUI(){ $$('#modeSwitch button').forEach(b => b.classList.toggle('active', b.dataset.mode === ANALYSIS_MODE)); }
 
+/* ---------------- Ülke veri kaynakları ---------------- */
+function srcRender(){
+  const src = readSources(), cnt = new Map(); RAW.forEach(r => cnt.set(r.Ulke, (cnt.get(r.Ulke)||0) + 1));
+  const extra = [...cnt.keys()].filter(u => !SAMPLE_SET.has(u) && !src.some(x => normCountry(x.ulke) === u));
+  $('#srcSample').checked = sampleOn();
+  $('#srcTbody').innerHTML = src.map(x => `<tr><td><b>${esc(x.ulke)}</b></td><td class="wrap-txt"><span class="muted">${esc(x.url || '—')}</span></td><td class="num">${nf0.format(cnt.get(normCountry(x.ulke)) || 0)}</td>
+      <td><span style="display:flex;gap:6px"><button class="btn" type="button" data-sact="edit" data-u="${esc(x.ulke)}">Düzenle</button><button class="btn" type="button" data-sact="load" data-u="${esc(x.ulke)}">Yükle</button><button class="btn ghost" type="button" data-sact="del" data-u="${esc(x.ulke)}">Sil</button></span></td></tr>`).join('')
+    + extra.map(u => `<tr><td><b>${esc(u)}</b></td><td><span class="muted">Dosyadan yüklendi (bağlantı yok)</span></td><td class="num">${nf0.format(cnt.get(u))}</td><td><button class="btn ghost" type="button" data-sact="drop" data-u="${esc(u)}">Veriyi kaldır</button></td></tr>`).join('')
+    + [...SAMPLE_SET].map(u => `<tr><td><b>${esc(u)}</b> <span class="cv-c-tag">Örnek</span></td><td><span class="muted">BMMC yapısından türetilmiş örnek veri · gerçek ${esc(u)} verisi eklenince kendiliğinden kalkar</span></td><td class="num">${nf0.format(cnt.get(u) || 0)}</td><td></td></tr>`).join('');
+}
+function srcNote(t, cls){ const n = $('#srcNote'); n.innerHTML = t; n.className = 'auth-note' + (cls ? ' ' + cls : ''); }
+function openSources(){ if(!isAdminSession()) return; srcRender(); $('#srcBackdrop').classList.add('open'); $('#srcBackdrop').setAttribute('aria-hidden','false'); }
+function closeSources(){ $('#srcBackdrop').classList.remove('open'); $('#srcBackdrop').setAttribute('aria-hidden','true'); }
+function wireSources(){
+  $('#srcClose').onclick = closeSources;
+  $('#srcBackdrop').addEventListener('click', e => { if(e.target.id === 'srcBackdrop') closeSources(); });
+  $('#srcAdd').onclick = async () => {
+    const u = normCountry($('#srcUlke').value), url = $('#srcUrl').value.trim();
+    if(!u || !url){ srcNote('Ülke adı ve bağlantı gerekli.', 'err'); return; }
+    const src = readSources().filter(x => normCountry(x.ulke) !== u); src.push({ulke:u, url}); writeSources(src);
+    srcNote(`<b>${esc(u)}</b> kaydedildi, yükleniyor…`);
+    const ok = await loadFromUrl(url, u); srcRender();
+    srcNote(ok ? `<b>${esc(u)}</b> yüklendi ve rapora eklendi.` : `<b>${esc(u)}</b> kaydedildi ancak veri okunamadı — bağlantıyı kontrol edin.`, ok ? '' : 'err');
+    if(ok){ $('#srcUlke').value = ''; $('#srcUrl').value = ''; }
+  };
+  $('#srcSample').onchange = e => { setSampleOn(e.target.checked); if(RAW.length) ingestRows(RAW.filter(r => !r.Ornek), DATA_SOURCE); srcRender(); srcNote(e.target.checked ? 'Örnek ülke verisi açıldı.' : 'Örnek ülke verisi kapatıldı.'); };
+  $('#srcReload').onclick = async () => { srcNote('Tüm ülkeler yükleniyor…'); RAW = []; await loadSources(); srcRender(); srcNote('Tüm kaynaklar yeniden yüklendi.'); };
+  $('#srcTbody').addEventListener('click', async e => {
+    const b = e.target.closest('button[data-sact]'); if(!b) return;
+    const u = b.dataset.u, src = readSources(), x = src.find(y => y.ulke === u);
+    if(b.dataset.sact === 'edit' && x){ $('#srcUlke').value = x.ulke; $('#srcUrl').value = x.url || ''; $('#srcUrl').focus(); }
+    else if(b.dataset.sact === 'load' && x){ srcNote(`<b>${esc(u)}</b> yükleniyor…`); const ok = await loadFromUrl(x.url, u); srcRender(); srcNote(ok ? `<b>${esc(u)}</b> güncellendi.` : `<b>${esc(u)}</b> okunamadı.`, ok ? '' : 'err'); }
+    else if(b.dataset.sact === 'del' || b.dataset.sact === 'drop'){
+      if(!confirm(`${u} kaynağı ve verisi rapordan kaldırılsın mı?`)) return;
+      writeSources(src.filter(y => y.ulke !== u));
+      const rest = RAW.filter(r => r.Ulke !== normCountry(u));
+      if(rest.length) ingestRows(rest, DATA_SOURCE); else { RAW = []; renderAll(); msg('Veri kalmadı. Kaynak ekleyin veya dosya yükleyin.', true); }
+      srcRender(); srcNote(`<b>${esc(u)}</b> kaldırıldı.`);
+    }
+  });
+}
+
 let DATA_BOOTED = false;
 async function bootData(){
   if(DATA_BOOTED) return; DATA_BOOTED = true;
@@ -2978,12 +3442,12 @@ async function bootData(){
   }catch(e){ console.warn('Gömülü veri okunamadı', e); }
   // 2) ?raw= parametresi → kayıtlı bağlantı → varsayılan GitHub kaynağı
   const qp = (() => { try{ return new URLSearchParams(location.search).get('raw'); }catch(e){ return null; } })();
-  const saved = (() => { try{ return localStorage.getItem(RAW_URL_KEY); }catch(e){ return null; } })();
-  const url = qp || saved || (AUTO_RAW_ENABLED ? RAW_DATA_URL_BASE : '');
-  if(url) await loadFromUrl(url); else msg('Excel/CSV yükleyerek başlayın.', true);
+  if(qp){ await loadFromUrl(qp); return; }
+  if(AUTO_RAW_ENABLED) await loadSources(); else msg('Excel/CSV yükleyerek başlayın.', true);
 }
 function onAppReady(){
-  const t = RISK_UI.tab || 'overview';
+  const t = RISK_UI.tab = 'cover';   // açılışta kapak sayfası
+  document.body.classList.add('on-cover');
   $$('.tab').forEach(x => x.classList.toggle('active', x.dataset.tab === t));
   $$('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + t));
   if(!DATA_BOOTED) bootData(); else if(CTX){ $$('.panel').forEach(p => DIRTY[p.id.replace('panel-','')] = true); renderPanel(t); }
@@ -3009,6 +3473,7 @@ document.addEventListener('DOMContentLoaded', async () => {
    ===================================================================== */
 const BOT_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.6 4.3 4.3 1.6-4.3 1.6L12 14.3l-1.6-4.3L6.1 8.4l4.3-1.6L12 2.5zM18.5 13l.9 2.4 2.4.9-2.4.9-.9 2.4-.9-2.4-2.4-.9 2.4-.9.9-2.4z"/></svg>';
 const DIMS = [
+  {key:'Ulke',       label:'Ülke',        words:['ulke','country','proje','sirket']},
   {key:'DepoSinifi', label:'Depo Sınıfı', words:['depo sinifi','depo sinif','depo sinifl','sinif']},
   {key:'AltGrup',    label:'Alt Grup',    words:['alt grup']},
   {key:'UstGrup',    label:'Üst Grup',    words:['ust grup','ana grup','kategori']},
