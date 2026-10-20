@@ -1,0 +1,44 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="tr">
+<head><meta charset="utf-8">
+<style>
+  html,body{margin:0;padding:0;min-height:0}
+  body{background:var(--bg)}
+  .cover{position:relative;width:960px;height:288px;overflow:hidden;background:var(--bg)}
+  .cover svg{position:absolute;inset:0}
+  .gold{fill:var(--gold)} .gold2{fill:var(--gold-2)} .gold3{fill:var(--gold-3)} .teal{fill:var(--c2)}
+  .obs{fill:var(--gold-ink)}
+  [data-theme="dark"] .obs{fill:var(--surface-3)}
+  .bar-on-obs{fill:var(--gold)}
+  .bar-on-gold{fill:var(--gold-ink)}
+  .rx-xl{rx:var(--r-xl)} .rx-lg{rx:var(--r-lg)}
+  .name{position:absolute;left:40px;bottom:58px;margin:0;max-width:440px;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-weight:800;font-size:120px;line-height:.92;letter-spacing:-.02em;color:var(--ink)}
+  .tag{position:absolute;left:42px;bottom:32px;margin:0;max-width:440px;font-family:"Inter",system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+</style></head>
+<body>
+<div class="cover">
+  <svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+    <!-- blocks: gold slab 320x192 (r-xl), obsidian gold-ink/surface-3 128x200 (r-xl), c2 teal 176x96 (r-lg), gold-2 pill 128x64 (rx 32), gold-3 disc 48
+         arrangement: one tall gold slab bleeding off the top-right edge with satellites below and left, all right of x=480
+         pattern: ranked horizontal pill bars (the dashboard's bar-row / rk-bar motif) — the brand speaks in ranked gold bars on dark ground
+         scales: gaps 16px (card gap), bar height 10px rx 5 (half), radii r-xl 24px, r-lg 18px, 999px pills -->
+    <rect class="gold rx-xl" x="640" y="-24" width="344" height="216"/>
+    <rect class="obs rx-xl" x="496" y="40" width="128" height="200"/>
+    <rect class="teal rx-lg" x="640" y="208" width="176" height="104"/>
+    <rect class="gold2" x="832" y="208" width="128" height="64" rx="32"/>
+    <circle class="gold3" cx="560" cy="264" r="24"/>
+    <rect class="bar-on-obs" x="512" y="72"  width="96" height="10" rx="5"/>
+    <rect class="bar-on-obs" x="512" y="96"  width="80" height="10" rx="5"/>
+    <rect class="bar-on-obs" x="512" y="120" width="62" height="10" rx="5"/>
+    <rect class="bar-on-obs" x="512" y="144" width="44" height="10" rx="5"/>
+    <rect class="bar-on-obs" x="512" y="168" width="28" height="10" rx="5"/>
+    <rect class="bar-on-gold" x="672" y="40" width="224" height="10" rx="5"/>
+    <rect class="bar-on-gold" x="672" y="64" width="176" height="10" rx="5"/>
+    <rect class="bar-on-gold" x="672" y="88" width="132" height="10" rx="5"/>
+  </svg>
+  <h1 class="name">D/U BI</h1>
+  <p class="tag">Stok Performans Kokpiti · Obsidyen &amp; Şampanya Altını</p>
+</div>
+</body>
+</html>
