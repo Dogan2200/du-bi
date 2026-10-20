@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 /* =====================================================================
    D/U BI — Premium Tasarım Sistemi (Obsidyen & Şampanya Altını)
@@ -24,7 +24,8 @@
   --bg:#0a0c11; --bg-2:#0e1118;
   --surface:#121620; --surface-2:#171c28; --surface-3:#1d2331;
   --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.12);
-  --ink:#eef0f5; --ink-2:#c3c8d4; --muted:#8a93a6; --faint:#5d6578;
+  --ink:#eef0f5; --ink-2:#c3c8d4; --muted:#8a93a6; --faint:#737c91;
+  --focus:#d6b25e;
   --gold:#d6b25e; --gold-2:#f1d993; --gold-3:#a8812e; --gold-ink:#1a1408;
   --gold-soft:rgba(214,178,94,.12); --gold-line:rgba(214,178,94,.32);
   --pos:#3fcf8e; --pos-soft:rgba(63,207,142,.12);
@@ -44,12 +45,13 @@
   --bg:#ffffff; --bg-2:#ffffff;
   --surface:#ffffff; --surface-2:#ffffff; --surface-3:#f8f8f6;
   --line:rgba(20,22,28,.08); --line-2:rgba(20,22,28,.13);
-  --ink:#14161c; --ink-2:#3b404c; --muted:#6b7280; --faint:#9aa1ad;
-  --gold:#EAB308; --gold-2:#FACC15; --gold-3:#CA8A04; --gold-ink:#1f1703; --gold-text:#9a6a05;
+  --ink:#14161c; --ink-2:#3b404c; --muted:#6b7280; --faint:#7d8594;
+  --focus:#8a5f04;
+  --gold:#EAB308; --gold-2:#FACC15; --gold-3:#CA8A04; --gold-ink:#1f1703; --gold-text:#8a5f04;
   --gold-soft:rgba(234,179,8,.12); --gold-line:rgba(202,138,4,.40);
-  --pos:#0f8a5f; --pos-soft:rgba(15,138,95,.10);
+  --pos:#0b7a53; --pos-soft:rgba(11,122,83,.10);
   --neg:#c8323f; --neg-soft:rgba(200,50,63,.09);
-  --warn:#b7791f; --warn-soft:rgba(183,121,31,.10);
+  --warn:#a3580b; --warn-soft:rgba(163,88,11,.10);
   --info:#2f6fd6; --info-soft:rgba(47,111,214,.09);
   --c1:#EAB308; --c2:#008F80; --c3:#7457D6; --c4:#D2544A; --c5:#2F6FD6; --c6:#5E8F22;
   --grid:rgba(20,22,28,.07); --axis:#7c828e;
@@ -74,7 +76,7 @@ body{
 .num, .tnum{font-variant-numeric:tabular-nums}
 button, input, select{font-family:inherit; color:inherit}
 ::selection{background:var(--gold-soft)}
-:focus-visible{outline:2px solid var(--gold); outline-offset:2px}
+:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
 /* ---------- Header ---------- */
@@ -872,7 +874,7 @@ details.grp details.grp{background:var(--surface)}
 #toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);z-index:300;padding:10px 16px;border-radius:999px;background:var(--surface);border:1px solid var(--gold-line);box-shadow:var(--shadow-lg);font-size:13px;font-weight:600;opacity:0;transition:all .25s var(--ease);pointer-events:none}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 
-footer.foot{margin-top:28px;font-size:11.5px;color:var(--faint);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer.foot{margin-top:28px;font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
 /* =====================================================================
    AUTH — Giriş ekranı
@@ -1022,6 +1024,26 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
 .sum-strip{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
 .login-emblem{width:86px;height:86px;border-radius:50%;background:#fff;padding:4px;box-shadow:0 12px 30px -10px rgba(214,178,94,.6);display:block}
 
+/* ===== Okunabilirlik / düzen iyileştirmeleri ===== */
+.tabs{gap:2px}
+.tab{padding:0 11px}
+@media(max-width:1380px) and (min-width:761px){.tab .ti{display:none}}
+.ap-m b{color:var(--ink-2);font-weight:700}
+.ap-m .tag{padding:1px 7px;border-radius:999px;font-size:10.5px;font-weight:700}
+@media(max-width:520px){
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .kpi{padding:12px 12px 0!important}
+  .kpi .k-lab{font-size:9.5px;letter-spacing:.1em}
+  .kpi .k-ic{display:none}
+  .kpi .k-val{font-size:18px!important}
+  .k-pv{display:none}
+  .k-spark-w{margin:8px -12px 0;height:26px}
+  .kpi .k-spark-w .k-spark{height:26px}
+  .k-foot{margin:0 -12px;padding:7px 12px;font-size:10.5px}
+  .chart{overflow:hidden}
+  .dpg-r{grid-template-columns:minmax(0,1fr) 40px 40px 48px minmax(76px,auto)!important;gap:6px}
+  .dpg-r>:nth-child(4){display:none}
+}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
@@ -1191,25 +1213,44 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
 
   <!-- SEKMELER -->
   <nav class="tabs" id="tabs" role="tablist">
-    <button class="tab" data-tab="cover"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5V3Z"/><path d="M8 12h8M8 16h5M8 8h4"/></svg>Kapak</button>
-    <button class="tab" data-tab="overview"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h6V4H4v9Zm10 7h6V11h-6v9ZM4 20h6v-4H4v4ZM14 4v4h6V4h-6Z"/></svg>Yönetici Özeti</button>
-    <button class="tab" data-tab="compare"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M17 4v16M3 8h8M13 16h8"/></svg>Karşılaştırmalar</button>
-    <button class="tab" data-tab="nomove"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6v12M15 6v12"/></svg>Hareketsiz <span class="badge" id="bdg-nomove" hidden></span></button>
-    <button class="tab" data-tab="min"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v12m0 0-5-5m5 5 5-5"/></svg>Min Altı <span class="badge" id="bdg-min" hidden></span></button>
-    <button class="tab" data-tab="max"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V7m0 0-5 5m5-5 5 5"/></svg>Max Üstü <span class="badge" id="bdg-max" hidden></span></button>
-    <button class="tab" data-tab="excess"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>Aşırı Kapsam <span class="badge" id="bdg-excess" hidden></span></button>
-    <button class="tab" data-tab="pareto"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-6M22 20H2"/></svg>Pareto · ABC</button>
-    <button class="tab" data-tab="outlier"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="16" r="1.6"/><circle cx="11" cy="13" r="1.6"/><circle cx="19" cy="5" r="1.6"/><path d="M3 20h18"/></svg>Outlier</button>
-    <button class="tab" data-tab="ai"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M9 11h7M9 15h7"/></svg>Yönetici Brifingi</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="cover"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h10l4 4v14H5V3Z"/><path d="M8 12h8M8 16h5M8 8h4"/></svg>Kapak</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="overview"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13h6V4H4v9Zm10 7h6V11h-6v9ZM4 20h6v-4H4v4ZM14 4v4h6V4h-6Z"/></svg>Yönetici Özeti</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="compare"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M17 4v16M3 8h8M13 16h8"/></svg>Karşılaştırmalar</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="nomove"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6v12M15 6v12"/></svg>Hareketsiz <span class="badge" id="bdg-nomove" hidden></span></button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="min"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v12m0 0-5-5m5 5 5-5"/></svg>Min Altı <span class="badge" id="bdg-min" hidden></span></button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="max"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V7m0 0-5 5m5-5 5 5"/></svg>Max Üstü <span class="badge" id="bdg-max" hidden></span></button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="excess"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>Aşırı Kapsam <span class="badge" id="bdg-excess" hidden></span></button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="pareto"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-6M22 20H2"/></svg>Pareto · ABC</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="outlier"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="16" r="1.6"/><circle cx="11" cy="13" r="1.6"/><circle cx="19" cy="5" r="1.6"/><path d="M3 20h18"/></svg>Outlier</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="ai"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M9 11h7M9 15h7"/></svg>Yönetici Brifingi</button>
   </nav>
 
   <!-- ÖZET -->
-  <section class="panel" id="panel-cover"><div id="coverWrap"></div></section>
+  <section class="panel" role="tabpanel" id="panel-cover"><div id="coverWrap"></div></section>
 
-  <section class="panel" id="panel-overview">
+  <section class="panel" role="tabpanel" id="panel-overview">
     <div class="card">
       <div class="card-h"><div><div class="eyebrow">Yönetici Özeti</div><div class="card-t">Ne oldu · Neden önemli</div></div><span class="chip gold" id="briefChip">—</span></div>
       <div class="brief brief2" id="brief"></div>
+    </div>
+    <div class="grid g-73 mt16">
+      <div class="card">
+        <div class="card-h"><div><div class="eyebrow">Ne yapmalı</div><div class="card-t">Öncelikli aksiyon planı</div><div class="card-s">Aciliyete ve parasal etkiye göre sıralı; her aksiyonun sorumlusu ve süresiyle</div></div></div>
+        <div class="plan" id="plan"></div>
+      </div>
+      <div class="card cap-card">
+        <div class="card-h"><div><div class="eyebrow">Finansal fırsat</div><div class="card-t" id="capTitle">Serbest bırakılabilir sermaye</div><div class="card-s">Hareketsiz, max üstü ve aşırı kapsamlı stokların net etkisi</div></div></div>
+        <div id="capital"></div>
+      </div>
+    </div>
+    <div class="card mt16">
+      <div class="card-h"><div><div class="eyebrow">Eğilim</div><div class="card-t" id="trendTitle">Aylık seyir</div><div class="card-s" id="trendSub"></div></div>
+        <div class="chart-tools"><label class="lim" for="trendMetric">Gösterge
+          <select class="sel" id="trendMetric">
+            <option value="kal">Kalan stok</option><option value="cik">Çıkan (tüketim)</option><option value="gir">Giren</option>
+            <option value="doh">Gün kapsamı</option><option value="turn">Devir hızı</option><option value="health">Sağlık skoru</option>
+          </select></label></div></div>
+      <div class="chart" id="chTrend" style="height:280px"></div>
     </div>
     <div class="grid g2 mt16">
       <div class="card">
@@ -1252,7 +1293,7 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
     </div>
   </section>
 
-  <section class="panel" id="panel-compare">
+  <section class="panel" role="tabpanel" id="panel-compare">
     <div class="card" id="cmpCountryCard" hidden><div class="card-h"><div><div class="eyebrow">Karşılaştırma</div><div class="card-t">Ülke</div></div></div><div id="tbl-country"></div></div>
     <div class="card"><div class="card-h"><div><div class="eyebrow">Karşılaştırma</div><div class="card-t">Depo sınıfı</div></div></div><div id="tbl-class"></div></div>
     <div class="card"><div class="card-h"><div><div class="eyebrow">Karşılaştırma</div><div class="card-t">Depo</div></div></div><div id="tbl-ware"></div></div>
@@ -1260,12 +1301,12 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
     <div class="card"><div class="card-h"><div><div class="eyebrow">Karşılaştırma</div><div class="card-t">Departman</div></div></div><div id="tbl-dept"></div></div>
   </section>
 
-  <section class="panel" id="panel-nomove"><div class="card" id="riskNoMove"></div></section>
-  <section class="panel" id="panel-min"><div class="card" id="riskMin"></div></section>
-  <section class="panel" id="panel-max"><div class="card" id="riskMax"></div></section>
-  <section class="panel" id="panel-excess"><div class="card" id="riskExcess"></div></section>
+  <section class="panel" role="tabpanel" id="panel-nomove"><div class="card" id="riskNoMove"></div></section>
+  <section class="panel" role="tabpanel" id="panel-min"><div class="card" id="riskMin"></div></section>
+  <section class="panel" role="tabpanel" id="panel-max"><div class="card" id="riskMax"></div></section>
+  <section class="panel" role="tabpanel" id="panel-excess"><div class="card" id="riskExcess"></div></section>
 
-  <section class="panel" id="panel-pareto">
+  <section class="panel" role="tabpanel" id="panel-pareto">
     <div class="card">
       <div class="card-h">
         <div><div class="eyebrow">Pareto · ABC</div><div class="card-t">Çıkışı sürükleyen kalemler</div><div class="card-s" id="paretoSub">—</div></div>
@@ -1280,7 +1321,7 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
     </div>
   </section>
 
-  <section class="panel" id="panel-outlier">
+  <section class="panel" role="tabpanel" id="panel-outlier">
     <div class="card">
       <div class="card-h"><div><div class="eyebrow">İstisna yönetimi</div><div class="card-t">Outlier Analizi — sapmalar ve öncelikli inceleme alanları</div><div class="card-s">Z-Score yöntemi · seçili ay</div></div></div>
       <div class="controls">
@@ -1313,7 +1354,7 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
     </div>
   </section>
 
-  <section class="panel" id="panel-ai">
+  <section class="panel" role="tabpanel" id="panel-ai">
     <div class="card">
       <div class="card-h">
         <div><div class="eyebrow">Otomatik rapor</div><div class="card-t">Yönetici Brifingi</div><div class="card-s">Seçili filtre ve ay için kural tabanlı, sayısal kanıtlı özet</div></div>
@@ -1375,7 +1416,7 @@ function compactNum(n){
   const a = Math.abs(n), s = n<0?'-':'';
   if(a >= 1e9) return s + nf1.format(a/1e9) + ' Mr';
   if(a >= 1e6) return s + nf1.format(a/1e6) + ' Mn';
-  if(a >= 1e4) return s + nf1.format(a/1e3) + ' B';
+  if(a >= 1e4) return s + nf1.format(a/1e3) + ' bin';
   return s + nf0.format(Math.round(a));
 }
 const tm = (a, b) => ANALYSIS_MODE === 'tutar' ? a : b;   // tutarsal / miktarsal ifade
@@ -2551,9 +2592,9 @@ function insights(ctx){
     plan.push({title:'Min-max parametrelerini revize et', owner:'Planlama', when:'30 gün', impact:v, impLab:'ilk 10 max üstü fazla',
       t:`Max üstü ilk 10 kalemde min-max parametrelerini son ${SETTINGS.avgMonths} ay tüketimine göre revize edin (ilk 10 fazla: <b>${FMTc(v)}</b>).`}); }
   const pl = paretoList(ctx.monthRows, c, rowKey); const A = pl.filter(x => x.Sinif === 'A');
-  if(pl.length) plan.push({title:'A sınıfı kalemleri haftalık takibe al', owner:'Planlama · Depo', when:'Sürekli', impact:sum(A,'cik'), impLab:'aylık çıkışın %80\'i',
+  if(pl.length) plan.push({title:'A sınıfı kalemleri haftalık takibe al', owner:'Planlama · Depo', when:'Sürekli', impact:sum(A,'cik'), impLab:'aylık çıkışın %80\'i', monitor:true,
       t:`Çıkışın ~%80'ini oluşturan <b>${A.length}</b> kalemi (A sınıfı, kalemlerin ${PCT(A.length/pl.length*100)}'i) haftalık takip listesine alın.`});
-  plan.sort((a,b) => (b.risk?1:0) - (a.risk?1:0) || b.impact - a.impact);
+  plan.sort((a,b) => (b.risk?1:0) - (a.risk?1:0) || (a.monitor?1:0) - (b.monitor?1:0) || b.impact - a.impact);
   plan.forEach((p,i) => p.pr = i+1);
   plan.slice(0,5).forEach(p => act.push(p.t));
   if(!act.length) act.push('Mevcut parametreleri koruyun; aylık izlemeye devam edin.');
@@ -2576,7 +2617,7 @@ function renderOverview(ctx){
   donut($('#chDonut'), groupAgg(ctx.monthRows, 'DepoSinifi', ctx.c).filter(x => x.kal > 0).map(x => ({label:x.Ad, value:x.kal})), {title:'Depo sınıfı payı', xf:'DepoSinifi'});
   shareBars($('#chDepo'), ctx, 'Depo', I.depots);
   shareBars($('#chMtrl'), ctx, 'MTRL');
-  renderMinMax(ctx); renderTopLists(ctx);
+  renderMinMax(ctx); renderTopLists(ctx); drawTrend(ctx);
 }
 const TREND_META = {
   kal:{n:'Kalan stok', good:'neutral'}, cik:{n:'Çıkan (tüketim)', good:'up'}, gir:{n:'Giren', good:'neutral'},
@@ -2589,10 +2630,12 @@ function drawTrend(ctx){
   const n = ctx.trendMonths.length;
   $('#trendTitle').textContent = `${meta.n} · aylık seyir`;
   const l = vals[n-1], p = n > 1 ? vals[n-2] : null, ch = pctChange(l, p);
-  $('#trendSub').innerHTML = `Her sütun bir ayın toplam ${esc(meta.n.toLowerCase())} değeridir; sütun üstündeki % etiketi bir önceki aya göre değişimdir.`
-    + (n > 1 ? `<br><b>${esc(fmtMonth(ctx.cur))}</b>: ${esc(fmtFull(l))} · önceki ay ${esc(fmtFull(p))}${ch != null ? ` · <b style="color:${trendColor(ch, meta.good)}">${ch > 0 ? '▲ +' : '▼ '}${PCT(ch)}</b>` : ''}` : '')
+  $('#trendSub').innerHTML = (n > 1 ? `<b>${esc(fmtMonth(ctx.cur))}</b>: ${esc(fmtFull(l))} · önceki ay ${esc(fmtFull(p))}${ch != null ? ` · <b style="color:${trendColor(ch, meta.good)}">${ch > 0 ? '▲ +' : '▼ '}${PCT(ch)}</b>` : ''}<br>` : '')
+    + `Son ${n} ay · sütun üstündeki yüzde, bir önceki aya göre değişimdir.`
     + (n <= 2 ? `<br><span style="color:var(--muted)">Veride ${n} ay bulunduğu için seyir sınırlıdır; yeni aylar eklendikçe grafik zenginleşir.</span>` : '');
-  columnChart($('#chTrend'), ctx.trendMonths.map(m => fmtMonth(m, true)), vals, {fmt, fmtFull, name:meta.n, good:meta.good, fullLabels:ctx.trendMonths.map(m => fmtMonth(m))});
+  const K = SETTINGS.kpi, target = k === 'doh' ? K.doh.target : k === 'turn' ? K.turn.target : k === 'health' ? SETTINGS.bands.good : null;
+  const tLab = target == null ? '' : k === 'doh' ? `≤ ${nf0.format(target)} gün` : k === 'turn' ? `≥ ${nf1.format(target)}×` : `≥ ${nf0.format(target)}`;
+  columnChart($('#chTrend'), ctx.trendMonths.map(m => fmtMonth(m, true)), vals, {fmt, fmtFull, name:meta.n, good:meta.good, fullLabels:ctx.trendMonths.map(m => fmtMonth(m)), target, targetLabel:tLab});
 }
 /* ---------- Depo performans matrisi ---------- */
 function depotMatrix(ctx){
@@ -2653,7 +2696,7 @@ function renderPlan(I){
   const el = $('#plan'); if(!el) return;
   if(!I.plan.length){ el.innerHTML = '<div class="empty">Acil aksiyon gerektiren bir konu yok.</div>'; return; }
   el.innerHTML = I.plan.map(p => `<div class="ap ${p.risk ? 'risk' : ''}"><span class="ap-pr">P${p.pr}</span>
-    <div class="ap-b"><div class="ap-t">${esc(p.title)}</div><div class="ap-x">${p.t}</div><div class="ap-m"><span>👤 ${esc(p.owner)}</span><span>⏱ ${esc(p.when)}</span></div></div>
+    <div class="ap-b"><div class="ap-t">${esc(p.title)}</div><div class="ap-x">${p.t}</div><div class="ap-m"><span>Sorumlu: <b>${esc(p.owner)}</b></span><span>Süre: <b>${esc(p.when)}</b></span>${p.risk ? '<span class="tag neg">Acil</span>' : ''}</div></div>
     <div class="ap-i"><b>${esc(FMTc(p.impact))}</b><small>${esc(p.impLab)}</small></div></div>`).join('');
 }
 function capitalOpp(ctx, I){
@@ -2668,13 +2711,14 @@ function capitalOpp(ctx, I){
 function renderCapital(ctx, I){
   const el = $('#capital'); if(!el) return;
   const C = capitalOpp(ctx, I), M = ctx.M;
+  const tt = $('#capTitle'); if(tt) tt.textContent = tm('Serbest bırakılabilir sermaye', 'Azaltılabilir fazla stok');
   if(!C.net){ el.innerHTML = '<div class="empty">Serbest bırakılabilir sermaye tespit edilmedi.</div>'; return; }
   const t20 = sum(C.items.slice(0,20),'net');
   el.innerHTML = `<div class="cap-big">${esc(FMTc(C.net))}</div>
     <div class="cap-sub">toplam stoğun <b>${PCT(M.kal ? C.net/M.kal*100 : 0)}</b>'i · <b>${nf0.format(C.items.length)}</b> kalem</div>
     <div class="cap-bar">${C.cats.filter(x => x.v > 0).map(x => `<div style="width:${x.v/C.net*100}%;background:${x.c}" data-tip="${tipHTML(x.t, [['Tutar', FMT(x.v)], ['Pay', PCT(x.v/C.net*100)], ['Kalem', nf0.format(x.n)]])}"></div>`).join('')}</div>
     <div class="cap-rows">${C.cats.map(x => `<div class="cap-r"><i style="background:${x.c}"></i><span>${esc(x.t)}</span><b>${esc(FMTc(x.v))}</b><small>${nf0.format(x.n)} kalem</small></div>`).join('')}</div>
-    <div class="cap-note">💡 İlk 20 kalem fırsatın <b>${PCT(t20/C.net*100)}</b>'ini oluşturuyor (${esc(FMTc(t20))}). Kategoriler örtüştüğünde her kalem en büyük etkisiyle bir kez sayılır (net); brüt toplam ${esc(FMTc(C.gross))}.</div>`;
+    <div class="cap-note">İlk 20 kalem fırsatın <b>${PCT(t20/C.net*100)}</b>'ini oluşturuyor (${esc(FMTc(t20))}). Kategoriler örtüştüğünde her kalem en büyük etkisiyle bir kez sayılır (net); brüt toplam ${esc(FMTc(C.gross))}.</div>`;
 }
 function shareBars(el, ctx, key, cur){
   const M = ctx.M; cur = cur || groupAgg(ctx.monthRows, key, ctx.c);
@@ -2689,7 +2733,8 @@ function columnChart(el, labels, values, o={}){
   const W = Math.max(320, el.clientWidth || 700), H = el.clientHeight || 280, L = 58, R = 12, T = 40, B = 30;
   const pts = values.filter(isNum); if(!pts.length){ el.innerHTML = '<div class="empty">Trend için veri yok.</div>'; return; }
   const fmt = o.fmt || FMTc, n = labels.length;
-  const ticks = niceTicks(Math.min(0, ...pts), Math.max(...pts, 0)*1.08 || 1, 4), y0 = ticks[0], y1 = ticks[ticks.length-1];
+  const tg = isNum(o.target) ? o.target : null;
+  const ticks = niceTicks(Math.min(0, ...pts), Math.max(...pts, tg ?? 0, 0)*1.08 || 1, 4), y0 = ticks[0], y1 = ticks[ticks.length-1];
   const Y = v => T + (1 - (v - y0)/(y1 - y0))*(H-T-B);
   const slot = (W-L-R)/n, bw = Math.min(70, slot*.58), X = i => L + slot*i + slot/2;
   const id = 'cg' + (++GID);
@@ -2704,6 +2749,7 @@ function columnChart(el, labels, values, o={}){
     const p = i ? values[i-1] : null, ch = pctChange(v, p);
     if(ch != null && (showAll || last)) s += `<text x="${X(i)}" y="${T-24}" text-anchor="middle" style="font-weight:700;font-size:10.5px;fill:${trendColor(ch, o.good)}">${ch > 0 ? '▲ +' : '▼ '}${esc(PCT(ch, Math.abs(ch) >= 100 ? 0 : 1))}</text>`;
   });
+  if(tg != null){ const yt = Y(tg); s += `<line x1="${L}" x2="${W-R}" y1="${yt}" y2="${yt}" stroke="var(--neg)" stroke-width="1.5" stroke-dasharray="5 4"/><text x="${L+6}" y="${yt-6}" text-anchor="start" style="font-weight:700;fill:var(--neg)">Hedef ${esc(o.targetLabel || fmt(tg))}</text>`; }
   const step = Math.ceil(n / Math.max(2, Math.floor((W-L-R)/62)));
   labels.forEach((lb,i) => { if(i % step === 0 || i === n-1) s += `<text x="${X(i)}" y="${H-9}" text-anchor="middle" style="${i === n-1 ? 'font-weight:700;fill:var(--ink)' : ''}">${esc(lb)}</text>`; });
   labels.forEach((lb,i) => { const v = values[i], p = i ? values[i-1] : null, ch = pctChange(v, p);
@@ -3403,7 +3449,7 @@ function wireCrossFilter(){
    ===================================================================== */
 function setTab(tab){
   RISK_UI.tab = tab; saveState(); document.body.classList.toggle('on-cover', tab === 'cover');
-  $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  $$('.tab').forEach(t => { const on = t.dataset.tab === tab; t.classList.toggle('active', on); t.setAttribute('aria-selected', on ? 'true' : 'false'); });
   $$('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + tab));
   renderPanel(tab);
 }
@@ -3461,6 +3507,7 @@ function wireUI(){
     }catch(err){ console.error(err); msg('Dosya okunamadı: ' + esc(err.message || err), false); }
     finally{ e.target.value = ''; }
   });
+  $('#trendMetric').onchange = e => { RISK_UI.trend = e.target.value; saveState(); if(CTX) drawTrend(CTX); };
   $('#paretoDim').onchange = e => { RISK_UI.pareto.dim = e.target.value; saveState(); DIRTY.pareto = true; renderPanel('pareto'); };
   $('#paretoLimit').onchange = e => { RISK_UI.pareto.n = +e.target.value; saveState(); DIRTY.pareto = true; renderPanel('pareto'); };
   const olRe = () => { saveState(); DIRTY.outlier = true; renderPanel('outlier'); };
@@ -3538,7 +3585,7 @@ async function bootData(){
 function onAppReady(){
   const t = RISK_UI.tab = 'cover';   // açılışta kapak sayfası
   document.body.classList.add('on-cover');
-  $$('.tab').forEach(x => x.classList.toggle('active', x.dataset.tab === t));
+  $$('.tab').forEach(x => { const on = x.dataset.tab === t; x.classList.toggle('active', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
   $$('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + t));
   if(!DATA_BOOTED) bootData(); else if(CTX){ $$('.panel').forEach(p => DIRTY[p.id.replace('panel-','')] = true); renderPanel(t); }
 }
@@ -3546,7 +3593,7 @@ function onAppReady(){
 function syncHeaderH(){ const h = $('.app-header'); if(h && h.offsetHeight) document.documentElement.style.setProperty('--hh', h.offsetHeight + 'px'); }
 window.addEventListener('resize', debounce(syncHeaderH, 100));
 document.addEventListener('DOMContentLoaded', async () => {
-  setTimeout(() => $('#fabHint')?.remove(), 12000);
+  setTimeout(() => $('#fabHint')?.remove(), 6000);
   let theme = 'light'; try{ theme = localStorage.getItem(THEME_KEY) || 'light'; }catch(e){}
   document.documentElement.setAttribute('data-theme', theme);
   loadState(); syncModeUI(); wireUI(); wireAuth(); wireChat(); wireCrossFilter(); wireExport(); wireMinMax();
