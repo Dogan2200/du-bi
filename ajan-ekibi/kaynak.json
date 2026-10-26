@@ -1,0 +1,22 @@
+{
+  "_aciklama": "Veri kaynağı. mod=demo iken dashboard'un kurgusal verisi kullanılır. Gerçek veriye geçmek için mod'u 'url' yapıp her ülkenin raw .xlsx/.csv/.json bağlantısını girin.",
+  "mod": "demo",
+  "ulkeler": [
+    { "ulke": "ATLAS", "url": "" },
+    { "ulke": "VEGA",  "url": "" },
+    { "ulke": "ORION", "url": "" }
+  ],
+  "ayarlar": {
+    "avgMonths": 3,
+    "deadMonths": 6,
+    "covTarget": 90,
+    "covMax": 180,
+    "kpi": {
+      "doh":      { "target": 90, "worst": 240, "w": 20 },
+      "turn":     { "target": 4,  "worst": 1,   "w": 20 },
+      "stockout": { "target": 5,  "worst": 25,  "w": 20 },
+      "excess":   { "target": 5,  "worst": 25,  "w": 20 },
+      "dead":     { "target": 5,  "worst": 30,  "w": 20 }
+    }
+  }
+}
