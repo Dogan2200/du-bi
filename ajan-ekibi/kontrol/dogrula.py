@@ -136,13 +136,20 @@ for u in ozet["ulkeler"]:
     # veri kalitesi (engellemez): tutarı olup miktarı 0 olan hareket/bakiye satırları
     qty_gap = sum(1 for r in rows if any((r.get(t) or 0) > 0 and not (r.get(m) or 0)
                   for t, m in (("Giren", "GirenM"), ("Cikan", "CikanM"), ("Kalan", "KalanM"))))
+    # veri kalitesi (engellemez): ay geçişinde açılış miktarı ≠ önceki ayın kapanış miktarı
+    hist = defaultdict(dict)
+    for r in rows:
+        hist[key(r)][r["Donem"]] = r
+    months = sorted({r["Donem"] for r in rows})
+    carry = sum(1 for h in hist.values() for a, b in zip(months, months[1:])
+                if a in h and b in h and abs((h[b].get("DevredenM") or 0) - (h[a].get("KalanM") or 0)) > 0.5)
     report["ulkeler"][u] = {"kontroller": checks, "bakiyeTutarsizSatir": broken, "negatifBakiyeSatir": neg,
-                            "tutarVarMiktarYokSatir": qty_gap,
+                            "tutarVarMiktarYokSatir": qty_gap, "devirKopuklukGecis": carry,
                             "gecti": all(c["uyumlu"] for c in checks)}
 
 report["gecti"] = ok_all
 (DIR / "dogrulama.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 for u, r in report["ulkeler"].items():
     bad = [c["alan"] for c in r["kontroller"] if not c["uyumlu"]]
-    print(f"{u}: {'GEÇTİ' if r['gecti'] else 'UYUMSUZ → ' + ', '.join(bad)} · bakiye tutarsız {r['bakiyeTutarsizSatir']} · negatif {r['negatifBakiyeSatir']} · tutar var/miktar 0: {r['tutarVarMiktarYokSatir']}")
+    print(f"{u}: {'GEÇTİ' if r['gecti'] else 'UYUMSUZ → ' + ', '.join(bad)} · bakiye tutarsız {r['bakiyeTutarsizSatir']} · negatif {r['negatifBakiyeSatir']} · tutar var/miktar 0: {r['tutarVarMiktarYokSatir']} · devir kopukluğu: {r['devirKopuklukGecis']}")
 sys.exit(0 if ok_all else 1)

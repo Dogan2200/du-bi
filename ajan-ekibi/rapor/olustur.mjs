@@ -108,7 +108,9 @@ const auditSec = `<section class="card sec audit" aria-labelledby="h-au">
     <div class="step"><span class="pill pos">Geçti</span><b>Dashboard eşitliği</b><p>Rakamlar D/U BI dashboard'unun kendi hesap koduyla birebir aynı.</p></div>
     <div class="step"><span class="pill pos">Onay</span><b>Kontrol ajanı</b><p>Analiz metinlerindeki ${nf0.format(kontrol.kontrol_edilen_sayi_adedi || 0)} sayı ve kalem adı kaynağa karşı tek tek denetlendi.</p></div>
   </div>
-  ${(() => { const q = Object.entries(dog.ulkeler).filter(([, x]) => x.tutarVarMiktarYokSatir > 0); return q.length ? `<p class="note"><span class="pill warn">Veri kalitesi</span> Tutarı olup miktarı 0 olan satırlar: ${q.map(([u, x]) => `<b>${esc(u)}</b> ${x.tutarVarMiktarYokSatir}`).join(', ')}. Tutar bazlı KPI'lar etkilenmez; miktar bazlı görünüm bu satırlarda güvenilir değildir.</p>` : ''; })()}
+  ${(() => { const E = Object.entries(dog.ulkeler), q = E.filter(([, x]) => x.tutarVarMiktarYokSatir > 0), d = E.filter(([, x]) => x.devirKopuklukGecis > 0);
+    return (q.length ? `<p class="note"><span class="pill warn">Veri kalitesi</span> Tutarı olup miktarı 0 olan satırlar: ${q.map(([u, x]) => `<b>${esc(u)}</b> ${x.tutarVarMiktarYokSatir}`).join(', ')}. Tutar bazlı KPI'lar etkilenmez; miktar bazlı görünüm bu satırlarda güvenilir değildir.</p>` : '')
+      + (d.length ? `<p class="note"><span class="pill warn">Veri kalitesi</span> Açılış miktarı önceki ayın kapanışını tutmayan ay geçişleri: ${d.map(([u, x]) => `<b>${esc(u)}</b> ${nf0.format(x.devirKopuklukGecis)}`).join(', ')}. Son ay KPI'ları etkilenmez; aylar arası kalem karşılaştırmalarında dikkat edilmeli.</p>` : ''); })()}
   ${(kontrol.uyarilar || []).length ? `<details><summary>Denetçi notları (${kontrol.uyarilar.length})</summary><ul class="dots">${kontrol.uyarilar.map(x => `<li>${esc(x)}</li>`).join('')}</ul></details>` : ''}
 </section>`;
 
