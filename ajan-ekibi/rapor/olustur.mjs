@@ -94,7 +94,7 @@ const SINIF = { tek_seferlik_alim: 'Tek seferlik alım', tuketim_sicramasi: 'Tü
 const anomSec = anomali ? `<section class="card sec" aria-labelledby="h-an">
   <div class="sec-h"><div><div class="eyebrow">Anomali analisti · tüm ülkeler</div><h2 id="h-an">Sıra dışı hareketler</h2></div></div>
   <p class="lead">${esc(anomali.ozet)}</p>
-  <div class="tw"><table class="dt"><thead><tr><th>Ülke</th><th>Kalem</th><th>Alan</th><th class="num">Bu ay</th><th class="num">Ortalama</th><th>Sınıf</th><th>Öneri</th></tr></thead><tbody>
+  <div class="tw"><table class="dt an"><thead><tr><th>Ülke</th><th>Kalem</th><th>Alan</th><th class="num">Bu ay</th><th class="num">Ortalama</th><th>Sınıf</th><th>Öneri</th></tr></thead><tbody>
   ${(anomali.bulgular || []).map(b => `<tr><td><b>${esc(b.ulke)}</b></td><td>${esc(b.stok)}<div class="meta">${esc(b.depo)}</div></td><td>${b.alan === 'Giren' ? 'Giriş' : 'Çıkış'}</td><td class="num">${usd(b.deger)}</td><td class="num muted">${usd(b.ortalama)}</td><td><span class="pill ${b.sinif === 'olasi_kayit_hatasi' ? 'neg' : 'warn'}">${SINIF[b.sinif] || esc(b.sinif)}</span>${b.teyit_gerekli ? '<div class="meta">Teyit gerekli</div>' : ''}</td><td>${esc(b.oneri)}</td></tr>`).join('')}
   </tbody></table></div>
   ${anomali.ulkeler_arasi ? `<p class="note"><b>Ülkeler arası:</b> ${esc(anomali.ulkeler_arasi)}</p>` : ''}
@@ -189,7 +189,8 @@ h3.lab{margin:6px 0 0}.lab.info{color:var(--info)}.lab.warn{color:var(--warn)}.l
 .dt{width:100%;border-collapse:collapse;font-size:12.5px}
 .dt th{background:var(--surface-3);text-align:left;padding:9px 10px;border-bottom:1px solid var(--line-2);white-space:nowrap}
 .dt td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:top;color:var(--ink-2)}.dt td b{color:var(--ink)}
-.dt .num{text-align:right}.muted{color:var(--muted)}.meta{font-size:11.5px;color:var(--muted)}
+.dt .num{text-align:right}
+.dt.an{min-width:980px}.dt.an td:nth-child(2){min-width:190px}.dt.an td:nth-child(6){min-width:130px}.dt.an td:nth-child(7){min-width:340px}.dt.an td.num{white-space:nowrap}.muted{color:var(--muted)}.meta{font-size:11.5px;color:var(--muted)}
 .bar{display:block;width:90px;height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden;margin-top:5px}.bar i{display:block;height:100%;border-radius:99px}
 .bar i.pos{background:var(--pos)}.bar i.warn{background:var(--warn)}.bar i.neg{background:var(--neg)}.bar i.muted{background:var(--faint)}
 .lead{margin:0;color:var(--ink-2);max-width:75ch}.note{margin:0;font-size:13px;color:var(--ink-2)}
