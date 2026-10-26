@@ -51,7 +51,9 @@ function spark(vals, w = 220, h = 56) {
 const tot = U.reduce((t, { k }) => ({ kalan: t.kalan + k.ozet.kalan, firsat: t.firsat + k.ozet.serbestBirakilabilirSermaye, minAcik: t.minAcik + k.ozet.minAltiAcik, minN: t.minN + k.ozet.minAltiKalem }), { kalan: 0, firsat: 0, minAcik: 0, minN: 0 });
 const healthW = Math.round(U.reduce((s, { k }) => s + k.ozet.saglikSkoru * k.ozet.kalan, 0) / (tot.kalan || 1));
 const donem = U[0].k.donem;
-const allActs = U.flatMap(({ u, a }) => (a?.aksiyonlar || []).map(x => ({ ...x, ulke: u }))).sort((x, y) => (y.etki_usd || 0) - (x.etki_usd || 0));
+const URG = s => { const d = String(s || '').toLocaleLowerCase('tr-TR'); return d.includes('hafta') ? 0 : d.includes('30') ? 1 : d.includes('90') ? 2 : 3; };
+const allActs = U.flatMap(({ u, a }) => (a?.aksiyonlar || []).map(x => ({ ...x, ulke: u })))// önce aciliyet (bu hafta → 30 gün → 90 gün), sonra etki: duruş riski sermaye fırsatından önce gelir
+  .sort((x, y) => (URG(x.sure) - URG(y.sure)) || ((y.etki_usd || 0) - (x.etki_usd || 0)));
 const topAct = allActs[0];
 
 const countryCard = ({ u, k, a }) => {
@@ -113,6 +115,38 @@ const auditSec = `<section class="card sec audit" aria-labelledby="h-au">
       + (d.length ? `<p class="note"><span class="pill warn">Veri kalitesi</span> Açılış miktarı önceki ayın kapanışını tutmayan ay geçişleri: ${d.map(([u, x]) => `<b>${esc(u)}</b> ${nf0.format(x.devirKopuklukGecis)}`).join(', ')}. Son ay KPI'ları etkilenmez; aylar arası kalem karşılaştırmalarında dikkat edilmeli.</p>` : ''); })()}
   ${(kontrol.uyarilar || []).length ? `<details><summary>Denetçi notları (${kontrol.uyarilar.length})</summary><ul class="dots">${kontrol.uyarilar.map(x => `<li>${esc(x)}</li>`).join('')}</ul></details>` : ''}
 </section>`;
+
+/* ---------- KISA RAPOR: tek ekranda ana konular ---------- */
+const kisa = x => x?.kisa || x?.kisa_oneri || x?.aksiyon || x?.oneri || '';
+const actsSec = `<section class="card sec" aria-labelledby="h-ak">
+  <div class="sec-h"><div><div class="eyebrow">Ne yapmalı · önce aciliyet, sonra etki</div><h2 id="h-ak">Bu haftanın kritik aksiyonları</h2></div></div>
+  <ol class="acts">${allActs.slice(0, 5).map((x, i) => `<li><span class="rk num">${i + 1}</span><div class="at"><b>${esc(kisa(x))}</b><div class="meta">${esc(x.ulke)} · ${esc(x.sorumlu)} · ${esc(x.sure)}</div></div><span class="ae num">${usdC(x.etki_usd)}</span></li>`).join('')}</ol>
+</section>`;
+
+const RISK_COLS = [['minAltiAcik', 'Min altı açık', 'minAltiKalem', 'Duruş riski'], ['oluStok', 'Ölü stok', 'oluStokKalem', '6 ay hareketsiz'],
+  ['asiriKapsamFazla', 'Aşırı kapsam', 'asiriKapsamKalem', '180 gün üstü'], ['maxUstuFazla', 'Max üstü', 'maxUstuKalem', 'Plan üstü stok']];
+const riskSec = `<section class="card sec" aria-labelledby="h-rk">
+  <div class="sec-h"><div><div class="eyebrow">Neden · tutar bazında</div><h2 id="h-rk">Risk haritası</h2></div></div>
+  <div class="tw"><table class="dt rm"><thead><tr><th>Ülke</th>${RISK_COLS.map(c => `<th class="num">${c[1]}<div class="th2">${c[3]}</div></th>`).join('')}</tr></thead><tbody>
+  ${U.map(({ u, k }) => { const o = k.ozet, mx = Math.max(...RISK_COLS.slice(1).map(c => o[c[0]] || 0));
+    return `<tr><td><b>${esc(u)}</b></td>${RISK_COLS.map(([f, , n], i) => `<td class="num ${i === 0 && o[f] > 0 ? 'hot' : o[f] === mx && i > 0 ? 'top' : ''}">${usdC(o[f])}<div class="meta">${nf0.format(o[n] || 0)} kalem</div></td>`).join('')}</tr>`; }).join('')}
+  </tbody></table></div>
+  <p class="meta">Kırmızı: stoksuz kalma riski, önce çözülmeli. Altın: ülkenin en büyük bağlı sermaye kalemi.</p>
+</section>`;
+
+const anomTop = anomali ? `<section class="card sec" aria-labelledby="h-an2">
+  <div class="sec-h"><div><div class="eyebrow">Teyit edilecekler</div><h2 id="h-an2">Sıra dışı hareketler</h2></div></div>
+  <ul class="anl">${(anomali.bulgular || []).slice(0, 3).map(b => `<li><div class="at"><b>${esc(b.ulke)} · ${esc(String(b.stok).replace(/^STK-\d+\s*/, ''))}</b><div class="meta">${esc(kisa(b))}</div></div><span class="pill ${b.sinif === 'olasi_kayit_hatasi' ? 'neg' : 'warn'}">${SINIF[b.sinif] || esc(b.sinif)}</span><span class="ae num">${usdC(b.deger)}</span></li>`).join('')}</ul>
+  ${(anomali.bulgular || []).length > 3 ? `<p class="meta">${anomali.bulgular.length - 3} bulgu daha ayrıntılarda.</p>` : ''}
+</section>` : '';
+
+const dqN = Object.values(dog.ulkeler).filter(x => x.tutarVarMiktarYokSatir > 0 || x.devirKopuklukGecis > 0).length;
+const auditStrip = `<div class="strip" role="note"><span class="pill pos">Doğrulandı</span>
+  <span>Bağımsız motor ✓</span><span>Dashboard eşitliği ✓</span><span>Kontrol ajanı onayı · ${nf0.format(kontrol.kontrol_edilen_sayi_adedi || 0)} sayı ✓</span>
+  ${dqN ? `<span class="pill warn">Veri kalitesi notu: ${dqN} ülke</span>` : ''}</div>`;
+
+const detailSec = `<details class="card sec det"><summary><span class="eyebrow">Ayrıntılar</span> <b>Ülke analizleri, tüm anomaliler ve denetim notları</b></summary>
+  <div class="detin">${U.map(countrySection).join('')}${anomSec}${auditSec}</div></details>`;
 
 const EMBLEM = readFileSync(join(ROOT, '..', 'design-system', 'assets', 'Logos', 'du-bi-emblem.svg'), 'utf8').replace('<svg ', '<svg class="emb" aria-hidden="true" ');
 
@@ -197,8 +231,20 @@ h3.lab{margin:6px 0 0}.lab.info{color:var(--info)}.lab.warn{color:var(--warn)}.l
 .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .step{background:var(--surface-3);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}.step p{margin:0;font-size:13px;color:var(--ink-2)}
 details summary{cursor:pointer;font-weight:600;font-size:13px;color:var(--gold-text)}
+.acts,.anl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.acts li,.anl li{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--line)}.acts li:first-child,.anl li:first-child{border-top:0}
+.rk{flex:none;width:26px;height:26px;border-radius:50%;background:var(--gold-soft);color:var(--gold-text);font-weight:800;font-size:12.5px;display:grid;place-items:center}
+.acts li:first-child .rk{background:linear-gradient(90deg,var(--gold-2),var(--gold));color:var(--gold-ink)}
+.at{flex:1;min-width:0}.at b{font-weight:600;color:var(--ink)}.ae{font-weight:700;white-space:nowrap}
+.duo>*{min-width:0}.duo{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:20px}
+.dt.rm{min-width:520px}.dt.rm td{color:var(--ink);font-weight:600}.dt.rm td .meta{font-weight:400}.th2{font-weight:500;text-transform:none;letter-spacing:0;font-size:11px}
+.dt.rm td.hot{background:var(--neg-soft);color:var(--neg)}.dt.rm td.top{background:var(--gold-soft);color:var(--gold-text)}
+.strip{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;font-size:12.5px;color:var(--ink-2);padding:2px 4px}
+.det{padding:0}.det>summary{padding:16px 22px;list-style:none;display:flex;gap:10px;align-items:baseline;cursor:pointer}.det>summary::-webkit-details-marker{display:none}
+.det>summary::after{content:"Göster ▾";margin-left:auto;font-size:12px;font-weight:600;color:var(--gold-text)}.det[open]>summary::after{content:"Gizle ▴"}
+.det>summary b{font-weight:600}.detin{display:flex;flex-direction:column;gap:20px;padding:0 16px 16px}.detin .card{box-shadow:none}
 footer{font-size:11.5px;color:var(--muted);padding-block:0 32px}
-@media (max-width:860px){.hero,.grid2{grid-template-columns:1fr}.cards,.steps{grid-template-columns:1fr}}
+@media (max-width:860px){.hero,.grid2,.duo{grid-template-columns:minmax(0,1fr)}.cards,.steps{grid-template-columns:1fr}}
 @media (max-width:480px){.big{grid-template-columns:1fr 1fr}.top .r{margin-left:0}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -209,20 +255,21 @@ ${ozet.demo ? `<div class="demo" role="note"><b>Deneme çalıştırması.</b> Bu
 <main>
 <section class="card hero" id="ozet" aria-labelledby="h-oz">
   <div><div class="eyebrow">Grup özeti · ${U.length} ülke</div>
-    <h2 id="h-oz">Grup stok sağlığı ${healthW}/100 · ${usdC(tot.firsat)} serbest bırakılabilir sermaye</h2>
+    <h2 id="h-oz">Sağlık ${healthW}/100 · ${usdC(tot.firsat)} serbest bırakılabilir sermaye</h2>
     <div class="big">
       <div class="mk"><div class="eyebrow">Toplam stok</div><div class="v num">${usdC(tot.kalan)}</div><div class="s">${U.length} ülke, son ay</div></div>
       <div class="mk"><div class="eyebrow">Sermaye fırsatı</div><div class="v num">${usdC(tot.firsat)}</div><div class="s">Stoğun ${pct(tot.firsat / tot.kalan * 100)}'i</div></div>
       <div class="mk"><div class="eyebrow">Min altı açık</div><div class="v num">${usdC(tot.minAcik)}</div><div class="s">${nf0.format(tot.minN)} kalem, duruş riski</div></div>
     </div></div>
-  ${topAct ? `<div class="prio"><div class="eyebrow">Bu haftanın 1 numaralı aksiyonu</div><b class="t">${esc(topAct.aksiyon)}</b>
+  ${topAct ? `<div class="prio"><div class="eyebrow">Bu haftanın 1 numaralı aksiyonu</div><b class="t">${esc(kisa(topAct))}</b>
     <div class="meta"><span class="chip">${esc(topAct.ulke)}</span><span class="chip">${esc(topAct.sorumlu)}</span><span class="chip">${esc(topAct.sure)}</span></div>
     <div class="meta">Tahmini etki <b class="num">${usd(topAct.etki_usd)}</b></div></div>` : ''}
 </section>
 <div class="cards">${U.map(countryCard).join('')}</div>
-${U.map(countrySection).join('')}
-${anomSec}
-${auditSec}
+${actsSec}
+<div class="duo">${riskSec}${anomTop}</div>
+${auditStrip}
+${detailSec}
 </main>
 <footer>Üretim ${new Date().toLocaleString('tr-TR', { timeZone: 'Europe/Istanbul' })} · Rakamlar hesap motorundan, yorumlar analist ajanlarından; tümü kontrol ajanınca denetlendi.</footer>
 </div>`;

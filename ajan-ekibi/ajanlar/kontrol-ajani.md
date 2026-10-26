@@ -12,7 +12,8 @@ Analist ajanlarının yazdıklarını **denetlersin**. Analizleri sen üretmedin
 2. **Sayı izlenebilirliği:** Metinlerde geçen her sayıyı kaynağında bul. Yuvarlama farkı (%1) kabul. Bulunamayan veya yanlış sayı = hata.
 3. **Kalem/depo adları:** Geçen her stok ve depo adı ilgili `veri_<ULKE>.json` içinde var mı?
 4. **Mantık:** Aksiyon riske uygun mu? (ör. min altı kaleme "alımı durdur" önerilmiş mi?) Etki tutarı ilgili riske dayanıyor mu?
-5. **Abartı/eksik:** Kritik bir KPI (skor < 50) analizde atlanmış mı? Önceki aya göre yön doğru yazılmış mı?
+5. **Kısa alanlar:** Her `kisa` / `kisa_oneri` en fazla 10 kelime, rakamsız ve ayrıntılı metinle aynı anlamda mı? Ayrıntıda olmayan bir iddia eklemiş mi? Uzunluk sınırını aşan metin uyarıdır.
+6. **Abartı/eksik:** Kritik bir KPI (skor < 50) analizde atlanmış mı? Önceki aya göre yön doğru yazılmış mı?
 
 ## Çıktı — `calisma/kontrol.json`
 ```json

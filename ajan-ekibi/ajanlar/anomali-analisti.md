@@ -18,6 +18,7 @@ Tüm ülkelerde sıra dışı stok hareketlerini değerlendirirsin. Amaç: **ger
 ## Kurallar
 - Sayıları sadece dosyalardan al. Sınıflandırmanın gerekçesini veride gördüğün aylarla yaz.
 - Kesin olmayanı "teyit edilmeli" diye işaretle.
+- **Kısa yaz.** Her bulguya `kisa_oneri` ekle: en fazla 10 kelime, emir kipi, rakamsız. `gerekce` ve `oneri` en fazla 30 kelime. `ozet` en fazla 2 cümle.
 - En fazla 8 bulgu raporla. Tutar etkisine göre sırala.
 
 ## Çıktı — `calisma/anomali.json`
@@ -26,7 +27,7 @@ Tüm ülkelerde sıra dışı stok hareketlerini değerlendirirsin. Amaç: **ger
   "ozet": "1–2 cümle",
   "bulgular": [
     {"ulke": "ATLAS", "stok": "...", "depo": "...", "alan": "Giren|Cikan", "deger": 0, "ortalama": 0,
-     "sinif": "tek_seferlik_alim", "gerekce": "aylara dayalı kısa açıklama", "oneri": "...", "teyit_gerekli": true}
+     "sinif": "tek_seferlik_alim", "gerekce": "aylara dayalı kısa açıklama", "oneri": "...", "kisa_oneri": "≤10 kelime", "teyit_gerekli": true}
   ],
   "ulkeler_arasi": "varsa ortak örüntü, yoksa boş"
 }
