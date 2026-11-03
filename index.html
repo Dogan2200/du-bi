@@ -1691,6 +1691,36 @@ details.grp>summary .chev{width:22px!important;height:22px!important;font-size:1
 .qms-f button{border:0;border-radius:10px;height:32px;padding:0 14px;font:700 12px var(--font);cursor:pointer;background:#eef3f9;color:#16335f}
 .qms-f button[data-ok]{background:#16335f;color:#fff}
 @media(max-width:640px){.qms>button{min-width:0;width:100%;max-width:none}.qms{flex:1 1 100%}}
+
+/* modern halka grafik */
+.dn{display:flex;gap:26px;align-items:center;flex-wrap:wrap;justify-content:center}
+.dn-svg{width:200px;height:200px;flex:none;overflow:visible}
+.dn-arc{cursor:pointer;transition:stroke-width .2s,filter .2s;animation:dnDraw .9s cubic-bezier(.3,.8,.2,1) both}
+.dn-arc:hover{stroke-width:20;filter:drop-shadow(0 6px 10px rgba(22,51,95,.25))}
+@keyframes dnDraw{from{stroke-dasharray:0 9999}}
+.dn .dn-v{font-size:22px;font-weight:800;fill:#16335f;letter-spacing:-.02em}
+.dn .dn-l{font-size:8.5px;font-weight:800;letter-spacing:.18em;fill:#9aa6b8}
+.dn-leg{flex:1;min-width:240px;display:grid;gap:12px}
+.dn-r{display:grid;grid-template-columns:12px minmax(0,1fr) auto 50px;column-gap:10px;row-gap:5px;align-items:center;font-size:12px;cursor:pointer}
+.dn-r i{width:10px;height:10px;border-radius:50%;box-shadow:0 0 0 3px rgba(42,98,168,.08)}
+.dn-n{color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dn-a{color:var(--ink-2);font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+.dn-r b{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+.dn-r u{grid-column:2/-1;display:block;height:5px;border-radius:99px;background:rgba(16,42,84,.05);overflow:hidden;text-decoration:none}
+.dn-r u s{display:block;height:100%;border-radius:99px;text-decoration:none}
+.dn-r:hover .dn-n{color:var(--ink)}
+/* parçalı şerit çubuklar: aralıklı, yuvarlak, cam parıltılı */
+.ag-bar,.mm-bar,.cv-stack,.fl-split,.cap-bar{gap:4px!important;background:transparent!important;overflow:visible!important}
+.ag-bar>div,.mm-bar>div,.cv-stack>div,.fl-split>i,.cap-bar>div{border-radius:8px;position:relative;background-image:linear-gradient(180deg,rgba(255,255,255,.38),rgba(255,255,255,0) 60%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 6px 14px -10px rgba(16,42,84,.45);transition:transform .2s,filter .2s;min-width:4px}
+.ag-bar>div:hover,.mm-bar>div:hover,.cv-stack>div:hover,.cap-bar>div:hover{transform:translateY(-1px);filter:saturate(1.1) brightness(1.04)}
+.ag-bar{height:14px!important}
+.fl-split{height:9px!important}
+/* şirket seçimi: alt satır */
+.qms-f{align-items:center}
+.qms-f span{font-size:10.5px;color:var(--muted);white-space:nowrap}
+.qms-f button{white-space:nowrap}
+.qms-dd{min-width:270px!important}
 </style>
 </head>
 <body class="auth-lock">
@@ -2989,18 +3019,23 @@ function waterfall(el, steps){
 function donut(el, items, o={}){
   const total = sum(items, 'value'); if(!items.length || total <= 0){ el.innerHTML = '<div class="empty">Veri yok.</div>'; return; }
   const top = items.slice(0,5); const rest = items.slice(5); if(rest.length) top.push({label:'Diğer', value:sum(rest,'value')});
-  const S = 200, r = 78, C = 2*Math.PI*r; let off = 0;
-  const colors = ['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)','var(--c6)'];
-  let arcs = '';
-  top.forEach((it,i) => {
-    const frac = Math.max(0, it.value)/total, len = Math.max(0, frac*C - (top.length > 1 ? 3 : 0));
-    arcs += `<circle cx="${S/2}" cy="${S/2}" r="${r}" fill="none" stroke="${colors[i]}" stroke-width="26" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 ${S/2} ${S/2})" data-tip="${tipHTML(it.label, [['Değer', FMT(it.value)], ['Pay', PCT(frac*100)], ['', 'Tıkla → raporu filtrele']])}"${o.xf ? xfAttr([[o.xf, it.label]]) : ''}/>`;
-    off += frac*C;
-  });
-  el.innerHTML = `<div style="display:flex;gap:22px;align-items:center;flex-wrap:wrap;justify-content:center">
-    <svg viewBox="0 0 ${S} ${S}" style="width:190px;height:190px;flex:none" role="img" aria-label="${esc(o.title||'Dağılım')}"><circle cx="${S/2}" cy="${S/2}" r="${r}" fill="none" stroke="var(--surface-3)" stroke-width="26"/>${arcs}
-    <text x="${S/2}" y="${S/2-4}" text-anchor="middle" style="font-size:20px;font-weight:700;fill:var(--ink)">${esc(FMTc(total))}</text><text x="${S/2}" y="${S/2+16}" text-anchor="middle" style="font-size:10.5px">toplam</text></svg>
-    <div style="flex:1;min-width:240px;display:grid;gap:9px">${top.map((it,i) => `<div style="display:flex;align-items:center;gap:10px;font-size:12.5px"${o.xf ? xfAttr([[o.xf, it.label]]) : ''}><i style="width:10px;height:10px;border-radius:3px;background:${colors[i]};flex:none"></i><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink-2)">${esc(it.label)}</span><span class="tnum" style="color:var(--ink-2);font-weight:600;min-width:74px;text-align:right">${esc(FMTc(it.value))}</span><b class="tnum" style="min-width:52px;text-align:right">${esc(PCT(it.value/total*100))}</b></div>`).join('')}</div></div>`;
+  const PAL = [['#2A62A8','#6aa8e0'],['#0f9a86','#5fd0b8'],['#7457D6','#a993f0'],['#E08A1E','#f5bd6e'],['#3FA0E0','#8fcdf3'],['#8593aa','#c3cddc']];
+  const S = 220, cx = S/2, r = 84, sw = 16, C = 2*Math.PI*r, gap = top.length > 1 ? sw*.55 + 3 : 0, id = 'dn' + (++GID);
+  let off = 0, arcs = '', defs = '';
+  top.forEach((it, i) => { const [c1, c2] = PAL[i % PAL.length], frac = Math.max(0, it.value)/total, len = Math.max(.01, frac*C - gap);
+    defs += `<linearGradient id="${id}g${i}" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="${c2}"/><stop offset="1" stop-color="${c1}"/></linearGradient>`;
+    arcs += `<circle class="dn-arc" cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="url(#${id}g${i})" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${len.toFixed(2)} ${(C-len).toFixed(2)}" stroke-dashoffset="${(-off - gap/2).toFixed(2)}" transform="rotate(-90 ${cx} ${cx})" style="--len:${len.toFixed(2)};animation-delay:${(i*.08).toFixed(2)}s" data-tip="${tipHTML(it.label, [['Değer', FMT(it.value)], ['Pay', PCT(frac*100)]])}"${o.xf ? xfAttr([[o.xf, it.label]]) : ''}/>`;
+    off += frac*C; });
+  el.innerHTML = `<div class="dn">
+    <svg viewBox="0 0 ${S} ${S}" class="dn-svg" role="img" aria-label="${esc(o.title||'Dağılım')}"><defs>${defs}
+      <radialGradient id="${id}c" cx=".5" cy=".38" r=".7"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#eef4fb"/></radialGradient>
+      <filter id="${id}s" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#16335f" flood-opacity=".12"/></filter></defs>
+      <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="rgba(16,42,84,.06)" stroke-width="${sw}"/>
+      <circle cx="${cx}" cy="${cx}" r="${r - sw/2 - 10}" fill="url(#${id}c)" filter="url(#${id}s)"/>${arcs}
+      <text x="${cx}" y="${cx+2}" text-anchor="middle" class="dn-v">${esc(FMTc(total))}</text><text x="${cx}" y="${cx+20}" text-anchor="middle" class="dn-l">TOPLAM</text></svg>
+    <div class="dn-leg">${top.map((it,i) => { const [c1, c2] = PAL[i % PAL.length], p = it.value/total*100;
+      return `<div class="dn-r"${o.xf ? xfAttr([[o.xf, it.label]]) : ''}><i style="background:linear-gradient(135deg,${c2},${c1})"></i><span class="dn-n" title="${esc(it.label)}">${esc(it.label)}</span><span class="dn-a">${esc(FMTc(it.value))}</span><b>${esc(PCT(p))}</b>
+        <u><s style="width:${Math.max(1.5, p).toFixed(1)}%;background:linear-gradient(90deg,${c2}55,${c1})"></s></u></div>`; }).join('')}</div></div>`;
 }
 
 function barList(el, items, o={}){
@@ -3725,7 +3760,7 @@ function countryBreakdown(ctx){
     const M = bm.has(ctx.cur) ? monthMetrics(ctx.cur, bm, ctx.allMonths, c) : null, P = ctx.prev && bm.has(ctx.prev) ? monthMetrics(ctx.prev, bm, ctx.allMonths, c) : null;
     const trend = ctx.trendMonths.map(m => bm.has(m) ? sum(bm.get(m), r => bal(r,c)) : null);
     const cr = bm.get(ctx.cur) || [], pr = ctx.prev ? (bm.get(ctx.prev) || []) : [];
-    return {u, M, P, trend, months:bm.size, dep:new Set(cr.map(r => r.Depo)).size, rows:cr, prevRows:pr}; }).filter(x => x.M).sort((a,b) => b.M.kal - a.M.kal);
+    return {u, M, P, trend, months:bm.size, dep:new Set(cr.map(r => r.Depo)).size, rows:cr, prevRows:pr}; }).filter(x => x.M && (!(FILTERS.Ulke || []).length || FILTERS.Ulke.includes(x.u))).sort((a,b) => b.M.kal - a.M.kal);
 }
 function shareRing(p, col){
   const R = 22, C = 2 * Math.PI * R, v = Math.max(0, Math.min(100, p));
@@ -4380,15 +4415,15 @@ function openPick(btn, which){
 }
 function qCompanyText(){ const us = ALL.Ulke || [], sel = [...(QB.sel || [])];
   if(!sel.length || sel.length === us.length) return us.length > 1 ? `Tüm şirketler (${us.length})` : (us[0] || DEFAULT_COUNTRY);
-  return sel.length <= 2 ? sel.join(' + ') : `${sel.length} şirket seçili`; }
+  const ord = us.filter(u => sel.includes(u)); return ord.length <= 2 ? ord.join(" + ") : `${ord.length} şirket seçili`; }
 function paintCompany(){
   const us = ALL.Ulke || [], sel = QB.sel || new Set(), all = !sel.size || sel.size === us.length, dd = $('#qCompanyDd');
   $('#qCompanyLab').textContent = qCompanyText();
   dd.innerHTML = `<label class="qms-r all"><input type="checkbox" data-all ${all ? 'checked' : ''}><span>Tüm şirketler</span><em>${us.length}</em></label>`
     + us.map(u => `<label class="qms-r"><input type="checkbox" data-u="${esc(u)}" ${!all && sel.has(u) ? 'checked' : ''}><span>${esc(u)}</span></label>`).join('')
-    + `<div class="qms-f"><button type="button" data-clear>Temizle</button><button type="button" data-ok>Uygula</button></div>`;
+    + `<div class="qms-f"><button type="button" data-clear>Tümünü seç</button><span>Seçim anında uygulanır</span></div>`;
 }
-function applyQbar(){
+function applyQbar(quiet){
   if(!ALL.Donem.length) return;
   const sel = [...(QB.sel || [])], us = ALL.Ulke || []; FILTERS.Ulke = sel.length && sel.length < us.length ? sel : [];
   const u = FILTERS.Ulke.length ? FILTERS.Ulke.join(' + ') : '';
@@ -4397,7 +4432,8 @@ function applyQbar(){
   RISK_UI.trendFrom = QB.from < QB.to ? QB.from : null; RISK_UI.trendWin = span > 0 ? span : 12;
   $('#qGo').classList.remove('pulse');
   buildMS(); renderAll(); saveState();
-  toast(`${u || 'Tüm şirketler'} · ${mmYYYY(QB.from)} – ${mmYYYY(QB.to)} getirildi`);
+  if(quiet !== true) toast(`${u || 'Tüm şirketler'} · ${mmYYYY(QB.from)} – ${mmYYYY(QB.to)} getirildi`);
+  const dd = $('#qCompanyDd'); if(dd && !dd.hidden) paintCompany();
 }
 function wireQbar(){
   if(!$('#qbar')) return;
@@ -4407,12 +4443,12 @@ function wireQbar(){
   const box = $('#qCompanyBox'), dd = $('#qCompanyDd'), btn = $('#qCompanyBtn');
   const close = () => { dd.hidden = true; btn.setAttribute('aria-expanded', 'false'); box.classList.remove('open'); };
   btn.onclick = e => { e.stopPropagation(); const open = dd.hidden; close(); if(open){ paintCompany(); dd.hidden = false; btn.setAttribute('aria-expanded', 'true'); box.classList.add('open'); } };
-  dd.onclick = e => { e.stopPropagation(); if(e.target.closest('[data-clear]')){ QB.sel = new Set(); paintCompany(); $('#qGo').classList.add('pulse'); return; } if(e.target.closest('[data-ok]')){ close(); applyQbar(); } };
+  dd.onclick = e => { e.stopPropagation(); if(e.target.closest('[data-clear]')){ QB.sel = new Set(); paintCompany(); applyQbar(true); } };
   dd.onchange = e => { const i = e.target; if(!i || i.type !== 'checkbox') return; const us = ALL.Ulke || [];
     if(i.dataset.all != null) QB.sel = new Set();
     else { if(i.checked) QB.sel.add(i.dataset.u); else QB.sel.delete(i.dataset.u); if(QB.sel.size === us.length) QB.sel = new Set(); }
-    paintCompany(); $('#qGo').classList.add('pulse'); };
-  document.addEventListener('click', e => { if(!dd.hidden && !e.target.closest('#qCompanyBox')) close(); });
+    paintCompany(); applyQbar(true); };
+  document.addEventListener('click', e => { if(!dd.hidden && !e.target.closest('#qCompanyBox')) close(); }); document.addEventListener('keydown', e => { if(e.key === 'Escape' && !dd.hidden) close(); });
   document.addEventListener('click', e => { const pk = $('#qPick'); if(pk && !pk.hidden && !e.target.closest('#qPick')) pk.hidden = true; });
   document.addEventListener('keydown', e => { if(e.key === 'Escape'){ const pk = $('#qPick'); if(pk) pk.hidden = true; } });
 }
