@@ -1847,6 +1847,16 @@ img,svg,canvas,video{max-width:100%}
   main.wrap,.app-header .wrap{max-width:100vw;overflow-x:clip}
   .chart,.chart svg,.fd,.dn-svg{max-width:100%}
 }
+
+@media(max-width:760px){ main.wrap{padding-bottom:110px!important} }
+/* yatay telefon: başlıklar ve rakamlar sıkışmasın */
+@media(max-width:960px) and (max-height:520px){
+  .app-header{position:relative!important}
+  .tabs{top:0!important}
+  .fab{width:46px!important;height:46px!important}
+  .fab-hint{display:none!important}
+  .fr-v{font-size:28px!important}
+}
 </style>
 </head>
 <body class="auth-lock">
@@ -3650,8 +3660,8 @@ function columnChart(el, labels, values, o={}){
   }
 
   const W = Math.max(320, el.clientWidth || 700);
-  // ---- mobil: küçük eğri + değişim merdiveni ----
-  if(W < 640){
+  // ---- mobil / dar ekran (telefon yatay dahil): küçük eğri + değişim merdiveni ----
+  if(W < 640 || (W - 116)/Math.max(1, n - 1) < 66){
     const amx = Math.max(...ok.map(x => Math.abs(x.d)), 1);
     const Pi = values.map((v,i) => isNum(v) ? i : null).filter(i => i != null), lo = Math.min(...Pi.map(i => values[i])), hi = Math.max(...Pi.map(i => values[i])), sh = 76;
     const sx = i => 6 + i/(n-1)*(W-12), sy = v => 8 + (1 - (v - lo)/((hi - lo) || 1))*(sh-16), pts = Pi.map(i => [sx(i), sy(values[i])]), gid = 'fs' + (++GID);
@@ -3698,6 +3708,10 @@ function columnChart(el, labels, values, o={}){
   s += `<rect x="${L-24}" y="${Z0-.5}" width="${W-L-R+48}" height="1" fill="url(#${id}Z)"/>`;
   s += `<line class="fd-scr" x1="0" x2="0" y1="${T-10}" y2="${MY-14}" stroke="#16335f" stroke-opacity="0" stroke-dasharray="3 4"/>`;
   // değişim sütunları (üstü yuvarlak, tabanı düz, renk tepeden tabana söner)
+  // etiket çakışması: yazı boyu sütun aralığına göre küçülür; komşu etiketler sığmıyorsa biri bir kat yukarı/aşağı kayar
+  const fs = slot >= 105 ? 12.5 : slot >= 85 ? 11.5 : 10.5, amtTxt = i => sg(D[i]) + fD(Math.abs(D[i])), tw = i => amtTxt(i).length * fs * .6;
+  const lift = []; for(let i = 1; i < n; i++){ lift[i] = 0; const p = i - 1;
+    if(p >= 1 && isNum(D[i]) && isNum(D[p]) && (D[i] >= 0) === (D[p] >= 0) && !lift[p] && (tw(i) + tw(p))/2 > slot - 6) lift[i] = 30; }
   for(let i = 1; i < n; i++){ const d = D[i]; if(!isNum(d)) continue;
     const c = col(d), h = Math.max(4, Math.abs(d)/amx*HM), up = d >= 0, x = X(i) - bw/2, r = Math.min(9, bw/2, h), gid = `${id}b${i}`, last = i === n-1;
     const y = up ? Z0 - h : Z0, dP = up ? `M${x} ${Z0} V${y+r} Q${x} ${y} ${x+r} ${y} H${x+bw-r} Q${x+bw} ${y} ${x+bw} ${y+r} V${Z0} Z`
@@ -3706,8 +3720,9 @@ function columnChart(el, labels, values, o={}){
     s += `<g class="fd-bar${up ? ' up' : ' dn'}${last ? ' on' : ''}" data-i="${i}" style="animation-delay:${(.35 + i/n*.6).toFixed(2)}s">
       <path d="${dP}" fill="url(#${gid})" stroke="${c}" stroke-opacity="${last ? .0 : .38}" stroke-width="1"${last ? ` filter="url(#${id}B)"` : ''}/>
       <rect x="${x + 3}" y="${up ? y + 2 : y + h - 3.5}" width="${Math.max(0, bw - 6)}" height="1.5" rx=".75" fill="#fff" opacity="${last ? .45 : .8}"/>
-      <text x="${X(i)}" y="${up ? y - 22 : y + h + 16}" text-anchor="middle" style="font-weight:800;font-size:${last ? 13.5 : 12.5}px;fill:${c}">${sg(d)}${esc(fD(Math.abs(d)))}</text>
-      <text x="${X(i)}" y="${up ? y - 8 : y + h + 30}" text-anchor="middle" style="font-weight:650;font-size:10.5px;fill:${c};opacity:.72">${sg(d)}${esc(pc(C[i]))}</text></g>`;
+      ${lift[i] ? `<line x1="${X(i)}" x2="${X(i)}" y1="${up ? y - 4 : y + h + 4}" y2="${up ? y - lift[i] + 2 : y + h + lift[i] - 2}" stroke="${c}" stroke-opacity=".35" stroke-dasharray="2 2"/>` : ''}
+      <text x="${Math.min(X(i), W - tw(i)/2 - 4)}" y="${up ? y - 22 - lift[i] : y + h + 16 + lift[i]}" text-anchor="middle" style="font-weight:800;font-size:${last ? fs + 1 : fs}px;fill:${c}">${esc(amtTxt(i))}</text>
+      <text x="${Math.min(X(i), W - tw(i)/2 - 4)}" y="${up ? y - 8 - lift[i] : y + h + 30 + lift[i]}" text-anchor="middle" style="font-weight:650;font-size:${fs - 2}px;fill:${c};opacity:.72">${sg(d)}${esc(pc(C[i]))}</text></g>`;
   }
   // seviye hattı (renk geçişli, ışıltılı) — sütunların üstünde kalsın
   s += `<path d="${path}" fill="none" stroke="url(#${id}S)" stroke-width="12" stroke-linecap="round" opacity=".3" filter="url(#${id}G)" class="fd-glow" pathLength="1"/>`;
