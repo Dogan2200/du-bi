@@ -1339,6 +1339,16 @@ body.on-cover::before{height:calc(var(--bandH,600px) - 150px)!important}
 :root[data-theme="dark"] .filters .ddbox>button .lab{color:#fff}
 :root[data-theme="dark"] .tab{color:rgba(255,255,255,.85)!important}
 @media(max-width:760px){.filters{background:rgba(255,255,255,.86)!important}}
+
+/* ===== v5.3 mavi tonu: bütçe raporundaki yumuşak çelik mavisi ===== */
+:root[data-theme="light"]{--band:#3c8dbc}
+:root[data-theme="light"] body::before{background:
+    linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px) 0 0/56px 56px,
+    linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px) 0 0/56px 56px,
+    linear-gradient(180deg, #3c8dbc 0, #3c8dbc 60%, #569fcb 72%, #82b9dd 82%, #c2ddef 92%, var(--bg) 100%)!important}
+:root[data-theme="light"] .app-header{background:linear-gradient(180deg,rgba(54,132,180,.78),rgba(60,141,188,.62))!important;border-bottom:1px solid rgba(255,255,255,.18)!important}
+:root[data-theme="light"] .app-header .seg{background:rgba(255,255,255,.20)!important}
+@media(max-width:760px){:root[data-theme="light"] .kpis{background:linear-gradient(180deg,#3c8dbc,#4594c2)!important}}
 </style>
 </head>
 <body class="auth-lock">
