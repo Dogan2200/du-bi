@@ -1525,6 +1525,120 @@ body.on-cover::before{height:calc(var(--bandH,600px) - 150px)!important}
 .hbar{flex-direction:row!important;align-items:center!important}
 .hactions{justify-content:flex-end!important}
 .hbar{min-height:62px!important}
+
+/* =====================================================================
+   v6 — Minimal ölçek: daha küçük, sakin tipografi ve sıkı tablolar
+   ===================================================================== */
+body{font-size:13px!important;line-height:1.5}
+.card-t{font-size:17px!important;font-weight:700!important;letter-spacing:-.005em}
+.card-s{font-size:11.5px!important}
+.eyebrow{font-size:9.5px!important;letter-spacing:.16em!important}
+.card-h{margin-bottom:14px!important}
+.panel .card + .card, .panel .card.mt16, .panel .grid.mt16{margin-top:40px!important}
+.panel .grid{gap:40px 44px!important}
+/* KPI şeridi */
+.kpi .k-val{font-size:23px!important;font-weight:750!important;margin-top:4px!important}
+.kpi:first-child .k-val{font-size:27px!important}
+.kpi .k-lab{font-size:9.5px!important}
+.kpi .k-ic{width:22px!important;height:22px!important}
+.kpi .k-ic svg{width:12px!important;height:12px!important}
+.kpi .delta{font-size:10.5px!important;padding:1px 6px!important}
+.kpi .k-pv,.kpi .k-foot{font-size:10.5px!important}
+.kpi .k-spark-w,.kpi .k-spark-w .k-spark{height:24px!important}
+.kpis{row-gap:12px!important}
+/* başlık okumaları, akış, dönem şeridi */
+.fr-v{font-size:32px!important}
+.fr-m{font-size:9.5px!important}
+.fr-d,.fr-s{font-size:12px!important}
+.per b{font-size:17px!important}
+.per span{font-size:10.5px!important}
+.fl-s b{font-size:22px!important}
+.fl-s span,.fl-foot,.fl-leg{font-size:10.5px!important}
+.fl-svg{height:120px!important}
+.cap-big{font-size:30px!important}
+.cap-card .cap-big{font-size:32px!important}
+.cap-r{font-size:11.5px!important}
+.cap-note{font-size:11px!important}
+.mm-k b,.pg-t b{font-size:18px!important}
+.mm-k small,.pg-t small{font-size:9px!important}
+.cs-v b{font-size:20px!important}
+/* listeler, aksiyonlar, özet */
+.brief2 li.bi{font-size:12px!important;padding:10px 2px!important}
+.bi-k{font-size:9px!important}
+.brief-col h4{font-size:10.5px!important}
+.ap{padding:11px 4px!important;gap:12px!important}
+.ap-t,.ap b{font-size:12.5px}
+.ap-pr{width:30px!important;height:30px!important;font-size:11px!important;border-radius:9px!important}
+.ap .v,.ap-v{font-size:14px}
+.rk-row{padding:8px 4px!important;gap:10px!important}
+.rk-name{font-size:12px!important}
+.rk-sub,.rk-val small{font-size:10.5px!important}
+.rk-val{font-size:12px!important}
+.rk-n{width:22px!important;height:22px!important;font-size:10px!important}
+.rk-bar{height:4px!important}
+/* tablolar */
+table.dt{font-size:11.5px!important}
+table.dt thead th{padding:8px 10px!important;font-size:9.5px!important;letter-spacing:.12em!important}
+table.dt tbody td{padding:7px 10px!important}
+table.dt tfoot td{padding:8px 10px!important}
+table.dt thead tr.sf-filter th{top:31px!important;padding:5px 6px!important}
+table.dt thead tr.sf-filter input{height:24px!important;font-size:10.5px!important}
+.pill{font-size:10px!important;padding:2px 7px!important}
+.cell-bar .mini{width:54px!important;height:4px!important}
+.table-wrap{border-radius:12px!important}
+/* filtre, sekme, başlık */
+.ddbox>button{padding:6px 26px 6px 10px!important}
+.ddbox>button .lab{font-size:12px!important}
+.tab{height:32px!important;font-size:12px!important;padding:0 10px!important}
+.tab .badge{min-width:16px;height:16px;font-size:9.5px}
+.qsel select,.qmonth,.qgo,.qxl{height:38px!important;font-size:13px!important}
+.qmonth i{width:28px!important;height:28px!important}
+.btn.icon2{width:38px!important;height:38px!important}
+:root .app-header .seg#modeSwitch{height:38px!important}
+:root .app-header .seg#modeSwitch button{height:30px!important;font-size:12.5px!important}
+.brand-t{font-size:17px!important}
+.brand-s{font-size:11px!important}
+/* kapak */
+.cv h1{font-size:26px!important}
+.cv-h b{font-size:24px!important}
+.cv-h small,.cv-r small,.cv-strip small{font-size:9.5px!important}
+.cv-c-val b{font-size:22px!important}
+.cv-c-id b{font-size:17px!important}
+.cv-c-hs b{font-size:19px!important}
+.cv-c-kpi b{font-size:13.5px!important}
+.cv-c-r b{font-size:11.5px!important}
+.cv-c-r .n{font-size:11px!important}
+.cv-r b{font-size:19px!important}
+.cv-sec{font-size:10px!important;margin:22px 0 10px!important}
+/* risk sekmeleri ve genel büyük sayılar */
+.rm-big,.risk-big,.kv b,.sum-strip b{font-size:inherit}
+.ov-k b,.rk-k b,.risk-k b,.rs-k b,.rh b{font-size:18px!important}
+.chart text{font-size:10.5px}
+.bubble{font-size:12.5px!important}
+
+/* risk sekmeleri: kutusuz, küçük */
+.mini-kpis{gap:0!important}
+.mk{background:transparent!important;border:0!important;border-left:1px solid var(--line)!important;border-radius:0!important;padding:4px 18px!important}
+.mk:first-child{border-left:0!important;padding-left:0!important}
+.mk .c{font-size:9px!important}
+.mk .v{font-size:16px!important;font-weight:750!important}
+.mk .s{font-size:10.5px!important}
+.risk-top{background:transparent!important;border:0!important;box-shadow:none!important;padding:6px 0!important;border-radius:0!important}
+.bar-row{font-size:11.5px!important;gap:10px!important}
+.bar-track{height:5px!important}
+.bar-row .bv{font-size:12px}
+.bar-row .bv small{font-size:10px!important}
+.bars{gap:7px!important}
+details.grp{background:transparent!important;border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;margin-top:0!important}
+details.grp>summary{padding:11px 2px!important}
+details.grp .grp-b{padding:0 0 12px!important}
+details.grp>summary .chev{width:22px!important;height:22px!important;font-size:10px!important}
+.controls{margin:14px 0 8px!important}
+.controls label{font-size:9px!important}
+.inp,.controls .sel{height:34px!important;font-size:12px!important}
+.note{font-size:11px!important}
+.empty{font-size:12px!important}
+.chip{height:24px!important;font-size:10.5px!important}
 </style>
 </head>
 <body class="auth-lock">
