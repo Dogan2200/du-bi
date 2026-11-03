@@ -1323,17 +1323,20 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
 
   <section class="panel" role="tabpanel" id="panel-outlier">
     <div class="card">
-      <div class="card-h"><div><div class="eyebrow">İstisna yönetimi</div><div class="card-t">Outlier Analizi — sapmalar ve öncelikli inceleme alanları</div><div class="card-s">Z-Score yöntemi · seçili ay</div></div></div>
+      <div class="card-h"><div><div class="eyebrow">İstisna yönetimi</div><div class="card-t">Outlier Analizi — sapmalar ve öncelikli inceleme alanları</div><div class="card-s">Sapma skoru · seçili ay · yöntem ve karşılaştırma grubu seçilebilir</div></div></div>
       <div class="controls">
         <div class="grow"><label>Arama</label><div class="inp-wrap"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input class="inp" id="outlierSearch" type="text" placeholder="Stok, depo, grup, FSN ara…" /></div></div>
         <div><label>Metrik</label><select class="sel" id="outlierMetric"><option value="kal">Kalan</option><option value="gir">Giren</option><option value="cik">Çıkan</option></select></div>
-        <div><label>Hassasiyet (Z eşiği)</label><select class="sel" id="outlierZ"><option value="2">Hassas · Z ≥ 2</option><option value="2.5">Dengeli · Z ≥ 2,5</option><option value="3">Sadece kritik · Z ≥ 3</option></select></div>
-        <div><label>Boyut</label><select class="sel" id="outlierDim"><option value="StokAdi">Stok (çapraz)</option><option value="Depo">Depo içi</option><option value="UstGrup">Üst Grup içi</option><option value="AltGrup">Alt Grup içi</option><option value="MTRL">MTRL içi</option><option value="FSN">FSN içi</option><option value="Departman">Departman içi</option></select></div>
+        <div><label>Yöntem</label><select class="sel" id="outlierMethod"><option value="robust">Sağlam · grup medyanına göre</option><option value="hist">Kendi geçmişine göre · son 6 ay</option><option value="z">Klasik Z · grup ortalamasına göre</option></select></div>
+        <div><label>Hassasiyet (sapma eşiği)</label><select class="sel" id="outlierZ"><option value="2">Hassas · ≥ 2</option><option value="2.5">Dengeli · ≥ 2,5</option><option value="3">Sadece kritik · ≥ 3</option><option value="3.5">Çok kritik · ≥ 3,5</option></select></div>
+        <div id="outlierDimBox"><label>Karşılaştırma grubu</label><select class="sel" id="outlierDim"><option value="UstGrup">Üst Grup içi</option><option value="AltGrup">Alt Grup içi</option><option value="Depo">Depo içi</option><option value="MTRL">MTRL içi</option><option value="FSN">FSN içi</option><option value="Departman">Departman içi</option></select></div>
         <div><label>Gösterim</label><select class="sel" id="outlierTopN"></select></div>
       </div>
-      <div class="z-help"><b>Sapma skoru (Z) nedir?</b> Bir kalemin değerinin, aynı gruptaki kalemlerin ortalamasından ne kadar uzak olduğunu gösterir. Ölçü birimi "standart sapma"dır, yani kalemlerin ortalamadan tipik uzaklığı.
-        <ul><li><b>Z ≈ 0</b>: ortalama civarı, normal.</li><li><b>Z 2–3</b>: belirgin şekilde farklı, incelenmeli.</li><li><b>Z 3+</b>: çok olağandışı. Kayıt hatası, tek seferlik büyük giriş/çıkış veya planlama sorunu olabilir.</li></ul>
-        <span class="muted">Örnek: Z = 116 olan bir kalem, gruptaki kalemlerin ortalamadan tipik uzaklığının 116 katı uzaktadır; o kalem tek başına "dev" bir istisnadır. Artı (+) değer ortalamanın üstü, eksi (−) değer altı demektir.</span></div>
+      <div class="z-help"><b>Üç yöntem, üç farklı soru</b>
+        <ul><li><b>Sağlam · grup medyanına göre</b> (önerilen): Kalemi aynı gruptaki kalemlerle karşılaştırır, ortalama yerine <b>medyan</b> ve medyandan tipik sapmayı kullanır. Birkaç çok pahalı kalem sonucu bozmaz.</li>
+        <li><b>Kendi geçmişine göre · son 6 ay</b>: Kalemin bu ayki değerini kendi son 6 aylık ortalamasıyla karşılaştırır. Ani sıçramaları, beklenmedik düşüşleri ve olası kayıt hatalarını yakalar.</li>
+        <li><b>Klasik Z · grup ortalamasına göre</b>: Ortalama ve standart sapma ile ölçer. Değerler çok dengesiz dağıldığında pahalı kalemleri aykırı gösterme eğilimindedir.</li></ul>
+        <span class="muted">Sapma skoru: 0 civarı normal · 2–3 belirgin farklı, incelenmeli · 3+ çok olağandışı. Artı (+) değer referansın üstü, eksi (−) altı demektir.</span></div>
       <div class="ol-hero">
         <div class="card" style="background:var(--surface-3)">
           <div class="eyebrow">Ana bulgu</div>
@@ -1346,8 +1349,8 @@ body.auth-lock .app-header, body.auth-lock main, body.auth-lock #chatRoot{displa
       </div>
       <div class="mini-kpis mt16" id="olKpis"></div>
       <div class="grid g2 mt16">
-        <div class="card" style="background:var(--surface-3)"><div class="card-h"><div><div class="eyebrow">Sapma şiddeti</div><div class="card-t">Ortalamadan en çok sapan kalemler</div><div class="card-s">Sapma skoru (Z) büyüdükçe kalem, diğerlerine göre daha olağandışıdır</div></div></div><div id="olBars"></div>
-          <div class="legend"><span><i style="background:var(--warn)"></i>Ortalamanın üstünde</span><span><i style="background:var(--info)"></i>Ortalamanın altında</span></div></div>
+        <div class="card" style="background:var(--surface-3)"><div class="card-h"><div><div class="eyebrow">Sapma şiddeti</div><div class="card-t">Referanstan en çok sapan kalemler</div><div class="card-s">Sapma skoru büyüdükçe kalem, karşılaştırıldığı referansa göre daha olağandışıdır</div></div></div><div id="olBars"></div>
+          <div class="legend"><span><i style="background:var(--warn)"></i>Referansın üstünde</span><span><i style="background:var(--info)"></i>Referansın altında</span></div></div>
         <div class="card" style="background:var(--surface-3)"><div class="card-h"><div><div class="eyebrow">Boyut özeti</div><div class="card-t">Sapmaların yoğunlaştığı alanlar</div></div></div><div id="olDims"></div></div>
       </div>
       <details class="grp"><summary><div class="s-left"><b>Detay kayıtlar</b><span class="pill gold" id="olTotal">—</span></div><span class="chev">⌄</span></summary><div class="grp-b" id="outlierTableWrap"></div></details>
@@ -1672,7 +1675,7 @@ let CTX = null;
 let RISK_UI = {
   nomove:{q:'', n:10, inner:'FSN'}, min:{q:'', n:10, inner:'FSN'},
   max:{q:'', n:10, inner:'FSN'},    excess:{q:'', n:10, inner:'FSN'}, compare:{},
-  pareto:{n:10, dim:'item'},        outlier:{q:'', n:10, metric:'kal', z:2.5, dim:'StokAdi'},
+  pareto:{n:10, dim:'item'},        outlier:{q:'', n:10, metric:'kal', z:3, dim:'UstGrup', method:'robust'},
   trend:'kal', tab:'overview'
 };
 
@@ -1685,6 +1688,8 @@ function loadState(){
     if(s.filters) FILTERS = Object.assign(EMPTY_FILTERS(), s.filters);
     if(s.analysis === 'tutar' || s.analysis === 'miktar') ANALYSIS_MODE = s.analysis;
     if(s.risk) for(const k of Object.keys(RISK_UI)){ if(s.risk[k] != null) RISK_UI[k] = (typeof RISK_UI[k] === 'object') ? Object.assign({}, RISK_UI[k], s.risk[k]) : s.risk[k]; }
+    if(RISK_UI.outlier.dim === 'StokAdi') RISK_UI.outlier.dim = 'UstGrup';   // çapraz görünüm kaldırıldı
+    if(!RISK_UI.outlier.method) RISK_UI.outlier.method = 'robust';
   }catch(e){}
 }
 
@@ -3198,50 +3203,61 @@ function paretoChart(el, list){
 const mean = a => a.length ? a.reduce((x,y) => x + y, 0)/a.length : 0;
 const stddev = a => { if(a.length < 2) return 0; const m = mean(a); return Math.sqrt(a.reduce((s,v) => s + (v-m)**2, 0)/a.length); };
 function metricVal(r, c, m){ return m === 'gir' ? (r[c.gir]||0) : m === 'cik' ? (r[c.cik]||0) : bal(r,c); }
+const medianOf = a => { if(!a.length) return 0; const s = a.slice().sort((x, y) => x - y), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m-1] + s[m]) / 2; };
+const OL_REF = {robust:'grup medyanı', z:'grup ortalaması', hist:'son 6 ay ortalaması'};
 function buildOutlierPack(ctx){
-  const ui = RISK_UI.outlier, c = ctx.c, dim = ui.dim, metric = ui.metric, z = +ui.z || 2.5, rows = ctx.monthRows;
+  const ui = RISK_UI.outlier, c = ctx.c, metric = ui.metric, z = +ui.z || 3, rows = ctx.monthRows;
+  const method = ['robust','hist','z'].includes(ui.method) ? ui.method : 'robust', dim = method === 'hist' ? 'Depo' : (ui.dim === 'StokAdi' ? 'UstGrup' : ui.dim);
   let find = [];
-  if(dim === 'StokAdi'){
-    const agg = new Map();
-    rows.forEach(r => { const k = r.StokAdi || 'Belirtilmemiş'; let a = agg.get(k); if(!a){ a = {k, v:0, r, depots:new Set()}; agg.set(k, a); } a.v += metricVal(r,c,metric); a.depots.add(r.Depo); });
-    const items = [...agg.values()], m = mean(items.map(x => x.v)), sd = stddev(items.map(x => x.v));
-    if(sd) find = items.map(it => { const zs = (it.v - m)/sd; return Object.assign(baseItem(it.r), {dimKey:it.k, value:it.v, zScore:zs, absZ:Math.abs(zs), impact:Math.abs(it.v - m), mean:m,
-      Depo:it.depots.size > 1 ? `${it.depots.size} depo` : (it.r.Depo || '—')}); }).filter(x => x.absZ >= z);
+  if(method === 'hist'){
+    // her kalem (Depo · Stok) kendi son 6 ayıyla karşılaştırılır — seçili ay hariç, en az 3 ay geçmiş gerekir
+    const i = ctx.allMonths.indexOf(ctx.cur), hist = ctx.allMonths.slice(Math.max(0, i - SETTINGS.deadMonths), i);
+    const H = new Map(); hist.forEach(m => (ctx.byMonth.get(m) || []).forEach(r => { const k = rowKey(r); let o = H.get(k); if(!o){ o = new Map(); H.set(k, o); } o.set(m, (o.get(m) || 0) + metricVal(r, c, metric)); }));
+    const cur = new Map(); rows.forEach(r => { const k = rowKey(r); let o = cur.get(k); if(!o){ o = {r, v:0}; cur.set(k, o); } o.v += metricVal(r, c, metric); });
+    cur.forEach((o, k) => { const h = H.get(k); if(!h || h.size < 3) return;
+      const vals = hist.map(m => h.get(m) || 0), m = mean(vals), sd0 = stddev(vals), sd = Math.max(sd0, Math.abs(m) * .1, 1);
+      const zs = (o.v - m) / sd; if(Math.abs(zs) < z || Math.abs(o.v - m) < 1) return;
+      find.push(Object.assign(baseItem(o.r), {dimKey:o.r.Depo || '—', value:o.v, zScore:zs, absZ:Math.abs(zs), impact:Math.abs(o.v - m), mean:m, nHist:h.size})); });
   }else{
     const g = new Map(); rows.forEach(r => { const k = r[dim] || 'Belirtilmemiş'; if(!g.has(k)) g.set(k, []); g.get(k).push(r); });
-    g.forEach((arr, k) => { const vals = arr.map(r => metricVal(r,c,metric)), m = mean(vals), sd = stddev(vals); if(!sd) return;
-      arr.forEach((r,i) => { const zs = (vals[i]-m)/sd; if(Math.abs(zs) >= z) find.push(Object.assign(baseItem(r), {dimKey:k, value:vals[i], zScore:zs, absZ:Math.abs(zs), impact:Math.abs(vals[i]-m), mean:m})); }); });
+    g.forEach((arr, k) => { if(arr.length < 5) return;   // çok küçük gruplar karşılaştırmaya uygun değil
+      const vals = arr.map(r => metricVal(r, c, metric));
+      let ref, scale;
+      if(method === 'robust'){ ref = medianOf(vals); const mad = medianOf(vals.map(v => Math.abs(v - ref))); scale = mad > 0 ? mad / .6745 : mean(vals.map(v => Math.abs(v - ref))) * 1.2533; }
+      else { ref = mean(vals); scale = stddev(vals); }
+      if(!(scale > 0)) return;
+      arr.forEach((r, i) => { const zs = (vals[i] - ref) / scale; if(Math.abs(zs) >= z) find.push(Object.assign(baseItem(r), {dimKey:k, value:vals[i], zScore:zs, absZ:Math.abs(zs), impact:Math.abs(vals[i] - ref), mean:ref})); }); });
   }
   const q = deaccent(ui.q || '').trim();
   if(q) find = find.filter(x => deaccent([x.dimKey,x.Depo,x.StokAdi,x.UstGrup,x.MTRL,x.FSN,x.Departman].join(' ')).includes(q));
   find.sort((a,b) => b.impact - a.impact || b.absZ - a.absZ);
   const dAgg = new Map(); find.forEach(f => { let d = dAgg.get(f.dimKey); if(!d){ d = {k:f.dimKey, n:0, imp:0, z:0}; dAgg.set(f.dimKey, d); } d.n++; d.imp += f.impact; d.z = Math.max(d.z, f.absZ); });
-  return {find, dims:[...dAgg.values()].sort((a,b) => b.imp - a.imp), total:sum(find,'impact'), metric, z, dim, src:rows.length};
+  return {find, dims:[...dAgg.values()].sort((a,b) => b.imp - a.imp), total:sum(find,'impact'), metric, z, dim, method, ref:OL_REF[method], src:rows.length};
 }
 function renderOutlier(ctx){
   const ui = RISK_UI.outlier;
-  $('#outlierSearch').value = ui.q; $('#outlierMetric').value = ui.metric; $('#outlierZ').value = String(ui.z); $('#outlierDim').value = ui.dim; $('#outlierTopN').innerHTML = limitOptions(ui.n);
+  $('#outlierSearch').value = ui.q; $('#outlierMetric').value = ui.metric; $('#outlierZ').value = String(ui.z); $('#outlierMethod').value = ui.method || 'robust'; $('#outlierDim').value = ui.dim === 'StokAdi' ? 'UstGrup' : ui.dim; $('#outlierDimBox').style.display = ui.method === 'hist' ? 'none' : ''; $('#outlierTopN').innerHTML = limitOptions(ui.n);
   const p = buildOutlierPack(ctx), mL = {kal:'Kalan', gir:'Giren', cik:'Çıkan'}[p.metric], lead = p.find[0];
   const sev = p.find.length > 200 || p.total > (ctx.M.kal||0)*.3 ? 'Yüksek' : p.find.length > 40 || p.total > (ctx.M.kal||0)*.1 ? 'Orta' : 'Düşük';
-  $('#olTitle').textContent = lead ? `${lead.dimKey === lead.StokAdi ? lead.StokAdi : lead.StokAdi + ' (' + lead.dimKey + ')'} en güçlü sapmayı üretiyor` : 'Seçilen eşikte belirgin aykırı değer yok';
-const kat = x => x.mean > 0 ? `ortalamanın ${nf0.format(Math.round(x.value/x.mean))} katı` : '';
-  $('#olSub').textContent = lead ? `${mL}: ${FMT(lead.value)} · grup ortalaması ${FMT(lead.mean)} (${kat(lead)}) · sapma skoru Z = ${nf1.format(lead.zScore)}` : `Z eşiğini 2.0'a düşürerek veya boyutu değiştirerek daha hassas tarama yapabilirsiniz.`;
-  $('#olChips').innerHTML = [`Outlier <b>${nf0.format(p.find.length)}</b>`, `Toplam sapma <b>${FMTc(p.total)}</b>`, `Seviye <b>${sev}</b>`, `${mL} · sapma skoru ≥ ${p.z}`].map((t,i) => `<span class="chip ${i === 2 ? 'gold' : ''}">${t}</span>`).join('');
+  $('#olTitle').textContent = lead ? `${lead.StokAdi} (${lead.dimKey}) en güçlü sapmayı üretiyor` : 'Seçilen eşikte belirgin aykırı değer yok';
+const kat = x => x.mean > 0 ? `${OL_REF[RISK_UI.outlier.method] || 'referansın'} ${nf1.format(x.value/x.mean)} katı` : '';
+  $('#olSub').textContent = lead ? `${mL}: ${FMT(lead.value)} · ${p.ref} ${FMT(lead.mean)}${lead.mean > 0 ? ' (' + nf1.format(lead.value/lead.mean) + ' katı)' : ''} · sapma skoru ${nf1.format(lead.zScore)}` : `Eşiği düşürerek ya da yöntemi / karşılaştırma grubunu değiştirerek daha hassas tarama yapabilirsiniz.`;
+  $('#olChips').innerHTML = [`Outlier <b>${nf0.format(p.find.length)}</b>`, `Toplam sapma <b>${FMTc(p.total)}</b>`, `Seviye <b>${sev}</b>`, `${{robust:'Sağlam (medyan)', hist:'Kendi geçmişi', z:'Klasik Z'}[p.method]} · ${mL} · eşik ≥ ${p.z}`].map((t,i) => `<span class="chip ${i === 2 ? 'gold' : ''}">${t}</span>`).join('');
   $('#olActions').innerHTML = [['Hızlı aksiyon', sev === 'Yüksek' ? 'İlk 20 kritik kalemde işlem geçmişi, sipariş ve transfer kayıtlarını yönetim önceliğiyle doğrulayın.' : 'Öncelikli sapmalarda veri doğrulaması ve dönemsel karşılaştırma yapın.'],
     ['Parametre & plan', 'Tekrarlayan outlier kalemlerde min-max ve tedarik planını yeniden değerlendirin.'],
-    ['Kök neden', p.dim === 'StokAdi' ? 'Depo / Üst Grup içi kırılıma geçerek sapmanın kaynağını daraltın.' : 'Aynı kalemi stok bazlı (çapraz) görünümde kontrol edin; tek seferlik hareket mi, yapısal mı?']]
+    ['Kök neden', p.method === 'hist' ? 'Ani değişimin tek seferlik bir giriş / çıkış mı yoksa kayıt hatası mı olduğunu hareket kayıtlarından doğrulayın.' : 'Aynı kalemi "Kendi geçmişine göre" yöntemiyle kontrol edin; sapma yeni mi, yapısal mı?']]
     .map(([c,x]) => `<div class="act"><div class="c">${c}</div><div class="x">${x}</div></div>`).join('');
-  $('#olPrio').innerHTML = p.find.slice(0,5).map((x,i) => `<div class="prio-i"><span class="rk">${i+1}</span><div style="min-width:0"><div class="t">${esc(x.StokAdi)}</div><div class="s">${esc(x.Depo)} · ${mL} ${FMTc(x.value)} · ${kat(x)} · Z ${nf1.format(x.zScore)}</div></div></div>`).join('') || '<div class="empty">Öncelikli kayıt yok.</div>';
+  $('#olPrio').innerHTML = p.find.slice(0,5).map((x,i) => `<div class="prio-i"><span class="rk">${i+1}</span><div style="min-width:0"><div class="t">${esc(x.StokAdi)}</div><div class="s">${esc(x.Depo)} · ${mL} ${FMTc(x.value)} · ${kat(x)} · skor ${nf1.format(x.zScore)}</div></div></div>`).join('') || '<div class="empty">Öncelikli kayıt yok.</div>';
   $('#olKpis').innerHTML = `<div class="mk"><div class="c">Outlier kayıt</div><div class="v">${nf0.format(p.find.length)}</div><div class="s">${nf0.format(p.src)} kaynak satır içinde</div></div>
-    <div class="mk"><div class="c">Toplam sapma</div><div class="v">${FMT(p.total)}</div><div class="s">|değer − ortalama| toplamı</div></div>
+    <div class="mk"><div class="c">Toplam sapma</div><div class="v">${FMT(p.total)}</div><div class="s">|değer − ${esc(p.ref)}| toplamı</div></div>
     <div class="mk"><div class="c">En baskın alan</div><div class="v">${esc(p.dims[0]?.k || '—')}</div><div class="s">${p.dims[0] ? p.dims[0].n + ' kayıt' : ''}</div></div>
     <div class="mk"><div class="c">Yoğunluk</div><div class="v" style="color:${sev === 'Yüksek' ? 'var(--neg)' : sev === 'Orta' ? 'var(--warn)' : 'var(--pos)'}">${sev}</div><div class="s">Kayıt sayısı ve sapma/stok oranına göre</div></div>`;
-  barList($('#olBars'), p.find.slice().sort((a,b) => b.absZ - a.absZ).slice(0,10).map(x => ({label:x.StokAdi, xf:[['StokAdi', x.StokAdi]], value:x.absZ, cls:x.zScore >= 0 ? '' : 'info', sub:esc(FMTc(x.value)) + (x.mean > 0 ? ' · ' + esc(nf0.format(Math.round(x.value/x.mean))) + '×' : ''),
-    tip:[[mL, FMT(x.value)], ['Grup ortalaması', FMT(x.mean)], ['Kaç katı', kat(x) || '—'], ['Sapma skoru (Z)', nf1.format(x.zScore)]]})), {fmt:v => 'Z ' + nf1.format(v)});
+  barList($('#olBars'), p.find.slice().sort((a,b) => b.absZ - a.absZ).slice(0,10).map(x => ({label:x.StokAdi, xf:[['StokAdi', x.StokAdi]], value:x.absZ, cls:x.zScore >= 0 ? '' : 'info', sub:esc(FMTc(x.value)) + (x.mean > 0 ? ' · ' + esc(nf1.format(x.value/x.mean)) + '×' : ''),
+    tip:[[mL, FMT(x.value)], [p.ref[0].toUpperCase() + p.ref.slice(1), FMT(x.mean)], ['Kaç katı', x.mean > 0 ? nf1.format(x.value/x.mean) + '×' : '—'], ['Sapma skoru', nf1.format(x.zScore)]].concat(x.nHist ? [['Geçmiş ay', String(x.nHist)]] : [])})), {fmt:v => nf1.format(v)});
   $$('#olBars .bar-fill:not(.info)').forEach(b => b.style.background = 'var(--warn)');
   barList($('#olDims'), p.dims.slice(0,10).map(d => ({label:d.k, value:d.imp, sub:`${d.n} kayıt · en yüksek Z ${nf1.format(d.z)}`, tip:[['Kayıt', d.n], ['Toplam sapma', FMT(d.imp)], ['En yüksek sapma skoru', nf1.format(d.z)]]})), {cls:'teal'});
   $('#olTotal').textContent = `${nf0.format(p.find.length)} kayıt · ${FMTc(p.total)}`;
-  const cols = [{t:'Boyut',k:'dimKey'},{t:'Stok Adı',k:'StokAdi'},{t:'Depo',k:'Depo'},{t:'FSN',k:'FSN'},{t:'MTRL',k:'MTRL'},{t:'Değer',num:1,f:x=>FMT(x.value),v:x=>x.value},{t:'Ortalama',num:1,f:x=>FMT(x.mean),v:x=>x.mean},{t:'Kaç katı',num:1,f:x=>x.mean > 0 ? nf0.format(Math.round(x.value/x.mean)) + '×' : '—',v:x=>x.mean > 0 ? x.value/x.mean : 0},{t:'Sapma skoru (Z)',num:1,f:x=>nf1.format(x.zScore),v:x=>x.zScore},{t:'Sapma',num:1,f:x=>FMT(x.impact),v:x=>x.impact}];
+  const cols = [{t:'Grup',k:'dimKey'},{t:'Stok Adı',k:'StokAdi'},{t:'Depo',k:'Depo'},{t:'FSN',k:'FSN'},{t:'MTRL',k:'MTRL'},{t:'Değer',num:1,f:x=>FMT(x.value),v:x=>x.value},{t:'Referans',num:1,f:x=>FMT(x.mean),v:x=>x.mean},{t:'Kaç katı',num:1,f:x=>x.mean > 0 ? nf1.format(x.value/x.mean) + '×' : '—',v:x=>x.mean > 0 ? x.value/x.mean : 0},{t:'Sapma skoru',num:1,f:x=>nf1.format(x.zScore),v:x=>x.zScore},{t:'Sapma',num:1,f:x=>FMT(x.impact),v:x=>x.impact}];
   $('#outlierTableWrap').innerHTML = p.find.length ? riskTable(p.find, cols, ui.n) : '<div class="empty">Outlier kayıt bulunamadı.</div>';
   $$('#outlierTableWrap table.dt').forEach(enhanceTable);
 }
@@ -3515,6 +3531,7 @@ function wireUI(){
   $('#outlierMetric').onchange = e => { RISK_UI.outlier.metric = e.target.value; olRe(); };
   $('#outlierZ').onchange = e => { RISK_UI.outlier.z = +e.target.value; olRe(); };
   $('#outlierDim').onchange = e => { RISK_UI.outlier.dim = e.target.value; olRe(); };
+  $('#outlierMethod').onchange = e => { RISK_UI.outlier.method = e.target.value; olRe(); };
   $('#outlierTopN').onchange = e => { RISK_UI.outlier.n = +e.target.value; olRe(); };
   $('#btnPrint').onclick = () => { $$('.panel').forEach(p => p.classList.toggle('print-on', p.id === 'panel-ai')); window.print(); };
   $('#btnCopyReport').onclick = async () => { try{ await navigator.clipboard.writeText($('#aiOut').innerText); toast('Brifing metni kopyalandı'); }catch(e){ toast('Kopyalanamadı'); } };
@@ -3851,8 +3868,8 @@ function ansPareto(ctx){
 }
 function ansOutlier(ctx){
   const p = buildOutlierPack(ctx);
-  if(!p.find.length) return {html:`Mevcut ayarlarla (Z ≥ ${p.z}) aykırı değer bulunmadı. Outlier sekmesinde eşiği 2.0'a düşürebilirsiniz.`};
-  return {html:`${H(`Outlier özeti · ${nf0.format(p.find.length)} kayıt`)}Toplam sapma <b>${FMTc(p.total)}</b>. En güçlü sapmalar:${AB(p.find.slice(0,6).map(x => ({n:x.StokAdi, s:'Z ' + nf1.format(x.zScore), v:x.impact})))}${TIP('Tek seferlik büyük giriş/çıkışlar ve veri giriş hataları outlier\'ların en sık nedenidir; işlem geçmişini doğrulayın.')}`, follow:['Ne yapmalıyız?','Genel durum nasıl?']};
+  if(!p.find.length) return {html:`Mevcut ayarlarla (eşik ≥ ${p.z}) aykırı değer bulunmadı. Outlier sekmesinde eşiği düşürebilir ya da yöntemi değiştirebilirsiniz.`};
+  return {html:`${H(`Outlier özeti · ${nf0.format(p.find.length)} kayıt`)}Toplam sapma <b>${FMTc(p.total)}</b>. En güçlü sapmalar:${AB(p.find.slice(0,6).map(x => ({n:x.StokAdi, s:x.dimKey + ' · skor ' + nf1.format(x.zScore), v:x.impact})))}${TIP('Tek seferlik büyük giriş/çıkışlar ve veri giriş hataları outlier\'ların en sık nedenidir; işlem geçmişini doğrulayın.')}`, follow:['Ne yapmalıyız?','Genel durum nasıl?']};
 }
 function ansCount(ctx, dim, ent){
   const rows = scopeRows(ctx, ctx.cur, ent);
