@@ -2547,6 +2547,145 @@ body.vg-loading::after{content:"";position:fixed;left:0;top:0;height:3px;width:1
 .dn-svg:has(.dn-arc.tip-on) .dn-arc:not(.tip-on),.dn-svg:has(.dn-arc:hover) .dn-arc:not(:hover){opacity:.5}
 .dn-arc{transition:stroke-width .2s,filter .2s,opacity .2s}
 .chart rect[data-tip].tip-on:not([fill="transparent"]){filter:brightness(1.08) saturate(1.1)}
+/* team:v_koyu — premium koyu tema (yalnızca :root[data-theme="dark"]) */
+:root[data-theme="dark"]{
+  --bg:#060d1b; --bg-2:#081226;
+  --surface:#0b1730; --surface-2:#0f1d3a; --surface-3:#132546;
+  --line:rgba(140,180,240,.10); --line-2:rgba(140,180,240,.18);
+  --ink:#ecf3fd; --ink-2:#c3d1e6; --muted:#93a5c2; --faint:#8396b6;
+  --gold:#6FA8E6; --gold-2:#A9CFF5; --gold-3:#3D7FC4; --gold-text:#A9CFF5; --gold-ink:#ffffff;
+  --gold-soft:rgba(111,168,230,.13); --gold-line:rgba(111,168,230,.38); --focus:#8fc2ff;
+  --navy:#d6e7fb; --band:#0c2346; --info:#6fb6ee;
+  --grid:rgba(150,190,255,.07); --axis:#7f92b2;
+  --glass:rgba(9,20,42,.78);
+  --shadow:0 1px 0 rgba(160,200,255,.05) inset,0 22px 50px -24px rgba(0,0,0,.85);
+  --dk-glass:linear-gradient(180deg,rgba(150,195,255,.10),rgba(150,195,255,.04));
+  --dk-glass-b:rgba(150,195,255,.20);
+  --dk-acc:linear-gradient(180deg,#2f6cb3,#214e8c);
+  --sf-navy:#d6e7fb; --sf-ink:#d6e7fb; --sf-mute:#93a5c2; --sf-bg:rgba(150,195,255,.08); --sf-line:rgba(140,180,240,.14); --sf-steel:#7fb8e0;
+  background:#060d1b;
+}
+:root[data-theme="dark"] body{background:var(--bg)}
+/* üst şerit: derin lacivert, ışıltılı mavi hale */
+:root[data-theme="dark"] body::before{background:
+  radial-gradient(900px 380px at 12% 0,rgba(63,140,230,.26),transparent 70%),
+  radial-gradient(700px 320px at 92% 8%,rgba(46,120,210,.18),transparent 70%),
+  linear-gradient(rgba(140,190,255,.045) 1px,transparent 1px) 0 0/56px 56px,
+  linear-gradient(90deg,rgba(140,190,255,.045) 1px,transparent 1px) 0 0/56px 56px,
+  linear-gradient(180deg,#0d2a55 0,#0b2349 300px,#09193a 470px,var(--bg) 640px)!important}
+:root[data-theme="dark"] .app-header{background:linear-gradient(180deg,rgba(9,26,56,.82),rgba(10,30,62,.55))!important;border-bottom:1px solid rgba(140,190,255,.12)!important;box-shadow:0 14px 34px -22px rgba(0,0,0,.9)!important}
+:root[data-theme="dark"] .app-header .btn,:root[data-theme="dark"] .app-header .user-chip,
+:root[data-theme="dark"] .qms>button,:root[data-theme="dark"] .qmonth,:root[data-theme="dark"] .qsel select{
+  background:var(--dk-glass)!important;border:1px solid var(--dk-glass-b)!important;color:#e6f0ff!important;
+  box-shadow:inset 0 1px 0 rgba(200,225,255,.10),0 10px 24px -16px rgba(0,0,0,.9)!important}
+:root[data-theme="dark"] .app-header .btn:hover,:root[data-theme="dark"] .qms>button:hover,:root[data-theme="dark"] .qmonth:hover{background:linear-gradient(180deg,rgba(150,195,255,.16),rgba(150,195,255,.07))!important;border-color:rgba(150,195,255,.34)!important}
+:root[data-theme="dark"] .app-header .btn svg,:root[data-theme="dark"] .qgo svg{color:#8fc2ff!important}
+:root[data-theme="dark"] .app-header .user-chip small{color:#93a5c2!important}
+:root[data-theme="dark"] .user-chip .av{background:var(--dk-acc)!important;color:#fff!important}
+:root[data-theme="dark"] .qsel::after{border-top-color:#a9cff5}
+:root[data-theme="dark"] .qmonth i{background:rgba(111,168,230,.14);color:#a9cff5}
+:root[data-theme="dark"] .qdash{color:#93a5c2}
+:root[data-theme="dark"] .qgo.pulse{box-shadow:0 0 0 0 rgba(111,168,230,.6)!important}
+:root[data-theme="dark"] .app-header .seg,:root[data-theme="dark"] .app-header .seg#modeSwitch{background:rgba(150,195,255,.07)!important;border:1px solid var(--dk-glass-b)!important}
+:root[data-theme="dark"] .app-header .seg button{color:#b9cbe6!important}
+:root[data-theme="dark"] .app-header .seg button.active{background:var(--dk-acc)!important;color:#fff!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 8px 18px -8px rgba(47,110,190,.8)!important}
+:root[data-theme="dark"] .brand-s,:root[data-theme="dark"] .status-line{color:#a9bad6!important}
+/* açılır menüler: #qCompanyDd, #qPick, filtre listeleri */
+:root[data-theme="dark"] .qms-dd,:root[data-theme="dark"] .qpick,:root[data-theme="dark"] .dd{
+  background:rgba(11,24,50,.97)!important;border:1px solid rgba(150,195,255,.16)!important;color:var(--ink);
+  box-shadow:inset 0 1px 0 rgba(200,225,255,.06),0 30px 70px -24px rgba(0,0,0,.95)!important}
+:root[data-theme="dark"] .qms-r,:root[data-theme="dark"] .qp-h b,:root[data-theme="dark"] .qp-g button{color:#dbe8fa}
+:root[data-theme="dark"] .qms-r:hover,:root[data-theme="dark"] .qp-g button:hover:not(:disabled){background:rgba(111,168,230,.12)}
+:root[data-theme="dark"] .qms-r input{accent-color:#6FA8E6}
+:root[data-theme="dark"] .qp-h button,:root[data-theme="dark"] .qms-f button{background:rgba(150,195,255,.08);color:#dbe8fa}
+:root[data-theme="dark"] .qp-g button.in{background:rgba(111,168,230,.10)}
+:root[data-theme="dark"] .qp-g button.on,:root[data-theme="dark"] .qms-f button[data-ok]{background:var(--dk-acc);color:#fff}
+:root[data-theme="dark"] .qp-g button:disabled{color:#4d5f80}
+/* filtre şeridi + sekmeler: buzlu lacivert cam */
+:root[data-theme="dark"] .filters,:root[data-theme="dark"] .tabs{background:linear-gradient(180deg,rgba(150,195,255,.10),rgba(150,195,255,.04))!important;border:1px solid rgba(150,195,255,.16)!important;box-shadow:inset 0 1px 0 rgba(200,225,255,.08),0 24px 50px -28px rgba(0,0,0,.9)!important}
+:root[data-theme="dark"] .filters .ddbox>button{background:rgba(6,16,36,.45)!important;border-color:rgba(150,195,255,.16)!important;box-shadow:none!important}
+:root[data-theme="dark"] .filters .ddbox>button:hover,:root[data-theme="dark"] .filters .ddbox.open>button{background:rgba(111,168,230,.14)!important;border-color:rgba(150,195,255,.36)!important}
+:root[data-theme="dark"] .filters .ddbox.active>button{background:rgba(111,168,230,.20)!important;border-color:rgba(150,195,255,.5)!important}
+:root[data-theme="dark"] .filters .ddbox>button b{color:#a9bad6!important}
+:root[data-theme="dark"] .filters .ddbox>button::after{border-color:#a9bad6!important}
+:root[data-theme="dark"] .filters .btn-clear{background:rgba(150,195,255,.08)!important;border:1px solid rgba(150,195,255,.22)!important;color:#c3d1e6!important}
+:root[data-theme="dark"] .tab{color:#b9cbe6!important}
+:root[data-theme="dark"] .tab:hover{color:#fff!important;background:rgba(150,195,255,.08)}
+:root[data-theme="dark"] .tab.active{background:var(--dk-acc)!important;color:#fff!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 10px 22px -10px rgba(47,110,190,.85)!important}
+:root[data-theme="dark"] .tab .badge{background:rgba(150,195,255,.16)!important;color:#dbe8fa!important}
+:root[data-theme="dark"] .tab.active .badge{background:rgba(255,255,255,.92)!important;color:#173a6b!important}
+/* --navy artık açık mürekkep: arka plan olarak kullanılan yerleri koru */
+:root[data-theme="dark"] .btn.gold,:root[data-theme="dark"] .cv-sec-n,:root[data-theme="dark"] .rk-row:nth-child(-n+3) .rk-n{background:var(--dk-acc)!important;color:#fff!important}
+:root[data-theme="dark"] .btn.gold{box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 12px 26px -12px rgba(47,110,190,.8)!important}
+:root[data-theme="dark"] .sf-seg i{background:var(--dk-acc)}
+:root[data-theme="dark"] .sf{background:var(--surface)}
+:root[data-theme="dark"] .sf-flow{stroke:rgba(255,255,255,.75)}
+:root[data-theme="dark"] .sf-tip{background:rgba(12,28,58,.97);border:1px solid rgba(150,195,255,.18)}
+/* liste çubukları: ışıltılı mavi dolgu, belirgin iz */
+:root[data-theme="dark"] .bar-track,:root[data-theme="dark"] .rk-bar,:root[data-theme="dark"] .cv-c-r .b{background:rgba(140,180,240,.09)!important}
+:root[data-theme="dark"] .bar-fill,:root[data-theme="dark"] .rk-bar i,:root[data-theme="dark"] .bar-fill.info,:root[data-theme="dark"] .rk-bar i.info,:root[data-theme="dark"] .cv-c-r .b i{background:linear-gradient(90deg,rgba(63,127,196,.45),#6FA8E6)!important;box-shadow:0 0 14px -4px rgba(111,168,230,.55)}
+:root[data-theme="dark"] .bar-fill.neg,:root[data-theme="dark"] .rk-bar i.neg{background:linear-gradient(90deg,rgba(240,99,111,.35),#f0636f)!important;box-shadow:0 0 14px -4px rgba(240,99,111,.5)}
+:root[data-theme="dark"] .bar-fill.pos{background:linear-gradient(90deg,rgba(63,207,142,.32),#3fcf8e)!important;box-shadow:0 0 14px -4px rgba(63,207,142,.5)}
+:root[data-theme="dark"] .bar-fill::after,:root[data-theme="dark"] .rk-bar i::after,:root[data-theme="dark"] .cv-c-r .b i::after{background:#e6f0ff}
+:root[data-theme="dark"] .bar-fill.neg::after{background:#ffc2c7}
+:root[data-theme="dark"] .bar-fill.pos::after{background:#bdf3da}
+/* parçalı şeritler: koyu zeminde daha az beyaz parıltı */
+:root[data-theme="dark"] .ag-bar>div,:root[data-theme="dark"] .mm-bar>div,:root[data-theme="dark"] .cv-stack>div,:root[data-theme="dark"] .fl-split>i,:root[data-theme="dark"] .cap-bar>div{background-image:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0) 60%)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 18px -10px rgba(0,0,0,.8)}
+:root[data-theme="dark"] .tierbar>div,:root[data-theme="dark"] .abc-bar>div{box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 18px -10px rgba(0,0,0,.8)}
+:root[data-theme="dark"] .sg-p,:root[data-theme="dark"] .cv-stack>div{text-shadow:0 1px 3px rgba(0,10,30,.7)}
+:root[data-theme="dark"] .abc-bar>div[style*="#C9DDF3"]{background:linear-gradient(180deg,rgba(111,168,230,.30),rgba(111,168,230,.15))!important;color:#dbe8fa!important;box-shadow:inset 0 0 0 1px rgba(111,168,230,.38)!important}
+:root[data-theme="dark"] .abc-bar>div[style*="#E7E5E4"]{background:linear-gradient(180deg,rgba(150,195,255,.14),rgba(150,195,255,.07))!important;color:#c3d1e6!important}
+:root[data-theme="dark"] .abc-bar>div[style*="#2A62A8"]{background:linear-gradient(180deg,#2f6cb3,#214e8c)!important}
+/* halka grafik */
+:root[data-theme="dark"] .dn-svg>circle:not(.dn-arc){stroke:rgba(140,180,240,.08)}
+:root[data-theme="dark"] .dn-svg>circle:nth-of-type(2){fill:#10213f;stroke:rgba(150,195,255,.16);stroke-width:1}
+:root[data-theme="dark"] .dn .dn-v{fill:#eaf3ff}
+:root[data-theme="dark"] .dn .dn-l{fill:#93a5c2}
+:root[data-theme="dark"] .dn-r u{background:rgba(140,180,240,.09)}
+:root[data-theme="dark"] .dn-r i{box-shadow:0 0 0 3px rgba(111,168,230,.12)}
+/* aylık seyir grafiği (fd) */
+:root[data-theme="dark"] .fd .fd-sel{fill:rgba(111,168,230,.09)!important;stroke:#6FA8E6;stroke-opacity:.35}
+:root[data-theme="dark"] .fd .fd-hov{fill:rgba(150,195,255,.06)!important;stroke:#6FA8E6}
+:root[data-theme="dark"] .fd line[stroke="#16335f"]{stroke:#9cc4f0}
+:root[data-theme="dark"] .fd text[style*="fill:#16335f"]{fill:#eaf3ff!important}
+:root[data-theme="dark"] .fd text[style*="fill:#5b6b82"]{fill:#a9bad6!important}
+:root[data-theme="dark"] .fd text[style*="fill:#9aa6b8"],:root[data-theme="dark"] .fd text[style*="fill:#a7b1c0"],:root[data-theme="dark"] .fd text[style*="fill:#7d8aa0"]{fill:#8fa3c3!important}
+:root[data-theme="dark"] .fd .fd-bar rect{opacity:.28}
+:root[data-theme="dark"] .fd .fd-dot{stroke:#0b1730}
+:root[data-theme="dark"] .fd .fd-line{filter:drop-shadow(0 0 8px rgba(111,168,230,.35))!important}
+/* metin vurguları */
+:root[data-theme="dark"] .num>i,:root[data-theme="dark"] .pg-tag,:root[data-theme="dark"] .bx-more>span,:root[data-theme="dark"] #briefChip,:root[data-theme="dark"] .chip.gold{color:#a9cff5!important}
+:root[data-theme="dark"] .sf-ind{color:#93a5c2}
+:root[data-theme="dark"] .cv-c-hs>span{color:#04203f!important}
+:root[data-theme="dark"] .cv-rk.top{background:var(--dk-acc)!important;color:#fff!important}
+:root[data-theme="dark"] .prio-i .rk{background:var(--dk-acc)!important;color:#fff!important}
+:root[data-theme="dark"] .abc-big{color:#d6e7fb!important}
+/* giriş */
+:root[data-theme="dark"] .auth-backdrop{background:radial-gradient(1000px 600px at 20% 10%,rgba(46,120,210,.22),transparent 60%),radial-gradient(800px 500px at 90% 90%,rgba(30,90,170,.16),transparent 60%),#050b18!important}
+:root[data-theme="dark"] .login-shell{background:rgba(10,22,46,.92);border-color:rgba(150,195,255,.16);box-shadow:0 40px 100px -30px rgba(0,0,0,.95),inset 0 1px 0 rgba(200,225,255,.06)}
+:root[data-theme="dark"] .fld input,:root[data-theme="dark"] .fld select{background:rgba(6,16,36,.6);border-color:rgba(150,195,255,.18);color:var(--ink)}
+:root[data-theme="dark"] .fld input::placeholder{color:#7f92b2}
+/* sohbet */
+:root[data-theme="dark"] .chat{background:rgba(9,20,42,.94)!important;border-color:rgba(150,195,255,.16)!important}
+:root[data-theme="dark"] .msg.user .bubble{background:var(--dk-acc);color:#fff}
+:root[data-theme="dark"] .per.on small{color:#a9cff5}
+:root[data-theme="dark"] .per.on::after{background:linear-gradient(90deg,#3D7FC4,#8fc2ff);box-shadow:0 0 12px rgba(111,168,230,.6)}
+:root[data-theme="dark"] .per:hover::after{background:rgba(111,168,230,.35)}
+:root[data-theme="dark"] .ap-pr{background:var(--dk-acc)}
+:root[data-theme="dark"] .ap.risk .ap-pr{background:linear-gradient(180deg,#c43543,#a12631)}
+:root[data-theme="dark"] .mr .tr,:root[data-theme="dark"] .pr-row .tr,:root[data-theme="dark"] .cv-c-d .b,:root[data-theme="dark"] .cv-dep .t,:root[data-theme="dark"] .cell-bar .mini,:root[data-theme="dark"] .dm-bar{background:rgba(140,180,240,.09)!important}
+:root[data-theme="dark"] .cls-A{background:var(--dk-acc);color:#fff}
+:root[data-theme="dark"] .cls-B{background:rgba(111,168,230,.22);color:#d6e7fb}
+:root[data-theme="dark"] .cls-C{background:rgba(150,195,255,.10);color:#c3d1e6}
+:root[data-theme="dark"] .fb-s.cik{background-color:rgba(240,99,111,.14);box-shadow:inset 0 0 0 1px rgba(240,99,111,.45)}
+:root[data-theme="dark"] .fb-s.cik span{color:#ffb3b9}
+:root[data-theme="dark"] .f-toggle{background:var(--dk-glass)!important;border:1px solid var(--dk-glass-b)!important;color:#e6f0ff!important;box-shadow:inset 0 1px 0 rgba(200,225,255,.08),0 10px 24px -16px rgba(0,0,0,.9)!important}
+:root[data-theme="dark"] .f-toggle svg{color:#8fc2ff}
+:root[data-theme="dark"] .f-toggle em,:root[data-theme="dark"] .f-toggle i{color:#a9bad6}
+@media(max-width:760px){
+  :root[data-theme="dark"] .kpis{background:linear-gradient(180deg,#0b2349,#0e2c5a)!important;box-shadow:inset 0 -1px 0 rgba(150,195,255,.14),0 20px 40px -28px rgba(0,0,0,.9)}
+  :root[data-theme="dark"] .filters{background:rgba(11,24,50,.96)!important}
+}
 </style>
 </head>
 <body class="auth-lock">
