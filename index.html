@@ -1857,6 +1857,37 @@ img,svg,canvas,video{max-width:100%}
   .fab-hint{display:none!important}
   .fr-v{font-size:28px!important}
 }
+
+@media(max-height:560px) and (max-width:1000px){
+  .fab{width:42px!important;height:42px!important}
+  .fab svg{width:18px!important;height:18px!important}
+  #chatRoot{right:8px!important;bottom:8px!important}
+  .fr-v{font-size:24px!important}
+  .per b{font-size:15px!important}
+  .per{padding:6px 0 8px!important}
+  .cs-strip{margin:2px 0!important}
+}
+
+/* patron odaklı sermaye paneli */
+.cap-kpi{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:16px 0 4px;border-top:1px solid rgba(255,255,255,.14);border-bottom:1px solid rgba(255,255,255,.14)}
+.cap-kpi>div{padding:12px 0}
+.cap-kpi>div+div{border-left:1px solid rgba(255,255,255,.14);padding-left:16px}
+.cap-kpi small{display:block;font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.cap-kpi b{display:block;font-size:20px;font-weight:800;color:#fff;margin-top:4px;font-variant-numeric:tabular-nums}
+.cap-kpi b i{font-style:normal;color:#7fe0bd;font-size:15px;margin:0 2px}
+.cap-kpi span{display:block;font-size:11px;color:rgba(255,255,255,.65);margin-top:2px}
+.cap-leg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11px;color:rgba(255,255,255,.75)}
+.cap-leg span{display:inline-flex;align-items:center;gap:6px}
+.cap-leg i{width:8px;height:8px;border-radius:50%}
+.cap-leg b{color:#fff}
+.cap-top{margin-top:16px}
+.cap-th{font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#9fcbf3;margin-bottom:6px}
+.cap-ti{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid rgba(255,255,255,.1);cursor:pointer}
+.cap-ti em{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:800;background:rgba(255,255,255,.14);color:#fff}
+.cap-ti b{display:block;font-size:12.5px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cap-ti small{display:block;font-size:10.5px;color:rgba(255,255,255,.62)}
+.cap-ti strong{font-size:13px;color:#fff;font-variant-numeric:tabular-nums}
+.cap-ti:hover b{text-decoration:underline}
 </style>
 </head>
 <body class="auth-lock">
@@ -3583,12 +3614,20 @@ function renderCapital(ctx, I){
   const C = capitalOpp(ctx, I), M = ctx.M;
   const tt = $('#capTitle'); if(tt) tt.textContent = tm('Serbest bırakılabilir sermaye', 'Azaltılabilir fazla stok');
   if(!C.net){ el.innerHTML = '<div class="empty">Serbest bırakılabilir sermaye tespit edilmedi.</div>'; return; }
-  const t20 = sum(C.items.slice(0,20),'net');
-  el.innerHTML = `<div class="cap-big">${esc(FMTc(C.net))}</div>
-    <div class="cap-sub">toplam stoğun <b>${PCT(M.kal ? C.net/M.kal*100 : 0)}</b>'i · <b>${nf0.format(C.items.length)}</b> kalem</div>
+  const outM = M.doh ? M.kal*30/M.doh : 0, months = outM ? C.net/outM : null;
+  const top3 = C.items.slice(0,3), t3 = sum(top3,'net'), t20 = sum(C.items.slice(0,20),'net');
+  const ACT = {dead:'Tasfiye / transfer', mx:'Alımı durdur', cov:'Siparişi dondur'};
+  // tamamı serbest kalırsa sağlık skoru
+  const kal2 = Math.max(0, M.kal - C.net), sc2 = scorecard({doh:outM ? kal2/outM*30 : null, turn:(M.dev + kal2) > 0 && outM ? outM*12/((M.dev + kal2)/2) : null,
+    stockout:M.minDef ? M.sMin*100 : null, excess:M.maxDef ? 0 : null, dead:0}).health;
+  const tip = tipHTML('Nasıl hesaplanır', [['Net', 'Kalemler kategoriler arasında bir kez, en büyük etkisiyle sayılır'], ['Brüt', FMT(C.gross)], ['İlk 20 kalem', `${FMTc(t20)} · ${PCT(t20/C.net*100)}`]]);
+  el.innerHTML = `<div class="cap-big" data-tip="${tip}">${esc(FMTc(C.net))}</div>
+    <div class="cap-sub">nakde çevrilebilir stok · toplam stoğun <b>${PCT(M.kal ? C.net/M.kal*100 : 0)}</b>'i${months ? ` · <b>${nf1.format(months)} aylık</b> tüketime eşit` : ''}</div>
+    <div class="cap-kpi"><div><small>İlk 3 kalemle</small><b>${esc(FMTc(t3))}</b><span>fırsatın ${PCT(t3/C.net*100)}'i · hızlı kazanç</span></div>
+      <div><small>Sağlık skoru</small><b>${M.health ?? '—'} <i>→</i> ${sc2 ?? '—'}</b><span>tamamı serbest kalırsa</span></div></div>
     <div class="cap-bar">${C.cats.filter(x => x.v > 0).map(x => `<div style="width:${x.v/C.net*100}%;background:${x.c}" data-tip="${tipHTML(x.t, [['Tutar', FMT(x.v)], ['Pay', PCT(x.v/C.net*100)], ['Kalem', nf0.format(x.n)]])}">${segPct(x.v/C.net*100)}</div>`).join('')}</div>
-    <div class="cap-rows">${C.cats.map(x => `<div class="cap-r"><i style="background:${x.c}"></i><span>${esc(x.t)}</span><b>${esc(FMTc(x.v))}</b><small>${nf0.format(x.n)} kalem</small></div>`).join('')}</div>
-    <div class="cap-note">İlk 20 kalem fırsatın <b>${PCT(t20/C.net*100)}</b>'ini oluşturuyor (${esc(FMTc(t20))}). Kategoriler örtüştüğünde her kalem en büyük etkisiyle bir kez sayılır (net); brüt toplam ${esc(FMTc(C.gross))}.</div>`;
+    <div class="cap-leg">${C.cats.filter(x => x.v > 0).map(x => `<span><i style="background:${x.c}"></i>${esc(x.t)} <b>${esc(FMTc(x.v))}</b></span>`).join('')}</div>
+    <div class="cap-top"><div class="cap-th">Önce bunlara karar verin</div>${top3.map((x, k) => `<div class="cap-ti"${xfAttr([['StokAdi', x.r.StokAdi]])}><em>${k+1}</em><div><b>${esc(x.r.StokAdi)}</b><small>${esc(x.r.Depo)} · ${ACT[x.cat]}</small></div><strong>${esc(FMTc(x.net))}</strong></div>`).join('')}</div>`;
 }
 function shareBars(el, ctx, key, cur){
   const M = ctx.M; cur = cur || groupAgg(ctx.monthRows, key, ctx.c);
@@ -3661,7 +3700,7 @@ function columnChart(el, labels, values, o={}){
 
   const W = Math.max(320, el.clientWidth || 700);
   // ---- mobil / dar ekran (telefon yatay dahil): küçük eğri + değişim merdiveni ----
-  if(W < 640 || (W - 116)/Math.max(1, n - 1) < 66){
+  if(W < 560){
     const amx = Math.max(...ok.map(x => Math.abs(x.d)), 1);
     const Pi = values.map((v,i) => isNum(v) ? i : null).filter(i => i != null), lo = Math.min(...Pi.map(i => values[i])), hi = Math.max(...Pi.map(i => values[i])), sh = 76;
     const sx = i => 6 + i/(n-1)*(W-12), sy = v => 8 + (1 - (v - lo)/((hi - lo) || 1))*(sh-16), pts = Pi.map(i => [sx(i), sy(values[i])]), gid = 'fs' + (++GID);
@@ -3674,8 +3713,8 @@ function columnChart(el, labels, values, o={}){
   }
 
   // ---- masaüstü: üstte seviye hattı, altta aynı aylara hizalı değişim sütunları ----
-  const H = 504, L = 64, R = Math.max(tg != null ? 84 : 26, Math.ceil((W - 64)/(2*(n-1) + 1)) + 2), T = 22, LB = 250;
-  const Z0 = 372, HM = 62, MY = H - 26;                       // değişim sıfır çizgisi, en uzun sütun, ay etiketleri
+  const CMP = W < 1000 && innerHeight < 560, H = CMP ? 360 : 504, L = CMP ? 50 : 64, R = Math.max(tg != null ? 84 : 26, Math.ceil((W - 64)/(2*(n-1) + 1)) + 2), T = CMP ? 14 : 22, LB = CMP ? 150 : 250;
+  const Z0 = CMP ? 262 : 372, HM = CMP ? (slot0 => slot0 < 60 ? 34 : 44)((W - 76)/Math.max(1, n - 1)) : 62, MY = H - (CMP ? 20 : 26);                       // değişim sıfır çizgisi, en uzun sütun, ay etiketleri
   const pts0 = values.filter(isNum), lo = Math.min(...pts0, tg ?? Infinity), hi = Math.max(...pts0, tg ?? -Infinity), pad = (hi - lo)*.2 || hi*.1 || 1;
   const ticks = niceTicks(Math.max(0, lo - pad), hi + pad*.6, 3), y0 = ticks[0], y1 = ticks[ticks.length-1];
   const X = i => L + i*(W-L-R)/(n-1), Y = v => T + (1 - (v - y0)/(y1 - y0))*(LB-T), slot = (W-L-R)/(n-1);
@@ -3704,14 +3743,14 @@ function columnChart(el, labels, values, o={}){
   s += `<g class="fd-area"><path d="${path} L${x1} ${LB+30} L${x0} ${LB+30} Z" fill="url(#${id}H)" opacity=".85" mask="url(#${id}M)"/></g>`;
   if(tg != null){ const yt = Y(tg); s += `<line x1="${L}" x2="${W-R}" y1="${yt}" y2="${yt}" stroke="#D0603F" stroke-opacity=".7" stroke-dasharray="5 5"/><text x="${W-R+10}" y="${yt+4}" style="font-weight:700;fill:#D0603F;font-size:10.5px">Hedef</text><text x="${W-R+10}" y="${yt+17}" style="fill:#D0603F;font-size:10.5px">${esc(o.targetLabel || fmt(tg))}</text>`; }
   // değişim bölgesi başlığı + sıfır çizgisi
-  s += `<text x="${L-14}" y="${Z0-HM-14}" text-anchor="end" style="font-size:9px;font-weight:800;letter-spacing:.14em;fill:#9aa6b8">AYLIK</text><text x="${L-14}" y="${Z0-HM-2}" text-anchor="end" style="font-size:9px;font-weight:800;letter-spacing:.14em;fill:#9aa6b8">DEĞİŞİM</text>`;
+  if(!CMP) s += `<text x="${L-14}" y="${Z0-HM-14}" text-anchor="end" style="font-size:9px;font-weight:800;letter-spacing:.14em;fill:#9aa6b8">AYLIK</text><text x="${L-14}" y="${Z0-HM-2}" text-anchor="end" style="font-size:9px;font-weight:800;letter-spacing:.14em;fill:#9aa6b8">DEĞİŞİM</text>`;
   s += `<rect x="${L-24}" y="${Z0-.5}" width="${W-L-R+48}" height="1" fill="url(#${id}Z)"/>`;
   s += `<line class="fd-scr" x1="0" x2="0" y1="${T-10}" y2="${MY-14}" stroke="#16335f" stroke-opacity="0" stroke-dasharray="3 4"/>`;
   // değişim sütunları (üstü yuvarlak, tabanı düz, renk tepeden tabana söner)
   // etiket çakışması: yazı boyu sütun aralığına göre küçülür; komşu etiketler sığmıyorsa biri bir kat yukarı/aşağı kayar
-  const fs = slot >= 105 ? 12.5 : slot >= 85 ? 11.5 : 10.5, amtTxt = i => sg(D[i]) + fD(Math.abs(D[i])), tw = i => amtTxt(i).length * fs * .6;
-  const lift = []; for(let i = 1; i < n; i++){ lift[i] = 0; const p = i - 1;
-    if(p >= 1 && isNum(D[i]) && isNum(D[p]) && (D[i] >= 0) === (D[p] >= 0) && !lift[p] && (tw(i) + tw(p))/2 > slot - 6) lift[i] = 30; }
+  const fs = slot >= 105 ? 12.5 : slot >= 85 ? 11.5 : slot >= 60 ? 10 : 9.5, short = slot < 90, amtTxt = i => sg(D[i]) + (short ? fD(Math.abs(D[i])).replace(' bin', 'b').replace(' Mn', 'M') : fD(Math.abs(D[i]))), tw = i => amtTxt(i).length * fs * .6;
+  const lift = []; for(let i = 1; i < n; i++){ lift[i] = 0; const p = i - 1; if(isNum(D[i]) && D[i] < 0 && Z0 + Math.abs(D[i])/amx*HM + 30 + (CMP ? 24 : 30) > MY - 14) continue;
+    if(p >= 1 && isNum(D[i]) && isNum(D[p]) && (D[i] >= 0) === (D[p] >= 0) && !lift[p] && (tw(i) + tw(p))/2 > slot - 6) lift[i] = CMP ? 24 : 30; }
   for(let i = 1; i < n; i++){ const d = D[i]; if(!isNum(d)) continue;
     const c = col(d), h = Math.max(4, Math.abs(d)/amx*HM), up = d >= 0, x = X(i) - bw/2, r = Math.min(9, bw/2, h), gid = `${id}b${i}`, last = i === n-1;
     const y = up ? Z0 - h : Z0, dP = up ? `M${x} ${Z0} V${y+r} Q${x} ${y} ${x+r} ${y} H${x+bw-r} Q${x+bw} ${y} ${x+bw} ${y+r} V${Z0} Z`
