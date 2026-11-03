@@ -1672,6 +1672,25 @@ details.grp>summary .chev{width:22px!important;height:22px!important;font-size:1
 .bx-more em{font-style:normal;color:var(--muted);font-size:10.5px}
 .bx-more i{font-style:normal;color:var(--muted);font-size:10px}
 .bx-more:hover span{text-decoration:underline}
+
+/* şirket çoklu seçimi */
+.qms{position:relative}
+.qms>button{appearance:none;display:flex;align-items:center;height:38px;min-width:210px;max-width:300px;padding:0 44px 0 18px;border-radius:14px;border:1px solid rgba(255,255,255,.85);
+  background:linear-gradient(180deg,#fff,rgba(255,255,255,.86));color:#16335f;font:700 13px var(--font);cursor:pointer;box-shadow:inset 0 1px 0 #fff,0 8px 20px -14px rgba(5,20,45,.7)}
+.qms>button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qms.open::after{transform:rotate(180deg)}
+.qsel.qms::after{transition:transform .2s}
+.qms-dd{position:absolute;left:0;top:calc(100% + 8px);z-index:320;min-width:240px;padding:8px;border-radius:16px;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(22,51,95,.08);box-shadow:0 24px 60px -20px rgba(10,30,62,.45)}
+.qms-r{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;font-size:13px;font-weight:650;color:#16335f;cursor:pointer}
+.qms-r:hover{background:#eef3f9}
+.qms-r input{width:16px;height:16px;accent-color:#16335f;margin:0}
+.qms-r em{margin-left:auto;font-style:normal;font-size:11px;color:var(--muted);font-weight:600}
+.qms-r.all{border-bottom:1px solid var(--line);border-radius:10px 10px 0 0;margin-bottom:4px}
+.qms-f{display:flex;justify-content:space-between;gap:8px;padding:8px 2px 2px;border-top:1px solid var(--line);margin-top:4px}
+.qms-f button{border:0;border-radius:10px;height:32px;padding:0 14px;font:700 12px var(--font);cursor:pointer;background:#eef3f9;color:#16335f}
+.qms-f button[data-ok]{background:#16335f;color:#fff}
+@media(max-width:640px){.qms>button{min-width:0;width:100%;max-width:none}.qms{flex:1 1 100%}}
 </style>
 </head>
 <body class="auth-lock">
@@ -1789,7 +1808,7 @@ details.grp>summary .chev{width:22px!important;height:22px!important;font-size:1
     </div>
     <div class="qrow">
         <div class="qbar" id="qbar">
-          <label class="qsel" title="Şirket / ülke"><select id="qCompany" aria-label="Şirket"></select></label>
+          <div class="qsel qms" id="qCompanyBox" title="Şirket / ülke — birden fazla seçilebilir"><button type="button" id="qCompanyBtn" aria-haspopup="listbox" aria-expanded="false"><span id="qCompanyLab">—</span></button><div class="qms-dd" id="qCompanyDd" role="listbox" aria-multiselectable="true" hidden></div></div>
           <div class="qrange">
             <button type="button" class="qmonth" id="qFrom" aria-label="Başlangıç ayı"><span>—</span><i><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5" fill="currentColor" opacity=".14"/><rect x="4" y="5.5" width="16" height="14.5" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="13" y="13" width="4" height="4" rx="1" fill="currentColor"/></svg></i></button>
             <span class="qdash">–</span>
@@ -3372,12 +3391,15 @@ function renderFlow(ctx){
   let topP = `M0 ${mid-hs[0]}`, botP = '';
   for(let i = 1; i < 6; i++){ const a = xs[i-1], b = xs[i], m = (a+b)/2; topP += ` C${m} ${mid-hs[i-1]} ${m} ${mid-hs[i]} ${b} ${mid-hs[i]}`; }
   botP = ` L1000 ${mid+hs[5]}`; for(let i = 5; i > 0; i--){ const a = xs[i-1], b = xs[i], m = (a+b)/2; botP += ` C${m} ${mid+hs[i]} ${m} ${mid+hs[i-1]} ${a} ${mid+hs[i-1]}`; }
+  // şeridin içindeki çizgi, şeridin genişleyip daralmasını aynı eğriyle izler
+  const hmin = Math.min(...hs), my = i => mid - (hs[i] - hmin)*.85;
+  let midP = `M0 ${my(0)}`; for(let i = 1; i < 6; i++){ const a = xs[i-1], b = xs[i], m = (a+b)/2; midP += ` C${m} ${my(i-1)} ${m} ${my(i)} ${b} ${my(i)}`; }
   const id = 'fg' + (++GID);
   const tip = (t, rows) => `data-tip="${tipHTML(t, rows)}"`;
   el.innerHTML = `<div class="fl-st">${st.map((x, i) => `<div class="fl-s" style="--fc:${x.c}" ${tip(x.k, [['Değer', FMT(x.v)], ['Açıklama', x.s]])}><small><i></i>${x.k}${x.sign ? ` <em>${x.sign}</em>` : ''}</small><b>${esc(FMTc(x.v))}</b><span>${esc(x.s)}</span></div>`).join('')}</div>
   <svg class="fl-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="#1E4E8C"/><stop offset=".33" stop-color="#2A62A8"/><stop offset=".62" stop-color="#3FA0E0"/><stop offset="1" stop-color="#14A38B"/></linearGradient></defs>
     <path d="${topP}${botP} Z" fill="url(#${id})"/><path d="${topP}" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.2" vector-effect="non-scaling-stroke"/>
-    <line x1="0" x2="1000" y1="${mid}" y2="${mid}" stroke="rgba(255,255,255,.22)" stroke-width="1" vector-effect="non-scaling-stroke"/></svg>
+    <path d="${midP}" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.4" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>
   <div class="fl-foot"><span>Kullanılabilir stok <b>${esc(FMTc(top))}</b></span><span>Tüketim oranı <b>${pct(cik, top)}</b></span><span>GIT (yolda) <b>${esc(FMTc(M.git))}</b> · ${pct(M.git, kal)}</span>${Math.abs(adj) > Math.max(1, kal*0.0005) ? `<span>Kayıt farkı <b>${esc(FMTc(adj))}</b></span>` : ''}</div>
   <div class="fl-split">${[['Ana depo', M.mainV, '#1E4E8C'], ['Birim depo', M.unitV, '#3FA0E0'], ['Diğer', M.otherV, '#9cc3e6'], ['GIT', M.git, '#14A38B']].filter(x => x[1] > 0).map(x => `<i style="flex:${x[1]};background:${x[2]}" ${tip(x[0], [['Kalan', FMT(x[1])], ['Pay', pct(x[1], kal)]])}></i>`).join('')}</div>
   <div class="fl-leg">${[['Ana depo', M.mainV, '#1E4E8C'], ['Birim depo', M.unitV, '#3FA0E0'], ['Diğer', M.otherV, '#9cc3e6'], ['GIT', M.git, '#14A38B']].filter(x => x[1] > 0).map(x => `<span><i style="background:${x[2]}"></i>${x[0]} <b>${esc(FMTc(x[1]))}</b> · ${pct(x[1], kal)}</span>`).join('')}</div>`;
@@ -4333,9 +4355,8 @@ function wireUI(){
 const QB = {from:null, to:null, target:null, year:null};
 const mmYYYY = m => m ? `${m.slice(5)}.${m.slice(0,4)}` : '—';
 function syncQbar(){
-  const sel = $('#qCompany'); if(!sel || !ALL.Donem.length) return;
-  const us = ALL.Ulke || [], cur = (FILTERS.Ulke || []).length === 1 ? FILTERS.Ulke[0] : '';
-  sel.innerHTML = `<option value="">${us.length > 1 ? `Tüm şirketler (${us.length})` : esc(us[0] || DEFAULT_COUNTRY)}</option>` + (us.length > 1 ? us.map(u => `<option value="${esc(u)}"${u === cur ? ' selected' : ''}>${esc(u)}</option>`).join('') : '');
+  if(!$('#qCompanyBox') || !ALL.Donem.length) return;
+  QB.sel = new Set((FILTERS.Ulke || []).filter(u => (ALL.Ulke || []).includes(u))); paintCompany();
   const ms = ALL.Donem, to = (FILTERS.Donem || []).slice().sort().pop() || ms[ms.length-1];
   const ti = ms.indexOf(to), fr = RISK_UI.trendFrom && ms.includes(RISK_UI.trendFrom) && RISK_UI.trendFrom < to ? RISK_UI.trendFrom : ms[Math.max(0, ti - (RISK_UI.trendWin || 12))];
   QB.from = fr; QB.to = to;
@@ -4357,9 +4378,20 @@ function openPick(btn, which){
     if(y){ QB.year += +y.dataset.y; paint(); return; }
     if(m && !m.disabled){ QB[which] = m.dataset.m; $('#q' + (which === 'from' ? 'From' : 'To') + ' span').textContent = mmYYYY(QB[which]); pk.hidden = true; $('#qGo').classList.add('pulse'); } };
 }
+function qCompanyText(){ const us = ALL.Ulke || [], sel = [...(QB.sel || [])];
+  if(!sel.length || sel.length === us.length) return us.length > 1 ? `Tüm şirketler (${us.length})` : (us[0] || DEFAULT_COUNTRY);
+  return sel.length <= 2 ? sel.join(' + ') : `${sel.length} şirket seçili`; }
+function paintCompany(){
+  const us = ALL.Ulke || [], sel = QB.sel || new Set(), all = !sel.size || sel.size === us.length, dd = $('#qCompanyDd');
+  $('#qCompanyLab').textContent = qCompanyText();
+  dd.innerHTML = `<label class="qms-r all"><input type="checkbox" data-all ${all ? 'checked' : ''}><span>Tüm şirketler</span><em>${us.length}</em></label>`
+    + us.map(u => `<label class="qms-r"><input type="checkbox" data-u="${esc(u)}" ${!all && sel.has(u) ? 'checked' : ''}><span>${esc(u)}</span></label>`).join('')
+    + `<div class="qms-f"><button type="button" data-clear>Temizle</button><button type="button" data-ok>Uygula</button></div>`;
+}
 function applyQbar(){
   if(!ALL.Donem.length) return;
-  const u = $('#qCompany').value; FILTERS.Ulke = u ? [u] : [];
+  const sel = [...(QB.sel || [])], us = ALL.Ulke || []; FILTERS.Ulke = sel.length && sel.length < us.length ? sel : [];
+  const u = FILTERS.Ulke.length ? FILTERS.Ulke.join(' + ') : '';
   FILTERS.Donem = [QB.to];
   const ms = ALL.Donem, span = ms.indexOf(QB.to) - ms.indexOf(QB.from);
   RISK_UI.trendFrom = QB.from < QB.to ? QB.from : null; RISK_UI.trendWin = span > 0 ? span : 12;
@@ -4372,7 +4404,15 @@ function wireQbar(){
   $('#qFrom').onclick = e => { e.stopPropagation(); openPick(e.currentTarget, 'from'); };
   $('#qTo').onclick = e => { e.stopPropagation(); openPick(e.currentTarget, 'to'); };
   $('#qGo').onclick = applyQbar;
-  $('#qCompany').onchange = () => $('#qGo').classList.add('pulse');
+  const box = $('#qCompanyBox'), dd = $('#qCompanyDd'), btn = $('#qCompanyBtn');
+  const close = () => { dd.hidden = true; btn.setAttribute('aria-expanded', 'false'); box.classList.remove('open'); };
+  btn.onclick = e => { e.stopPropagation(); const open = dd.hidden; close(); if(open){ paintCompany(); dd.hidden = false; btn.setAttribute('aria-expanded', 'true'); box.classList.add('open'); } };
+  dd.onclick = e => { e.stopPropagation(); if(e.target.closest('[data-clear]')){ QB.sel = new Set(); paintCompany(); $('#qGo').classList.add('pulse'); return; } if(e.target.closest('[data-ok]')){ close(); applyQbar(); } };
+  dd.onchange = e => { const i = e.target; if(!i || i.type !== 'checkbox') return; const us = ALL.Ulke || [];
+    if(i.dataset.all != null) QB.sel = new Set();
+    else { if(i.checked) QB.sel.add(i.dataset.u); else QB.sel.delete(i.dataset.u); if(QB.sel.size === us.length) QB.sel = new Set(); }
+    paintCompany(); $('#qGo').classList.add('pulse'); };
+  document.addEventListener('click', e => { if(!dd.hidden && !e.target.closest('#qCompanyBox')) close(); });
   document.addEventListener('click', e => { const pk = $('#qPick'); if(pk && !pk.hidden && !e.target.closest('#qPick')) pk.hidden = true; });
   document.addEventListener('keydown', e => { if(e.key === 'Escape'){ const pk = $('#qPick'); if(pk) pk.hidden = true; } });
 }
