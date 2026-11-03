@@ -1430,6 +1430,21 @@ body.on-cover::before{height:calc(var(--bandH,600px) - 150px)!important}
 .fd-c.on{background:linear-gradient(180deg,rgba(42,98,168,.08),transparent)}
 .fd-dim .fd-c:not(.hl){opacity:.38}
 .fd-c.hl{background:linear-gradient(180deg,rgba(42,98,168,.10),transparent)}
+
+/* dönem şeridi (3 / 6 / 9 / 12 ay) */
+.per-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 28px;margin:18px 0 6px;border-bottom:1px solid var(--line)}
+.per{all:unset;cursor:pointer;display:block;padding:10px 0 12px;position:relative;min-width:0}
+.per small{display:block;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.per small em{font-style:normal;font-weight:600;letter-spacing:.02em;text-transform:none}
+.per b{display:block;font-size:22px;font-weight:800;letter-spacing:-.02em;margin-top:4px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.per span{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.per::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;border-radius:3px 3px 0 0;background:transparent;transition:background .2s}
+.per:hover::after{background:rgba(42,98,168,.25)}
+.per.on::after{background:#16335f}
+.per.on small{color:#16335f}
+.per:not(.on){opacity:.78}.per:hover{opacity:1}
+.per:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media(max-width:760px){.per-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}.per b{font-size:18px}}
 </style>
 </head>
 <body class="auth-lock">
@@ -1622,6 +1637,7 @@ body.on-cover::before{height:calc(var(--bandH,600px) - 150px)!important}
             <option value="doh">Gün kapsamı</option><option value="turn">Devir hızı</option><option value="health">Sağlık skoru</option>
           </select></label></div></div>
       <div class="cs-strip" id="chTrendSum"></div>
+      <div class="per-strip" id="chTrendPer" role="tablist" aria-label="Dönem"></div>
       <div class="chart" id="chTrend" style="height:400px"></div>
     </div>
     <div class="grid g2 mt16">
@@ -3001,19 +3017,27 @@ const TREND_META = {
   doh:{n:'Gün kapsamı', good:'down'}, turn:{n:'Devir hızı', good:'up'}, health:{n:'Sağlık skoru', good:'up'}};
 function drawTrend(ctx){
   const k = RISK_UI.trend || 'kal'; $('#trendMetric').value = k; const meta = TREND_META[k];
-  const vals = ctx.trendMonths.map(m => ctx.mm[m][k]);
+  const upto = ctx.allMonths.slice(0, ctx.allMonths.indexOf(ctx.cur) + 1), val = m => (ctx.get(m) || {})[k];
+  const WINS = [3, 6, 9, 12], win = WINS.includes(RISK_UI.trendWin) ? RISK_UI.trendWin : 12;
+  const ms = upto.slice(-(win + 1)), vals = ms.map(val);
   const fmt = k === 'doh' ? v => nf0.format(Math.round(v)) + ' g' : k === 'turn' ? v => nf1.format(v) + '×' : k === 'health' ? v => nf0.format(v) : FMTc;
   const fmtFull = k === 'doh' || k === 'turn' || k === 'health' ? fmt : FMT;
   const fmtD = k === 'doh' ? v => nf0.format(Math.round(v)) + ' g' : k === 'turn' ? v => nf1.format(v) + '×' : k === 'health' ? v => nf0.format(v) + ' puan' : FMTc;
-  const n = ctx.trendMonths.length;
   $('#trendTitle').textContent = `${meta.n} · aylık seyir`;
-  const l = vals[n-1], p = n > 1 ? vals[n-2] : null, ch = pctChange(l, p);
-  $('#trendSub').innerHTML = ''
-    + `Son ${n} ay · eğri seviyeyi, alttaki bant her ayın önceki aya göre artış / azalışını gösterir · üzerine gelin`
-    + (n <= 2 ? `<br><span style="color:var(--muted)">Veride ${n} ay bulunduğu için seyir sınırlıdır; yeni aylar eklendikçe grafik zenginleşir.</span>` : '');
+  $('#trendSub').innerHTML = `Her ayın değişimi alttaki bantta · dönem şeridinden 3, 6, 9 veya 12 aylık görünüme geçin`
+    + (upto.length <= 2 ? `<br><span style="color:var(--muted)">Veride ${upto.length} ay bulunduğu için seyir sınırlıdır.</span>` : '');
+  const cv = val(ctx.cur), good = d => meta.good === 'neutral' ? null : (meta.good === 'up' ? d > 0 : d < 0);
+  const colr = d => { if(!isNum(d) || Math.abs(d) < 1e-9) return 'var(--muted)'; const g = good(d); if(g == null) return d > 0 ? '#2A62A8' : '#E0884A'; return g ? '#1E9E82' : '#D0603F'; };
+  $('#chTrendPer').innerHTML = WINS.map(p => {
+    const bi = Math.max(0, upto.length - 1 - p), bm = upto[bi], bv = val(bm), span = upto.length - 1 - bi, d = isNum(cv) && isNum(bv) ? cv - bv : null, pc = pctChange(cv, bv), short = span < p;
+    return `<button type="button" role="tab" class="per${p === win ? ' on' : ''}" data-win="${p}" aria-selected="${p === win}">
+      <small>Son ${p} ay${short ? ` <em>· veride ${span} ay</em>` : ''}</small>
+      <b style="color:${colr(d)}">${!isNum(d) ? '—' : `${d > 0 ? '▲' : d < 0 ? '▼' : '●'} ${esc(fmtD(Math.abs(d)))}`}</b>
+      <span>${pc == null ? '' : `${esc(PCT(Math.abs(pc)))} ${d > 0 ? 'artış' : d < 0 ? 'azalış' : ''} · `}${esc(fmtMonth(bm, true))} → ${esc(fmtMonth(ctx.cur, true))}</span></button>`; }).join('');
+  $$('#chTrendPer .per').forEach(b => b.onclick = () => { RISK_UI.trendWin = +b.dataset.win; saveState(); drawTrend(ctx); });
   const K = SETTINGS.kpi, target = k === 'doh' ? K.doh.target : k === 'turn' ? K.turn.target : k === 'health' ? SETTINGS.bands.good : null;
   const tLab = target == null ? '' : k === 'doh' ? `≤ ${nf0.format(target)} gün` : k === 'turn' ? `≥ ${nf1.format(target)}×` : `≥ ${nf0.format(target)}`;
-  columnChart($('#chTrend'), ctx.trendMonths.map(m => fmtMonth(m, true)), vals, {fmt, fmtFull, fmtD, name:meta.n, good:meta.good, fullLabels:ctx.trendMonths.map(m => fmtMonth(m)), target, targetLabel:tLab});
+  columnChart($('#chTrend'), ms.map(m => fmtMonth(m, true)), vals, {fmt, fmtFull, fmtD, name:meta.n, good:meta.good, fullLabels:ms.map(m => fmtMonth(m)), target, targetLabel:tLab});
 }
 /* ---------- Depo performans matrisi ---------- */
 function depotMatrix(ctx){
@@ -3170,7 +3194,7 @@ function columnChart(el, labels, values, o={}){
     sumEl.querySelector('.fr-d').innerHTML = isNum(d) ? `<b style="color:${col(d)}">${arw(d)} ${esc(fD(Math.abs(d)))} · ${esc(pc(C[i]))} ${word(d)}</b> <span>önceki aya göre</span>` : '<span>başlangıç ayı</span>'; };
   if(sumEl){
     sumEl.innerHTML = `<div class="fr-l"><div class="fr-m"></div><div class="fr-v"></div><div class="fr-d"></div></div>
-      <p class="fr-s">${ok.length + 1} ayda <b style="color:${col(net)}">${sg(net)}${esc(fD(Math.abs(net)))} (${sg(net)}${esc(pc(np))})</b> net ${word(net)}<br>
+      <p class="fr-s">Son ${ok.length} ayda <b style="color:${col(net)}">${sg(net)}${esc(fD(Math.abs(net)))} (${sg(net)}${esc(pc(np))})</b> net ${word(net)}<br>
       <span><b>${ups}</b> ay artış · <b>${dns}</b> ay azalış</span><br>
       <span>En sert artış <b>${esc(labels[mx.i])}</b> ${mx.d > 0 ? '+' + esc(fD(mx.d)) : '—'} · en sert düşüş <b>${esc(labels[mn.i])}</b> ${mn.d < 0 ? '−' + esc(fD(Math.abs(mn.d))) : '—'}</span></p>`;
     readout(n-1);
