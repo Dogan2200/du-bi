@@ -1478,6 +1478,53 @@ body.on-cover::before{height:calc(var(--bandH,600px) - 150px)!important}
 .fd.fd-dim .fd-bar:not(.hl){opacity:.32}
 .fd .fd-m.hl{fill:#16335f!important;font-weight:800}
 .fd-band{display:none}
+
+/* ===== Üst sorgu çubuğu (şirket · dönem · Getir) ===== */
+.hactions{gap:10px!important}
+.qbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.qsel{position:relative;display:block}
+.qsel select{appearance:none;-webkit-appearance:none;height:42px;min-width:210px;padding:0 44px 0 18px;border-radius:14px;border:1px solid rgba(255,255,255,.85);
+  background:linear-gradient(180deg,#fff,rgba(255,255,255,.86));color:#16335f;font:700 14px var(--font);cursor:pointer;box-shadow:inset 0 1px 0 #fff,0 8px 20px -14px rgba(5,20,45,.7);outline:none}
+.qsel::after{content:"";position:absolute;right:16px;top:50%;margin-top:-3px;border:6px solid transparent;border-top:7px solid #16335f;border-bottom:0;pointer-events:none}
+.qsel select:focus-visible{box-shadow:0 0 0 3px rgba(255,255,255,.55)}
+.qrange{display:flex;align-items:center;gap:8px}
+.qdash{color:rgba(255,255,255,.9);font-weight:700}
+.qmonth{display:inline-flex;align-items:center;gap:10px;height:42px;padding:0 6px 0 16px;border-radius:14px;border:1px solid rgba(255,255,255,.85);cursor:pointer;
+  background:linear-gradient(180deg,#fff,rgba(255,255,255,.86));color:#16335f;font:700 14px var(--font);font-variant-numeric:tabular-nums;box-shadow:inset 0 1px 0 #fff,0 8px 20px -14px rgba(5,20,45,.7)}
+.qmonth span{min-width:62px;text-align:left}
+.qmonth i{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:rgba(42,98,168,.08);color:#16335f;transition:background .2s}
+.qmonth i svg{width:18px;height:18px}
+.qmonth:hover i{background:rgba(42,98,168,.16)}
+.qgo{height:42px!important;padding:0 18px!important;font-size:14px!important;font-weight:800!important;border-radius:999px!important}
+.qgo svg{width:18px!important;height:18px!important;color:#2A62A8!important;transition:transform .5s}
+.qgo:hover svg{transform:rotate(180deg)}
+.qgo.pulse{box-shadow:0 0 0 0 rgba(255,255,255,.7),inset 0 1px 0 #fff!important;animation:qPulse 1.6s infinite}
+@keyframes qPulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.75)}70%{box-shadow:0 0 0 10px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+:root .app-header .seg#modeSwitch{height:42px;padding:4px;border-radius:999px}
+:root .app-header .seg#modeSwitch button{height:34px;padding:0 18px;font-size:13.5px;font-weight:700}
+.qxl{height:42px!important;padding:0 18px!important;font-size:14px!important;font-weight:800!important}
+.btn.icon2{width:42px;height:42px;padding:0!important;justify-content:center}
+.btn.icon2 .bt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.qpick{position:absolute;z-index:300;width:260px;padding:12px;border-radius:18px;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(22,51,95,.08);box-shadow:0 24px 60px -20px rgba(10,30,62,.45)}
+.qp-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.qp-h b{font-size:15px;color:#16335f}
+.qp-h button{width:32px;height:32px;border-radius:10px;border:0;background:#eef3f9;color:#16335f;font-size:18px;cursor:pointer}
+.qp-h button:disabled{opacity:.35;cursor:default}
+.qp-g{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.qp-g button{height:36px;border-radius:10px;border:0;background:transparent;color:#16335f;font:650 13px var(--font);cursor:pointer}
+.qp-g button:hover:not(:disabled){background:#eef3f9}
+.qp-g button.in{background:rgba(42,98,168,.08)}
+.qp-g button.on{background:#16335f;color:#fff}
+.qp-g button:disabled{color:#b8c2d1;cursor:default}
+.qp-f{margin-top:8px;font-size:11px;color:var(--muted);text-align:center}
+@media(max-width:1380px){.hbar{flex-direction:column;align-items:stretch}.hactions{justify-content:flex-start!important}}
+@media(max-width:640px){.qsel select{min-width:0;width:100%}.qsel{flex:1 1 100%}.qmonth span{min-width:54px}}
+
+.qrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:2px 0 14px}
+.hbar{flex-direction:row!important;align-items:center!important}
+.hactions{justify-content:flex-end!important}
+.hbar{min-height:62px!important}
 </style>
 </head>
 <body class="auth-lock">
@@ -1570,21 +1617,16 @@ body.on-cover::before{height:calc(var(--bandH,600px) - 150px)!important}
         </div>
       </div>
       <div class="hactions">
-        <div class="seg" id="modeSwitch" role="tablist" aria-label="Analiz modu">
-          <button data-mode="tutar" class="active">Tutarsal</button>
-          <button data-mode="miktar">Miktarsal</button>
-        </div>
-        <button class="btn" id="btnUpload" title="Excel veya CSV yükleyin">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0-4 4m4-4 4 4M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Veri Yükle
+        
+        <button class="btn icon2" id="btnUpload" title="Excel veya CSV yükleyin">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0-4 4m4-4 4 4M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="bt">Veri Yükle</span>
         </button>
-        <button class="btn" id="btnLink" title="Ülke veri kaynakları (ATLAS, VEGA, ORION…)">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Kaynak
+        <button class="btn icon2" id="btnLink" title="Ülke veri kaynakları (ATLAS, VEGA, ORION…)">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="bt">Kaynak</span>
         </button>
-        <button class="btn" id="btnExcel" title="Tüm raporu çok sayfalı Excel olarak indir">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="1.8"/><path d="M8 8l8 8M16 8l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Excel
-        </button>
-        <button class="btn" id="btnSave" title="Veri gömülü tek dosya HTML olarak kaydet">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M5 4h11l3 3v13H5V4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 4v5h8V4M8 20v-6h8v6" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Kaydet
+        
+        <button class="btn icon2" id="btnSave" title="Veri gömülü tek dosya HTML olarak kaydet">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 4h11l3 3v13H5V4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 4v5h8V4M8 20v-6h8v6" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span class="bt">Kaydet</span>
         </button>
         <button class="btn icon" id="btnTheme" title="Açık / koyu tema">
           <svg viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
@@ -1597,6 +1639,24 @@ body.on-cover::before{height:calc(var(--bandH,600px) - 150px)!important}
           <svg viewBox="0 0 24 24" fill="none"><path d="M15 17l5-5-5-5M20 12H9M12 20H5V4h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
+    </div>
+    <div class="qrow">
+        <div class="qbar" id="qbar">
+          <label class="qsel" title="Şirket / ülke"><select id="qCompany" aria-label="Şirket"></select></label>
+          <div class="qrange">
+            <button type="button" class="qmonth" id="qFrom" aria-label="Başlangıç ayı"><span>—</span><i><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5" fill="currentColor" opacity=".14"/><rect x="4" y="5.5" width="16" height="14.5" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="13" y="13" width="4" height="4" rx="1" fill="currentColor"/></svg></i></button>
+            <span class="qdash">–</span>
+            <button type="button" class="qmonth" id="qTo" aria-label="Bitiş ayı"><span>—</span><i><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5" fill="currentColor" opacity=".14"/><rect x="4" y="5.5" width="16" height="14.5" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="13" y="13" width="4" height="4" rx="1" fill="currentColor"/></svg></i></button>
+          </div>
+          <button type="button" class="btn qgo" id="qGo" title="Seçili şirket ve dönem aralığını getir"><svg viewBox="0 0 24 24" fill="none"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8M4 4v4h4M4 13a8 8 0 0 0 14.3 4.9L20 16M20 20v-4h-4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>Getir</button>
+        </div>
+        <div class="seg" id="modeSwitch" role="tablist" aria-label="Analiz modu">
+          <button data-mode="tutar" class="active">Tutarsal</button>
+          <button data-mode="miktar">Miktarsal</button>
+        </div>
+        <button class="btn qxl" id="btnExcel" title="Tüm raporu çok sayfalı Excel olarak indir">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="1.8"/><path d="M8 8l8 8M16 8l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Excel
+        </button>
     </div>
     <div class="status-line"><span class="dot" id="msgDot"></span><span id="msg">Veri bekleniyor…</span></div>
   </div>
@@ -1815,6 +1875,7 @@ body.on-cover::before{height:calc(var(--bandH,600px) - 150px)!important}
   </button>
 </div>
 
+<div class="qpick" id="qPick" hidden></div>
 <div id="tip"></div>
 <div id="toast"></div>
 <script id="EMBED_DATA" type="application/json"></script>
@@ -2884,7 +2945,7 @@ function enhanceTable(table){
    ===================================================================== */
 const DIRTY = {};
 function renderAll(){
-  CTX = buildCtx(); paintCountryUI();
+  CTX = buildCtx(); paintCountryUI(); try{ syncQbar(); }catch(e){}
   if(!CTX){ return; }
   renderHero(CTX); renderKPIs(CTX); renderBadges(CTX); renderXfBar();
   $$('.panel').forEach(p => DIRTY[p.id.replace('panel-','')] = true);
@@ -3052,7 +3113,8 @@ function drawTrend(ctx){
   const k = RISK_UI.trend || 'kal'; $('#trendMetric').value = k; const meta = TREND_META[k];
   const upto = ctx.allMonths.slice(0, ctx.allMonths.indexOf(ctx.cur) + 1), val = m => (ctx.get(m) || {})[k];
   const WINS = [3, 6, 9, 12], win = WINS.includes(RISK_UI.trendWin) ? RISK_UI.trendWin : 12;
-  const ms = upto.slice(-(win + 1)), vals = ms.map(val);
+  const fi = RISK_UI.trendFrom ? upto.indexOf(RISK_UI.trendFrom) : -1;
+  const ms = fi >= 0 && fi < upto.length - 1 ? upto.slice(fi) : upto.slice(-(win + 1)), vals = ms.map(val);
   const fmt = k === 'doh' ? v => nf0.format(Math.round(v)) + ' g' : k === 'turn' ? v => nf1.format(v) + '×' : k === 'health' ? v => nf0.format(v) : FMTc;
   const fmtFull = k === 'doh' || k === 'turn' || k === 'health' ? fmt : FMT;
   const fmtD = k === 'doh' ? v => nf0.format(Math.round(v)) + ' g' : k === 'turn' ? v => nf1.format(v) + '×' : k === 'health' ? v => nf0.format(v) + ' puan' : FMTc;
@@ -3063,11 +3125,11 @@ function drawTrend(ctx){
   const colr = d => { if(!isNum(d) || Math.abs(d) < 1e-9) return 'var(--muted)'; const g = good(d); if(g == null) return d > 0 ? '#12A37A' : '#E5484D'; return g ? '#12A37A' : '#E5484D'; };
   $('#chTrendPer').innerHTML = WINS.map(p => {
     const bi = Math.max(0, upto.length - 1 - p), bm = upto[bi], bv = val(bm), span = upto.length - 1 - bi, d = isNum(cv) && isNum(bv) ? cv - bv : null, pc = pctChange(cv, bv), short = span < p;
-    return `<button type="button" role="tab" class="per${p === win ? ' on' : ''}" data-win="${p}" aria-selected="${p === win}">
+    return `<button type="button" role="tab" class="per${p === ms.length - 1 || (p === 12 && ms.length - 1 === upto.length - 1 && upto.length - 1 < 12) ? ' on' : ''}" data-win="${p}" aria-selected="${p === ms.length - 1}">
       <small>Son ${p} ay${short ? ` <em>· veride ${span} ay</em>` : ''}</small>
       <b style="color:${colr(d)}">${!isNum(d) ? '—' : `${d > 0 ? '▲' : d < 0 ? '▼' : '●'} ${esc(fmtD(Math.abs(d)))}`}</b>
       <span>${pc == null ? '' : `${esc(PCT(Math.abs(pc)))} ${d > 0 ? 'artış' : d < 0 ? 'azalış' : ''} · `}${esc(fmtMonth(bm, true))} → ${esc(fmtMonth(ctx.cur, true))}</span></button>`; }).join('');
-  $$('#chTrendPer .per').forEach(b => b.onclick = () => { RISK_UI.trendWin = +b.dataset.win; saveState(); drawTrend(ctx); });
+  $$('#chTrendPer .per').forEach(b => b.onclick = () => { const p = +b.dataset.win; RISK_UI.trendWin = p; RISK_UI.trendFrom = upto[Math.max(0, upto.length - 1 - p)]; saveState(); syncQbar(); drawTrend(ctx); });
   const K = SETTINGS.kpi, target = k === 'doh' ? K.doh.target : k === 'turn' ? K.turn.target : k === 'health' ? SETTINGS.bands.good : null;
   const tLab = target == null ? '' : k === 'doh' ? `≤ ${nf0.format(target)} gün` : k === 'turn' ? `≥ ${nf1.format(target)}×` : `≥ ${nf0.format(target)}`;
   columnChart($('#chTrend'), ms.map(m => fmtMonth(m, true)), vals, {fmt, fmtFull, fmtD, name:meta.n, good:meta.good, fullLabels:ms.map(m => fmtMonth(m)), target, targetLabel:tLab});
@@ -4051,6 +4113,7 @@ function wireUI(){
   $('#modeSwitch').addEventListener('click', e => { const b = e.target.closest('button[data-mode]'); if(!b) return; ANALYSIS_MODE = b.dataset.mode; syncModeUI(); saveState(); renderAll(); });
   $('#btnClear').onclick = () => { const keep = FILTERS.Donem; FILTERS = EMPTY_FILTERS(); FILTERS.Donem = keep.length ? keep : []; buildMS(); renderAll(); saveState(); toast('Filtreler temizlendi'); };
   $('#btnUpload').onclick = () => $('#file').click();
+  wireQbar();
   $('#btnSave').onclick = exportSingleHTML;
   $('#btnTheme').onclick = () => applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
   $('#btnLink').onclick = openSources;
@@ -4087,6 +4150,54 @@ function wireUI(){
   $('#btnPrint').onclick = () => { $$('.panel').forEach(p => p.classList.toggle('print-on', p.id === 'panel-ai')); window.print(); };
   $('#btnCopyReport').onclick = async () => { try{ await navigator.clipboard.writeText($('#aiOut').innerText); toast('Brifing metni kopyalandı'); }catch(e){ toast('Kopyalanamadı'); } };
   window.addEventListener('resize', debounce(() => { if(!CTX) return; const t = RISK_UI.tab; if(t === 'overview' || t === 'pareto'){ DIRTY[t] = true; renderPanel(t); } }, 250));
+}
+
+/* ---------- Üst sorgu çubuğu: şirket · dönem aralığı · Getir ---------- */
+const QB = {from:null, to:null, target:null, year:null};
+const mmYYYY = m => m ? `${m.slice(5)}.${m.slice(0,4)}` : '—';
+function syncQbar(){
+  const sel = $('#qCompany'); if(!sel || !ALL.Donem.length) return;
+  const us = ALL.Ulke || [], cur = (FILTERS.Ulke || []).length === 1 ? FILTERS.Ulke[0] : '';
+  sel.innerHTML = `<option value="">${us.length > 1 ? `Tüm şirketler (${us.length})` : esc(us[0] || DEFAULT_COUNTRY)}</option>` + (us.length > 1 ? us.map(u => `<option value="${esc(u)}"${u === cur ? ' selected' : ''}>${esc(u)}</option>`).join('') : '');
+  const ms = ALL.Donem, to = (FILTERS.Donem || []).slice().sort().pop() || ms[ms.length-1];
+  const ti = ms.indexOf(to), fr = RISK_UI.trendFrom && ms.includes(RISK_UI.trendFrom) && RISK_UI.trendFrom < to ? RISK_UI.trendFrom : ms[Math.max(0, ti - (RISK_UI.trendWin || 12))];
+  QB.from = fr; QB.to = to;
+  $('#qFrom span').textContent = mmYYYY(QB.from); $('#qTo span').textContent = mmYYYY(QB.to);
+}
+function openPick(btn, which){
+  const pk = $('#qPick'), ms = ALL.Donem; if(!ms.length) return;
+  QB.target = which; const curv = QB[which] || ms[ms.length-1]; QB.year = +curv.slice(0,4);
+  const years = [...new Set(ms.map(m => +m.slice(0,4)))], MN = ['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  const paint = () => {
+    pk.innerHTML = `<div class="qp-h"><button type="button" data-y="-1" ${QB.year <= Math.min(...years) ? 'disabled' : ''}>‹</button><b>${QB.year}</b><button type="button" data-y="1" ${QB.year >= Math.max(...years) ? 'disabled' : ''}>›</button></div>
+      <div class="qp-g">${MN.map((t, i) => { const m = `${QB.year}-${String(i+1).padStart(2,'0')}`, has = ms.includes(m);
+        const bad = which === 'from' ? m > QB.to : m < QB.from, on = m === QB[which], inr = m >= QB.from && m <= QB.to;
+        return `<button type="button" data-m="${m}" class="${on ? 'on' : ''}${inr ? ' in' : ''}" ${!has || bad ? 'disabled' : ''}>${t}</button>`; }).join('')}</div>
+      <div class="qp-f">${which === 'from' ? 'Başlangıç ayı' : 'Bitiş ayı (rapor ayı)'}</div>`; };
+  paint();
+  const r = btn.getBoundingClientRect(); pk.style.left = Math.min(window.innerWidth - 268, Math.max(8, r.left)) + 'px'; pk.style.top = (r.bottom + 8 + window.scrollY) + 'px'; pk.hidden = false;
+  pk.onclick = e => { e.stopPropagation(); const y = e.target.closest('[data-y]'), m = e.target.closest('[data-m]');
+    if(y){ QB.year += +y.dataset.y; paint(); return; }
+    if(m && !m.disabled){ QB[which] = m.dataset.m; $('#q' + (which === 'from' ? 'From' : 'To') + ' span').textContent = mmYYYY(QB[which]); pk.hidden = true; $('#qGo').classList.add('pulse'); } };
+}
+function applyQbar(){
+  if(!ALL.Donem.length) return;
+  const u = $('#qCompany').value; FILTERS.Ulke = u ? [u] : [];
+  FILTERS.Donem = [QB.to];
+  const ms = ALL.Donem, span = ms.indexOf(QB.to) - ms.indexOf(QB.from);
+  RISK_UI.trendFrom = QB.from < QB.to ? QB.from : null; RISK_UI.trendWin = span > 0 ? span : 12;
+  $('#qGo').classList.remove('pulse');
+  buildMS(); renderAll(); saveState();
+  toast(`${u || 'Tüm şirketler'} · ${mmYYYY(QB.from)} – ${mmYYYY(QB.to)} getirildi`);
+}
+function wireQbar(){
+  if(!$('#qbar')) return;
+  $('#qFrom').onclick = e => { e.stopPropagation(); openPick(e.currentTarget, 'from'); };
+  $('#qTo').onclick = e => { e.stopPropagation(); openPick(e.currentTarget, 'to'); };
+  $('#qGo').onclick = applyQbar;
+  $('#qCompany').onchange = () => $('#qGo').classList.add('pulse');
+  document.addEventListener('click', e => { const pk = $('#qPick'); if(pk && !pk.hidden && !e.target.closest('#qPick')) pk.hidden = true; });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape'){ const pk = $('#qPick'); if(pk) pk.hidden = true; } });
 }
 function syncModeUI(){ $$('#modeSwitch button').forEach(b => b.classList.toggle('active', b.dataset.mode === ANALYSIS_MODE)); }
 
