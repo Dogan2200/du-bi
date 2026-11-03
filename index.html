@@ -1909,9 +1909,46 @@ img,svg,canvas,video{max-width:100%}
 }
 @media(max-height:560px){
   .chat-h .s{display:none}
-  .suggest{display:none!important}
+  .suggest{display:flex!important;padding:5px 10px!important;gap:6px!important}
+  .suggest button{padding:3px 9px!important;font-size:11px!important}
   .chat-body{padding:8px 14px!important}
 }
+
+/* ===== mobil düzeltmeler v2 ===== */
+@media(max-width:1060px){
+  .mm-grid{grid-template-columns:minmax(0,1fr)!important;row-gap:28px!important}
+  #mmViz{padding-right:0!important;border-right:0!important}
+  #pgViz .pg{padding-left:0!important;border-left:0!important}
+  .mm-grid .pg-h{min-height:0!important}
+}
+@media(max-width:760px){
+  .mm-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important;row-gap:12px!important}
+  .mm-k:nth-child(3){border-left:0!important;padding-left:0!important}
+  .pg-k{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .pg-t small{white-space:normal!important;line-height:1.2}
+  .pg-t span{white-space:normal!important}
+  .dpg-r{grid-template-columns:minmax(0,1fr) 34px 34px 46px minmax(70px,auto)!important;gap:6px!important;font-size:11.5px}
+  .dpg-r>:nth-child(4){display:none!important}
+  .dpg-v i{display:none!important}
+  .dpg-h{white-space:normal;line-height:1.15}
+  /* tablolar: sütun filtre satırı telefonda gizli (sıralama başlıktan çalışır) */
+  table.dt thead tr.sf-filter{display:none!important}
+  table.dt thead th{white-space:nowrap}
+  table.dt td:first-child{min-width:128px}
+  table.dt td{white-space:nowrap}
+  table.dt td:first-child,table.dt td.wrap-txt{white-space:normal}
+  .table-wrap{position:relative;mask-image:linear-gradient(90deg,#000 88%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent)}
+  .table-wrap.at-end{mask-image:none;-webkit-mask-image:none}
+}
+/* yatay telefon: yan yana sütunlar dar kalmasın */
+@media(max-height:560px) and (max-width:1000px){
+  .mm-grid{grid-template-columns:minmax(0,1fr)!important}
+  table.dt thead tr.sf-filter{display:none!important}
+}
+
+.t-nm{display:block;font-weight:650;color:var(--ink)}
+.t-sub{display:block;font-size:10.5px;color:var(--muted);margin-top:1px}
+@media(max-width:760px){ table.dt td:first-child{min-width:0} table.dt td .t-nm{min-width:150px} }
 </style>
 </head>
 <body class="auth-lock">
@@ -4166,7 +4203,7 @@ function renderRisk(key){
 function riskTable(rows, cols, n){
   const show = applyLimit(rows, n);
   return `<div class="table-wrap"><table class="dt"><thead><tr>${cols.map(c => `<th class="${c.num ? 'num' : ''}">${esc(c.t)}</th>`).join('')}</tr></thead><tbody>
-    ${show.map(x => `<tr>${cols.map(c => `<td class="${c.num ? 'num' : ''}${c.wrap ? ' wrap-txt' : ''}" ${c.v ? `data-v="${c.v(x)}"` : ''}${c.xf ? xfAttr(c.xf(x)) : XF_KEYS.includes(c.k) ? xfAttr([[c.k, x[c.k]]]) : ''}>${esc(c.f ? c.f(x) : (x[c.k] ?? '—'))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+    ${show.map(x => `<tr>${cols.map(c => `<td class="${c.num ? 'num' : ''}${c.wrap ? ' wrap-txt' : ''}" ${c.v ? `data-v="${c.v(x)}"` : ''}${c.xf ? xfAttr(c.xf(x)) : XF_KEYS.includes(c.k) ? xfAttr([[c.k, x[c.k]]]) : ''}>${c.h ? c.h(x) : esc(c.f ? c.f(x) : (x[c.k] ?? '—'))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
     ${rows.length > show.length ? `<div class="note mt10">${nf0.format(rows.length)} kayıttan ilk ${show.length} gösteriliyor.</div>` : ''}`;
 }
 function renderRiskList(key){
@@ -4205,7 +4242,7 @@ function renderPareto(ctx){
     + mk('B sınıfı · %80–95', B, `Çıkışın ${PCT(sum(B,'cik')/(tot||1)*100)}'i`)
     + mk('C sınıfı · %95–100', C, `Çıkışın ${PCT(sum(C,'cik')/(tot||1)*100)}'i — sadeleştirme adayı`);
   paretoViz($('#paretoViz'), list, {A, B, C, tot});
-  const cols = [{t:'#',num:1,f:x=>x.Sira,v:x=>x.Sira},{t:ui.dim === 'item' ? 'Depo · Stok' : 'Ad',k:'Ad',xf:x => paretoXf(x.Ad, ui.dim)},{t:'Sınıf',f:x=>x.Sinif},{t:'Çıkan',num:1,f:x=>FMT(x.cik),v:x=>x.cik},{t:'Kalan',num:1,f:x=>FMT(x.kal),v:x=>x.kal},{t:'Pay',num:1,f:x=>PCT(x.Pay),v:x=>x.Pay},{t:'Kümülatif',num:1,f:x=>PCT(x.Kum),v:x=>x.Kum}];
+  const cols = [{t:'#',num:1,f:x=>x.Sira,v:x=>x.Sira},{t:ui.dim === 'item' ? 'Stok · Depo' : 'Ad',k:'Ad',xf:x => paretoXf(x.Ad, ui.dim),h:ui.dim === 'item' ? (x => { const p = String(x.Ad).split(' • '); return `<b class="t-nm">${esc(p[1] || p[0])}</b><small class="t-sub">${esc([p[0], p[2]].filter(Boolean).join(' · '))}</small>`; }) : null},{t:'Sınıf',f:x=>x.Sinif},{t:'Çıkan',num:1,f:x=>FMT(x.cik),v:x=>x.cik},{t:'Kalan',num:1,f:x=>FMT(x.kal),v:x=>x.kal},{t:'Pay',num:1,f:x=>PCT(x.Pay),v:x=>x.Pay},{t:'Kümülatif',num:1,f:x=>PCT(x.Kum),v:x=>x.Kum}];
   $('#paretoGroups').innerHTML = [['A','A sınıfı — yakın takip','crit',A],['B','B sınıfı — periyodik takip','mid',B],['C','C sınıfı — sadeleştirme / konsolidasyon','low',C]].map(([k,t,p,arr],i) =>
     `<details class="grp" ><summary><div class="s-left"><span class="pill ${p}"><span class="d"></span>${t}</span><span class="chip">${nf0.format(arr.length)} kalem</span></div><div class="s-right"><span class="chip"><b>${FMT(sum(arr,'cik'))}</b></span><span class="chev">⌄</span></div></summary>
     <div class="grp-b">${arr.length ? riskTable(arr, cols, ui.n) : '<div class="empty">Kayıt yok.</div>'}</div></details>`).join('');
@@ -4668,6 +4705,9 @@ function syncFToggle(){
 }
 function wireFToggle(){ const b = $('#fToggle'), f = $('#filters'); if(!b || !f) return;
   b.onclick = () => { const o = !f.classList.contains('m-open'); f.classList.toggle('m-open', o); b.classList.toggle('on', o); b.setAttribute('aria-expanded', o); }; }
+
+/* tablo sonuna kayınca sağdaki solukluğu kaldır */
+document.addEventListener('scroll', e => { const t = e.target; if(t && t.classList && t.classList.contains('table-wrap')) t.classList.toggle('at-end', t.scrollLeft + t.clientWidth >= t.scrollWidth - 4); }, true);
 function syncModeUI(){ $$('#modeSwitch button').forEach(b => b.classList.toggle('active', b.dataset.mode === ANALYSIS_MODE)); }
 
 /* ---------------- Ülke veri kaynakları ---------------- */
