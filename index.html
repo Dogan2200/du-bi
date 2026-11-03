@@ -1821,7 +1821,7 @@ details.grp>summary .chev{width:22px!important;height:22px!important;font-size:1
         </div>
         <button class="btn gold" id="uaAdd" type="button">Ekle / Güncelle</button>
       </div>
-      <div class="auth-note" id="uaNote">Kullanıcılar bu tarayıcıda saklanır. Varsayılan <b>admin</b> şifresini ilk girişte değiştirin.</div>
+      <div class="auth-note" id="uaNote">Kullanıcılar bu tarayıcıda saklanır. Ana yönetici hesabı <b>dulusoy</b> silinemez.</div>
       <div class="table-wrap mt16"><table class="dt"><thead><tr><th>Kullanıcı</th><th>Rol</th><th>Oluşturma</th><th>Son giriş</th><th>İşlem</th></tr></thead><tbody id="uaTbody"></tbody></table></div>
       <div class="note mt10">Güvenlik notu: Bu çözüm intranet/demo içindir; gerçek ortamda kullanıcılar sunucu tarafında yönetilmelidir.</div>
     </div>
@@ -2225,17 +2225,19 @@ function readSession(){ try{ return JSON.parse(localStorage.getItem(AUTH_SESSION
 function writeSession(s){ try{ localStorage.setItem(AUTH_SESSION_KEY, JSON.stringify(s)); }catch(e){} }
 function clearSession(){ try{ localStorage.removeItem(AUTH_SESSION_KEY); }catch(e){} }
 
+const OWNER_USER = 'dulusoy', OWNER_HASH = 's:a77030b67a8292b68fa5c2cd88c33339a8f7a8bc5fddbac4c90da5be5a09ec60';   // şifre düz metin olarak tutulmaz (SHA-256)
 async function ensureDefaultAdmin(){
   let users = readUsers().filter(u => u && String(u.username||'').trim()).map(u => ({
     username:String(u.username).trim(), role:u.role === 'admin' ? 'admin' : 'viewer',
     passHash:String(u.passHash||'').trim(), createdAt:u.createdAt || nowISO(), lastLogin:u.lastLogin || ''
   }));
-  let admin = users.find(u => u.username.toLowerCase() === 'admin');
+  // Eski varsayılan "admin" hesabı kaldırıldı; ana yönetici hesabı OWNER_USER
+  users = users.filter(u => u.username.toLowerCase() !== 'admin');
+  let admin = users.find(u => u.username.toLowerCase() === OWNER_USER);
   if(!admin){
-    users.unshift({username:'admin', role:'admin', passHash:await hashPass('123'), createdAt:nowISO(), lastLogin:''});
+    users.unshift({username:OWNER_USER, role:'admin', passHash:OWNER_HASH, createdAt:nowISO(), lastLogin:''});
   }else{
-    // DÜZELTME: "s:" (SHA-256) şifreler artık sıfırlanmıyor
-    if(!/^(h:|s:)/.test(admin.passHash)) admin.passHash = await hashPass('123');
+    if(!/^(h:|s:)/.test(admin.passHash)) admin.passHash = OWNER_HASH;
     admin.role = 'admin';
   }
   writeUsers(users);
@@ -2290,7 +2292,7 @@ function uaRender(){
 async function uaAction(act, username){
   if(!isAdminSession()) return uaNote('Yetkiniz yok (admin gerekli).','err');
   if(act === 'del'){
-    if(username.toLowerCase() === 'admin') return uaNote('admin kullanıcısı silinemez.','err');
+    if(username.toLowerCase() === OWNER_USER) return uaNote(OWNER_USER + ' kullanıcısı silinemez.','err');
     if(!confirm(`${username} kullanıcısı silinsin mi?`)) return;
     writeUsers(readUsers().filter(x => x.username !== username)); uaRender(); uaNote(`Kullanıcı silindi: ${username}`,'ok');
   }
@@ -2309,7 +2311,7 @@ async function uaUpsert(){
     if(!pass) return uaNote('Yeni kullanıcı için şifre zorunlu.','err');
     users.push({username, role, passHash:await hashPass(pass), createdAt:nowISO(), lastLogin:''}); uaNote(`Kullanıcı eklendi: ${username}`,'ok');
   }else{
-    u.role = u.username.toLowerCase() === 'admin' ? 'admin' : role;
+    u.role = u.username.toLowerCase() === OWNER_USER ? 'admin' : role;
     if(pass) u.passHash = await hashPass(pass); uaNote(`Kullanıcı güncellendi: ${u.username}`,'ok');
   }
   writeUsers(users); $('#uaPass').value = ''; uaRender();
