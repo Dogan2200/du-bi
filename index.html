@@ -1259,6 +1259,56 @@ body.on-cover::before{height:440px}
   .kpi .k-val,.kpi:first-child .k-val{font-size:21px!important}
   .tabs{width:auto}
 }
+
+/* ===== v5.1 cam (glassmorphism) ===== */
+body::before{height:var(--bandH,640px)!important;
+  background:
+    radial-gradient(900px 420px at 12% 8%, rgba(120,190,255,.35), transparent 60%),
+    radial-gradient(700px 380px at 92% 30%, rgba(20,163,139,.20), transparent 65%),
+    linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px) 0 0/56px 56px,
+    linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px) 0 0/56px 56px,
+    linear-gradient(180deg, #2a63a3 0, var(--band) 58%, #6aa3d6 82%, var(--bg) 100%)!important}
+body.on-cover::before{height:var(--bandH,440px)!important}
+/* üst bar */
+:root .app-header{background:linear-gradient(180deg,rgba(30,78,140,.62),rgba(36,92,158,.42))!important;
+  backdrop-filter:blur(22px) saturate(1.6)!important;-webkit-backdrop-filter:blur(22px) saturate(1.6)!important;
+  border-bottom:1px solid rgba(255,255,255,.16)!important;box-shadow:inset 0 -1px 0 rgba(255,255,255,.06),0 12px 32px -20px rgba(8,25,52,.6)!important}
+.glass-btn, :root .app-header .btn, :root .app-header .user-chip, :root .app-header .seg{
+  background:linear-gradient(180deg,rgba(255,255,255,.20),rgba(255,255,255,.06))!important;
+  border:1px solid rgba(255,255,255,.26)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 8px 20px -14px rgba(5,20,45,.7)!important;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#fff!important}
+:root .app-header .btn:hover{background:linear-gradient(180deg,rgba(255,255,255,.30),rgba(255,255,255,.12))!important}
+:root .app-header .seg button.active{background:rgba(255,255,255,.95)!important}
+/* filtre kartı: cam */
+.filters{background:linear-gradient(180deg,rgba(255,255,255,.20),rgba(255,255,255,.08))!important;
+  border:1px solid rgba(255,255,255,.30)!important;
+  backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 24px 50px -28px rgba(5,20,45,.55)!important}
+.filters .ddbox>button{background:rgba(255,255,255,.10)!important;border:1px solid rgba(255,255,255,.26)!important;color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.filters .ddbox>button:hover,.filters .ddbox.open>button{background:rgba(255,255,255,.18)!important;border-color:rgba(255,255,255,.5)!important}
+.filters .ddbox>button b{color:rgba(255,255,255,.72)!important}
+.filters .ddbox>button .lab{color:#fff}
+.filters .ddbox>button::after{border-color:rgba(255,255,255,.85)!important}
+.filters .ddbox.active>button{background:rgba(255,255,255,.28)!important;border-color:rgba(255,255,255,.65)!important}
+.filters .btn-clear{background:rgba(255,255,255,.10)!important;border:1px solid rgba(255,255,255,.3)!important;color:#fff!important}
+.filters .dd{color:var(--ink)}
+/* sekmeler: lacivert tonlu cam (yapışınca açık zeminde de okunur) */
+.tabs{background:linear-gradient(180deg,rgba(24,60,110,.55),rgba(24,60,110,.40))!important;border:1px solid rgba(255,255,255,.24)!important;
+  backdrop-filter:blur(20px) saturate(1.6)!important;-webkit-backdrop-filter:blur(20px) saturate(1.6)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 14px 30px -18px rgba(5,20,45,.6)!important}
+.tab{color:rgba(255,255,255,.86)!important}
+.tab:hover{color:#fff!important;background:rgba(255,255,255,.08)}
+.tab.active{background:rgba(255,255,255,.95)!important;color:var(--navy)!important;box-shadow:0 6px 16px -8px rgba(5,20,45,.6)!important}
+.tab .badge{background:rgba(255,255,255,.92)!important;color:#16335f!important}
+.tab.active .badge{background:#16335f!important;color:#fff!important}
+:root[data-theme="dark"] .filters,:root[data-theme="dark"] .tabs{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.04))!important}
+:root[data-theme="dark"] .tab.active{color:#16335f!important}
+@media(max-width:760px){.filters{background:linear-gradient(180deg,rgba(42,99,163,.85),rgba(42,99,163,.7))!important}}
+
+.filters{position:relative;z-index:36}
+body.on-cover::before{height:calc(var(--bandH,600px) - 150px)!important}
 </style>
 </head>
 <body class="auth-lock">
@@ -3838,6 +3888,15 @@ function onAppReady(){
 
 function syncHeaderH(){ const h = $('.app-header'); if(h && h.offsetHeight) document.documentElement.style.setProperty('--hh', h.offsetHeight + 'px'); }
 window.addEventListener('resize', debounce(syncHeaderH, 100));
+/* mavi şeridin boyu: filtre + sekmeler her zaman camın arkasındaki mavinin üzerinde kalsın */
+function syncBand(){
+  const f = document.getElementById('filters'), t = document.getElementById('tabs'); if(!f || !t) return;
+  const h = f.offsetTop + f.offsetHeight + 26 + t.offsetHeight + 220;
+  document.body.style.setProperty('--bandH', Math.max(520, h) + 'px');
+}
+if(window.ResizeObserver){ const ro = new ResizeObserver(() => syncBand()); ['filters','kpis','appMain'].forEach(id => { const e = document.getElementById(id); if(e) ro.observe(e); }); }
+window.addEventListener('resize', debounce(syncBand, 100));
+
 document.addEventListener('DOMContentLoaded', async () => {
   setTimeout(() => $('#fabHint')?.remove(), 6000);
   let theme = 'light'; try{ theme = localStorage.getItem(THEME_KEY) || 'light'; }catch(e){}
