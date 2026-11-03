@@ -1983,6 +1983,26 @@ img,svg,canvas,video{max-width:100%}
   .plan .ap strong,.plan .ap .ap-v b{font-size:12px!important}
   .plan .ap small,.ap-m{font-size:9.5px!important}
 }
+
+/* stok köprüsü: kompakt kaynak / kullanım şeridi */
+.fl-svg{display:none!important}
+.fb{position:relative;--fbL:74px;--fbR:64px;display:grid;gap:8px;margin:6px 0 2px}
+.fb-row{display:grid;grid-template-columns:var(--fbL) minmax(0,1fr) var(--fbR);align-items:center}
+.fb-row em{font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.fb-tot{text-align:right;font-size:12px;color:var(--ink);font-variant-numeric:tabular-nums}
+.fb-t{display:flex;gap:3px;height:30px}
+.fb-s{position:relative;border-radius:9px;display:flex;align-items:center;padding:0 10px;min-width:0;overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 16px -12px rgba(16,42,84,.5);background-image:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0) 60%)}
+.fb-s i{font-style:normal}
+.fb-s span{font-size:11px;font-weight:650;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fb-s b{font-weight:800}
+.fb-s.dev{background-color:#1E4E8C}
+.fb-s.gir{background-color:#3FA0E0}
+.fb-s.kal{background-color:#14A38B}
+.fb-s.cik{background-color:#fde2e3;background-image:repeating-linear-gradient(135deg,rgba(200,50,63,.18) 0 6px,transparent 6px 12px)!important;box-shadow:inset 0 0 0 1px rgba(200,50,63,.35)}
+.fb-s.cik span{color:#b4262f}
+.fb-mk{position:absolute;top:-4px;bottom:-4px;width:0;border-left:1.5px dashed rgba(22,51,95,.35);pointer-events:none}
+@media(max-width:760px){.fb{--fbL:66px;--fbR:0px}.fb-s i{display:none}.fb-row em{font-size:8px;letter-spacing:.1em}.fb-s{justify-content:center}.fb-tot{display:none}.fb-t{height:26px}.fb-s{padding:0 7px}.fb-s span{font-size:10px}}
 </style>
 </head>
 <body class="auth-lock">
@@ -3697,9 +3717,13 @@ function renderFlow(ctx){
   const id = 'fg' + (++GID);
   const tip = (t, rows) => `data-tip="${tipHTML(t, rows)}"`;
   el.innerHTML = `<div class="fl-st">${st.map((x, i) => `<div class="fl-s" style="--fc:${x.c}" ${tip(x.k, [['Değer', FMT(x.v)], ['Açıklama', x.s]])}><small><i></i>${x.k}${x.sign ? ` <em>${x.sign}</em>` : ''}</small><b>${esc(FMTc(x.v))}</b><span>${esc(x.s)}</span></div>`).join('')}</div>
-  <svg class="fl-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="#1E4E8C"/><stop offset=".33" stop-color="#2A62A8"/><stop offset=".62" stop-color="#3FA0E0"/><stop offset="1" stop-color="#14A38B"/></linearGradient></defs>
-    <path d="${topP}${botP} Z" fill="url(#${id})"/><path d="${topP}" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.2" vector-effect="non-scaling-stroke"/>
-    <path d="${midP}" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.4" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>
+  ${(() => { const T = Math.max(top, kal + cik, 1), w = v => (Math.max(0, v)/T*100).toFixed(2) + '%', pp = v => PCT(v/T*100, 0);
+    const seg = (cls, v, lab, val) => v > 0 ? `<div class="fb-s ${cls}" style="width:${w(v)}" ${tip(lab, [['Tutar', FMT(v)], ['Pay', PCT(v/T*100)]])}><span><i>${lab} </i><b>${esc(FMTc(val ?? v))}</b></span></div>` : '';
+    return `<div class="fb">
+      <div class="fb-row"><em>Kaynak</em><div class="fb-t">${seg('dev', dev, 'Devreden')}${seg('gir', gir, 'Giren +')}</div><b class="fb-tot">${esc(FMTc(top))}</b></div>
+      <div class="fb-row"><em>Kullanım</em><div class="fb-t">${seg('kal', kal, 'Kalan')}${seg('cik', cik, 'Çıkan −')}</div><b class="fb-tot">${esc(FMTc(kal + cik))}</b></div>
+      <div class="fb-mk" style="left:calc(var(--fbL) + (100% - var(--fbL) - var(--fbR)) * ${(Math.max(0, dev)/T).toFixed(4)})"></div>
+    </div>`; })()}
   <div class="fl-foot"><span>Kullanılabilir stok <b>${esc(FMTc(top))}</b></span><span>Tüketim oranı <b>${pct(cik, top)}</b></span><span>GIT (yolda) <b>${esc(FMTc(M.git))}</b> · ${pct(M.git, kal)}</span>${Math.abs(adj) > Math.max(1, kal*0.0005) ? `<span>Kayıt farkı <b>${esc(FMTc(adj))}</b></span>` : ''}</div>
   <div class="fl-split">${[['Ana depo', M.mainV, '#1E4E8C'], ['Birim depo', M.unitV, '#3FA0E0'], ['Diğer', M.otherV, '#9cc3e6'], ['GIT', M.git, '#14A38B']].filter(x => x[1] > 0).map(x => `<i style="flex:${x[1]};background:${x[2]}" ${tip(x[0], [['Kalan', FMT(x[1])], ['Pay', pct(x[1], kal)]])}>${segPct(kal ? x[1]/kal*100 : 0)}</i>`).join('')}</div>
   <div class="fl-leg">${[['Ana depo', M.mainV, '#1E4E8C'], ['Birim depo', M.unitV, '#3FA0E0'], ['Diğer', M.otherV, '#9cc3e6'], ['GIT', M.git, '#14A38B']].filter(x => x[1] > 0).map(x => `<span><i style="background:${x[2]}"></i>${x[0]} <b>${esc(FMTc(x[1]))}</b> · ${pct(x[1], kal)}</span>`).join('')}</div>`;
