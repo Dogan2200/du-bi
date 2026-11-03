@@ -1741,6 +1741,13 @@ details.grp>summary .chev{width:22px!important;height:22px!important;font-size:1
 .abc-bar>div[style*="#E7E5E4"]{background:linear-gradient(180deg,#f1f4f8,#dfe5ed)!important}
 .abc-legend{font-size:11px!important}
 .abc-lab{font-size:11px!important}
+
+/* parça içi yüzde etiketleri */
+.tierbar,.ag-bar,.cap-bar,.fl-split{height:24px!important}
+.tierbar>div,.ag-bar>div,.cap-bar>div,.fl-split>i{display:flex;align-items:center;justify-content:center;overflow:hidden;font-style:normal}
+.sg-p{font-size:11px;font-weight:800;color:#fff;letter-spacing:.01em;text-shadow:0 1px 2px rgba(10,30,62,.25);white-space:nowrap;pointer-events:none}
+.cap-card .cap-bar>div .sg-p{color:#0f2546;text-shadow:none}
+.fl-split>i[style*="#9cc3e6"] .sg-p{color:#16335f;text-shadow:none}
 </style>
 </head>
 <body class="auth-lock">
@@ -3407,7 +3414,7 @@ function renderAging(ctx){
   const span = ctx.allMonths.indexOf(ctx.cur) + 1, idle = bk.slice(1).reduce((s,x) => s + x.v, 0), risky = bk.slice(2).reduce((s,x) => s + x.v, 0);
   el.innerHTML = `<div class="ag-head"><div class="ag-kpi"><div class="ag-big">${PCT(idle/tot*100)}</div><div class="card-s">${tm('stok değeri','stok miktarı')} bu ay çıkış görmedi (${esc(FMTc(idle))})</div></div>
     <div class="ag-kpi"><div class="ag-big" style="color:${risky ? 'var(--neg)' : 'var(--muted)'}">${PCT(risky/tot*100)}</div><div class="card-s">3 aydan uzun süredir çıkış yok (${esc(FMTc(risky))})</div></div></div>
-    <div class="ag-bar">${bk.filter(x => x.v > 0).map(x => `<div style="width:${x.v/tot*100}%;background:${x.c}" data-tip="${tipHTML(x.t, [['Değer', FMT(x.v)], ['Pay', PCT(x.v/tot*100)], ['Kalem', nf0.format(x.n)]])}"></div>`).join('')}</div>
+    <div class="ag-bar">${bk.filter(x => x.v > 0).map(x => `<div style="width:${x.v/tot*100}%;background:${x.c}" data-tip="${tipHTML(x.t, [['Değer', FMT(x.v)], ['Pay', PCT(x.v/tot*100)], ['Kalem', nf0.format(x.n)]])}">${segPct(x.v/tot*100)}</div>`).join('')}</div>
     <div class="ag-rows">${bk.map(x => `<div class="ag-r"><i style="background:${x.c}"></i><span>${esc(x.t)}</span><b>${esc(FMTc(x.v))}</b><em>${PCT(x.v/tot*100)}</em><small>${nf0.format(x.n)} kalem</small></div>`).join('')}</div>
     ${span < 12 ? `<div class="note mt10">Veri ${span} ay olduğu için ${span}+ aydır çıkışı olmayanlar en uzun dilimde biriken kalemlerdir; yeni aylar ekledikçe dağılım netleşir. GIT hariç.</div>` : '<div class="note mt10">GIT hariç · son çıkış ayına göre.</div>'}`;
 }
@@ -3456,7 +3463,7 @@ function renderFlow(ctx){
     <path d="${topP}${botP} Z" fill="url(#${id})"/><path d="${topP}" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.2" vector-effect="non-scaling-stroke"/>
     <path d="${midP}" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.4" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>
   <div class="fl-foot"><span>Kullanılabilir stok <b>${esc(FMTc(top))}</b></span><span>Tüketim oranı <b>${pct(cik, top)}</b></span><span>GIT (yolda) <b>${esc(FMTc(M.git))}</b> · ${pct(M.git, kal)}</span>${Math.abs(adj) > Math.max(1, kal*0.0005) ? `<span>Kayıt farkı <b>${esc(FMTc(adj))}</b></span>` : ''}</div>
-  <div class="fl-split">${[['Ana depo', M.mainV, '#1E4E8C'], ['Birim depo', M.unitV, '#3FA0E0'], ['Diğer', M.otherV, '#9cc3e6'], ['GIT', M.git, '#14A38B']].filter(x => x[1] > 0).map(x => `<i style="flex:${x[1]};background:${x[2]}" ${tip(x[0], [['Kalan', FMT(x[1])], ['Pay', pct(x[1], kal)]])}></i>`).join('')}</div>
+  <div class="fl-split">${[['Ana depo', M.mainV, '#1E4E8C'], ['Birim depo', M.unitV, '#3FA0E0'], ['Diğer', M.otherV, '#9cc3e6'], ['GIT', M.git, '#14A38B']].filter(x => x[1] > 0).map(x => `<i style="flex:${x[1]};background:${x[2]}" ${tip(x[0], [['Kalan', FMT(x[1])], ['Pay', pct(x[1], kal)]])}>${segPct(kal ? x[1]/kal*100 : 0)}</i>`).join('')}</div>
   <div class="fl-leg">${[['Ana depo', M.mainV, '#1E4E8C'], ['Birim depo', M.unitV, '#3FA0E0'], ['Diğer', M.otherV, '#9cc3e6'], ['GIT', M.git, '#14A38B']].filter(x => x[1] > 0).map(x => `<span><i style="background:${x[2]}"></i>${x[0]} <b>${esc(FMTc(x[1]))}</b> · ${pct(x[1], kal)}</span>`).join('')}</div>`;
 }
 function renderCapital(ctx, I){
@@ -3467,7 +3474,7 @@ function renderCapital(ctx, I){
   const t20 = sum(C.items.slice(0,20),'net');
   el.innerHTML = `<div class="cap-big">${esc(FMTc(C.net))}</div>
     <div class="cap-sub">toplam stoğun <b>${PCT(M.kal ? C.net/M.kal*100 : 0)}</b>'i · <b>${nf0.format(C.items.length)}</b> kalem</div>
-    <div class="cap-bar">${C.cats.filter(x => x.v > 0).map(x => `<div style="width:${x.v/C.net*100}%;background:${x.c}" data-tip="${tipHTML(x.t, [['Tutar', FMT(x.v)], ['Pay', PCT(x.v/C.net*100)], ['Kalem', nf0.format(x.n)]])}"></div>`).join('')}</div>
+    <div class="cap-bar">${C.cats.filter(x => x.v > 0).map(x => `<div style="width:${x.v/C.net*100}%;background:${x.c}" data-tip="${tipHTML(x.t, [['Tutar', FMT(x.v)], ['Pay', PCT(x.v/C.net*100)], ['Kalem', nf0.format(x.n)]])}">${segPct(x.v/C.net*100)}</div>`).join('')}</div>
     <div class="cap-rows">${C.cats.map(x => `<div class="cap-r"><i style="background:${x.c}"></i><span>${esc(x.t)}</span><b>${esc(FMTc(x.v))}</b><small>${nf0.format(x.n)} kalem</small></div>`).join('')}</div>
     <div class="cap-note">İlk 20 kalem fırsatın <b>${PCT(t20/C.net*100)}</b>'ini oluşturuyor (${esc(FMTc(t20))}). Kategoriler örtüştüğünde her kalem en büyük etkisiyle bir kez sayılır (net); brüt toplam ${esc(FMTc(C.gross))}.</div>`;
 }
@@ -3765,6 +3772,7 @@ function renderTopLists(ctx){
 /* =====================================================================
    PANEL: Kapak — üst yönetim için yorumsuz, derli toplu özet
    ===================================================================== */
+const segPct = p => p >= 6 ? `<span class="sg-p">${PCT(p, 0)}</span>` : '';
 function stackHTML(segs, fmt){
   const T = sum(segs,'v') || 1;
   return `<div class="cv-stack">${segs.filter(x => x.v > 0).map(x => `<div style="width:${x.v/T*100}%;background:${x.c};color:${x.fg || '#fff'}" data-tip="${tipHTML(x.t, [['Değer', fmt(x.v)], ['Pay', PCT(x.v/T*100)]].concat(x.n != null ? [['Kalem', nf0.format(x.n)]] : []))}">${x.v/T > .08 ? PCT(x.v/T*100, 0) : ''}</div>`).join('')}</div>
@@ -3955,7 +3963,7 @@ function renderRisk(key){
       <div class="mk"><div class="c">En yüksek etki</div><div class="v" title="${esc(top ? top.StokAdi : '')}">${esc(top ? top.StokAdi : '—')}</div><div class="s">${top ? esc(top.Depo) + ' · ' + FMT(top.Impact) : '—'}</div></div>
       <div class="mk"><div class="c">Önerilen aksiyon</div><div class="v" style="font-size:14px">Hızlı müdahale</div><div class="s">${esc(cfg.action)}</div></div>
     </div>
-    ${all.length ? `<div class="mt16"><div class="tierbar">${[['crit','linear-gradient(90deg,#e46a72,#c8323f)'],['mid','linear-gradient(90deg,#f2a65a,#d9822b)'],['low','linear-gradient(90deg,#4cc79a,#12a37a)']].map(([k,col]) => `<div style="width:${tot ? gv(k)/tot*100 : 0}%;background:${col}" data-tip="${tipHTML({crit:'Kritik',mid:'Orta',low:'Düşük'}[k], [['Kalem', nf0.format(g[k].length)], ['Etki', FMT(gv(k))], ['Pay', PCT(tot ? gv(k)/tot*100 : 0)]])}"></div>`).join('')}</div>
+    ${all.length ? `<div class="mt16"><div class="tierbar">${[['crit','linear-gradient(90deg,#e46a72,#c8323f)'],['mid','linear-gradient(90deg,#f2a65a,#d9822b)'],['low','linear-gradient(90deg,#4cc79a,#12a37a)']].map(([k,col]) => `<div style="width:${tot ? gv(k)/tot*100 : 0}%;background:${col}" data-tip="${tipHTML({crit:'Kritik',mid:'Orta',low:'Düşük'}[k], [['Kalem', nf0.format(g[k].length)], ['Etki', FMT(gv(k))], ['Pay', PCT(tot ? gv(k)/tot*100 : 0)]])}">${segPct(tot ? gv(k)/tot*100 : 0)}</div>`).join('')}</div>
       <div class="tier-legend"><span><i style="background:var(--neg)"></i>Kritik ${PCT(tot ? gv('crit')/tot*100 : 0, 0)} etki · ${g.crit.length} kalem</span><span><i style="background:var(--warn)"></i>Orta ${PCT(tot ? gv('mid')/tot*100 : 0, 0)}</span><span><i style="background:var(--pos)"></i>Düşük ${PCT(tot ? gv('low')/tot*100 : 0, 0)}</span></div></div>` : ''}
     ${all.length ? `<div class="risk-top"><div class="rt-h"><div class="eyebrow">En yüksek etkili 10 kalem</div><span class="note">Tıklayarak raporu filtreleyin</span></div><div data-role="top"></div></div>` : ''}
     <div class="controls">
