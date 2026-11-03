@@ -1748,6 +1748,93 @@ details.grp>summary .chev{width:22px!important;height:22px!important;font-size:1
 .sg-p{font-size:11px;font-weight:800;color:#fff;letter-spacing:.01em;text-shadow:0 1px 2px rgba(10,30,62,.25);white-space:nowrap;pointer-events:none}
 .cap-card .cap-bar>div .sg-p{color:#0f2546;text-shadow:none}
 .fl-split>i[style*="#9cc3e6"] .sg-p{color:#16335f;text-shadow:none}
+
+/* =====================================================================
+   TELEFON UYARLAMASI
+   ===================================================================== */
+.f-toggle{display:none}
+@media(max-width:760px){
+  .wrap{padding:0 14px!important}
+  /* üst bar: tek satır marka + simgeler, altında sorgu satırları */
+  .hbar{flex-direction:row!important;flex-wrap:nowrap!important;gap:10px!important;min-height:56px!important;padding:8px 0 4px!important}
+  .brand{flex:1;min-width:0;gap:8px}
+  .brand-mark{width:34px!important;height:34px!important}
+  .brand-t{font-size:15px!important}
+  .brand-s{display:none}
+  .hactions{flex-wrap:nowrap!important;gap:6px!important;overflow-x:auto;scrollbar-width:none;flex:none;max-width:62%}
+  .hactions::-webkit-scrollbar{display:none}
+  .btn.icon2,.btn.icon{width:34px!important;height:34px!important;flex:none}
+  :root .app-header .user-chip{height:34px;padding:0 4px;flex:none}
+  .user-chip #userChipName,.user-chip small{display:none}
+  #btnLink,#btnSave,#btnUserAdmin{display:none!important}
+  .hactions{max-width:none!important;overflow:visible!important}
+  .qrow{display:grid!important;grid-template-columns:1fr auto;gap:8px!important;padding:4px 0 10px!important}
+  .qms{grid-column:1/-1}
+  .qms>button{width:100%;max-width:none;min-width:0}
+  .qbar{display:contents!important}
+  .qrange{grid-column:1/2;min-width:0}
+  .qmonth{flex:1;min-width:0;padding:0 4px 0 10px!important;gap:6px!important}
+  .qmonth span{min-width:0!important;font-size:12.5px}
+  .qmonth i{width:26px!important;height:26px!important}
+  .qgo{grid-column:2/3;padding:0 14px!important}
+  :root .app-header .seg#modeSwitch{grid-column:1/2;justify-self:stretch;display:flex}
+  :root .app-header .seg#modeSwitch button{flex:1}
+  .qxl{grid-column:2/3}
+  .status-line{display:none}
+  /* KPI şeridi */
+  .kpis{margin:0 -14px!important;padding:12px 14px 16px!important}
+  /* filtreler: açılır */
+  .f-toggle{display:flex;align-items:center;gap:8px;width:100%;margin-top:14px;height:42px;padding:0 14px;border-radius:14px;border:1px solid rgba(255,255,255,.85);
+    background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.72));color:#16335f;font:700 13px var(--font);box-shadow:0 10px 24px -18px rgba(5,20,45,.6)}
+  .f-toggle svg{width:18px;height:18px;color:#2A62A8}
+  .f-toggle em{margin-left:auto;font-style:normal;font-size:11px;font-weight:700;color:var(--muted)}
+  .f-toggle i{font-style:normal;font-size:10px;color:var(--muted);transition:transform .2s}
+  .f-toggle.on i{transform:rotate(180deg)}
+  .filters{display:none!important;margin-top:8px!important}
+  .filters.m-open{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .filters.m-open .ddbox{flex:auto}
+  .filters.m-open .btn-clear{grid-column:1/-1}
+  /* sekmeler: yapışkan, yatay kaydırmalı */
+  .tabs{position:sticky!important;top:0!important;z-index:45!important;width:auto!important;margin:14px -14px 0!important;border-radius:0!important;border-left:0!important;border-right:0!important;padding:6px 10px!important}
+  .tab{height:32px!important;padding:0 12px!important;flex:none}
+  .tab .ti{display:none}
+  /* bölümler */
+  .panel{margin-top:20px!important}
+  .panel .card + .card, .panel .card.mt16, .panel .grid.mt16{margin-top:30px!important}
+  .panel .grid{gap:30px!important}
+  .card-t{font-size:16px!important}
+  .card-h{gap:8px!important}
+  .chart-tools,.controls{width:100%}
+  /* kapak */
+  .cv h1{font-size:22px!important}
+  .cv-head{gap:14px!important}
+  .cv-side{width:100%;justify-content:space-between;text-align:left}
+  .cv-hero{grid-template-columns:repeat(2,minmax(0,1fr))!important;row-gap:16px!important}
+  .cv-h{border-left:0!important;padding:4px 0!important}
+  .cv-h:nth-child(even){border-left:1px solid var(--line)!important;padding-left:14px!important}
+  .cv-h b{font-size:20px!important}
+  .cv-c-body{padding:14px!important}
+  /* tablolar: dokunarak yatay kaydırma */
+  .table-wrap{-webkit-overflow-scrolling:touch}
+  table.dt{font-size:11px!important}
+  table.dt tbody td,table.dt thead th{padding:7px 8px!important}
+  /* aylık seyir başlığı */
+  .fr-v{font-size:28px!important}
+  .per-strip{gap:0 14px!important}
+  /* asistan */
+  .fab{width:52px!important;height:52px!important}
+  .fab svg{width:22px!important;height:22px!important}
+  .fab-hint{display:none!important}
+  #chatRoot{right:12px!important;bottom:12px!important}
+  /* risk modülleri */
+  .mini-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important;row-gap:14px!important}
+  .mk:nth-child(odd){border-left:0!important;padding-left:0!important}
+  .mk:nth-child(even){padding-left:14px!important}
+  .bar-row{grid-template-columns:minmax(0,1fr) 72px!important;row-gap:4px!important}
+  .bar-row .bar-track{grid-column:1/-1;grid-row:2;height:10px!important}
+  .bar-row .bv{grid-column:2;grid-row:1}
+}
+@media(max-width:380px){ .qmonth i{display:none!important} }
 </style>
 </head>
 <body class="auth-lock">
@@ -1894,6 +1981,7 @@ details.grp>summary .chev{width:22px!important;height:22px!important;font-size:1
   <section class="kpis" id="kpis"></section>
 
   <!-- FİLTRELER -->
+  <button type="button" class="f-toggle" id="fToggle" aria-expanded="false" aria-controls="filters"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Filtreler</span><em id="fToggleN"></em><i>▾</i></button>
   <div class="filters" id="filters">
     <div class="ddbox" data-key="Ulke" style="display:none"><button type="button"><b>Ülke</b><span class="lab">Tümü</span></button><div class="dd"></div></div>
     <div class="ddbox" data-key="Donem"><button type="button"><b>Dönem</b><span class="lab">—</span></button><div class="dd"></div></div>
@@ -3175,7 +3263,7 @@ function enhanceTable(table){
    ===================================================================== */
 const DIRTY = {};
 function renderAll(){
-  CTX = buildCtx(); paintCountryUI(); try{ syncQbar(); }catch(e){}
+  CTX = buildCtx(); paintCountryUI(); try{ syncQbar(); syncFToggle(); }catch(e){}
   if(!CTX){ return; }
   renderHero(CTX); renderKPIs(CTX); renderBadges(CTX); renderXfBar();
   $$('.panel').forEach(p => DIRTY[p.id.replace('panel-','')] = true);
@@ -4377,7 +4465,7 @@ function wireUI(){
   $('#modeSwitch').addEventListener('click', e => { const b = e.target.closest('button[data-mode]'); if(!b) return; ANALYSIS_MODE = b.dataset.mode; syncModeUI(); saveState(); renderAll(); });
   $('#btnClear').onclick = () => { const keep = FILTERS.Donem; FILTERS = EMPTY_FILTERS(); FILTERS.Donem = keep.length ? keep : []; buildMS(); renderAll(); saveState(); toast('Filtreler temizlendi'); };
   $('#btnUpload').onclick = () => $('#file').click();
-  wireQbar();
+  wireQbar(); wireFToggle();
   $('#btnSave').onclick = exportSingleHTML;
   $('#btnTheme').onclick = () => applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
   $('#btnLink').onclick = openSources;
@@ -4482,6 +4570,14 @@ function wireQbar(){
   document.addEventListener('click', e => { const pk = $('#qPick'); if(pk && !pk.hidden && !e.target.closest('#qPick')) pk.hidden = true; });
   document.addEventListener('keydown', e => { if(e.key === 'Escape'){ const pk = $('#qPick'); if(pk) pk.hidden = true; } });
 }
+
+/* telefon: filtreler açılır panel */
+function syncFToggle(){
+  const n = Object.keys(FILTERS).filter(k => k !== 'Donem' && k !== 'Ulke' && (FILTERS[k] || []).length).reduce((a, k) => a + FILTERS[k].length, 0), e = $('#fToggleN');
+  if(e) e.textContent = n ? `${n} aktif` : 'tümü';
+}
+function wireFToggle(){ const b = $('#fToggle'), f = $('#filters'); if(!b || !f) return;
+  b.onclick = () => { const o = !f.classList.contains('m-open'); f.classList.toggle('m-open', o); b.classList.toggle('on', o); b.setAttribute('aria-expanded', o); }; }
 function syncModeUI(){ $$('#modeSwitch button').forEach(b => b.classList.toggle('active', b.dataset.mode === ANALYSIS_MODE)); }
 
 /* ---------------- Ülke veri kaynakları ---------------- */
