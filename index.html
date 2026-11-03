@@ -1445,6 +1445,39 @@ body.on-cover::before{height:calc(var(--bandH,600px) - 150px)!important}
 .per:not(.on){opacity:.78}.per:hover{opacity:1}
 .per:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 @media(max-width:760px){.per-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}.per b{font-size:18px}}
+
+/* modern çizgi: renk geçişli hat, ışıltı, çizim animasyonu */
+.fd .fd-line,.fd .fd-glow{stroke-dasharray:1;stroke-dashoffset:0;animation:fdDraw 1.25s cubic-bezier(.65,0,.35,1) both}
+.fd .fd-glow{animation-delay:.05s}
+.fd .fd-area{animation:fdFade 1s .35s ease-out both}
+.fd .fd-pt{transform-box:fill-box;transform-origin:center;animation:fdPop .45s cubic-bezier(.2,1.6,.4,1) both}
+.fd .fd-pulse{transform-box:fill-box;transform-origin:center;animation:fdPulse 2.4s ease-out infinite;opacity:.0}
+.fd .fd-line{filter:none!important}
+.fd-dot{filter:drop-shadow(0 4px 8px rgba(22,51,95,.28))}
+@keyframes fdDraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes fdFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fdPop{from{transform:scale(0)}to{transform:scale(1)}}
+@keyframes fdPulse{0%{transform:scale(.7);opacity:.35}70%{transform:scale(2.6);opacity:0}100%{opacity:0}}
+.fd-band{border-top:0!important}
+.fd-band::before{content:"";position:absolute;left:var(--L);right:var(--R);top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(16,42,84,.14) 12%,rgba(16,42,84,.14) 88%,transparent)}
+.fd-c u{display:block;height:3px;margin:-1px auto 10px;border-radius:3px;transition:width .3s}
+.fd-c{padding-top:0!important}
+.fd-c0{padding-top:12px}
+.fd-c.on{background:linear-gradient(180deg,rgba(42,98,168,.09),rgba(42,98,168,0))!important}
+.fd-c b{letter-spacing:-.01em}
+.per::after{transition:background .25s,transform .35s cubic-bezier(.2,.8,.2,1);transform:scaleX(.4);transform-origin:left}
+.per.on::after{transform:scaleX(1);background:linear-gradient(90deg,#16335f,#3c8dbc)!important}
+@media (prefers-reduced-motion: reduce){.fd .fd-pulse{display:none}}
+
+/* hat + değişim sütunları */
+.fd .fd-bar{transform-box:fill-box;transition:opacity .2s}
+.fd .fd-bar.up{transform-origin:50% 100%;animation:fdGrowU .7s cubic-bezier(.2,.9,.25,1) both}
+.fd .fd-bar.dn{transform-origin:50% 0%;animation:fdGrowD .7s cubic-bezier(.2,.9,.25,1) both}
+@keyframes fdGrowU{from{transform:scaleY(0);opacity:0}to{transform:none;opacity:1}}
+@keyframes fdGrowD{from{transform:scaleY(0);opacity:0}to{transform:none;opacity:1}}
+.fd.fd-dim .fd-bar:not(.hl){opacity:.32}
+.fd .fd-m.hl{fill:#16335f!important;font-weight:800}
+.fd-band{display:none}
 </style>
 </head>
 <body class="auth-lock">
@@ -3027,7 +3060,7 @@ function drawTrend(ctx){
   $('#trendSub').innerHTML = `Her ayın değişimi alttaki bantta · dönem şeridinden 3, 6, 9 veya 12 aylık görünüme geçin`
     + (upto.length <= 2 ? `<br><span style="color:var(--muted)">Veride ${upto.length} ay bulunduğu için seyir sınırlıdır.</span>` : '');
   const cv = val(ctx.cur), good = d => meta.good === 'neutral' ? null : (meta.good === 'up' ? d > 0 : d < 0);
-  const colr = d => { if(!isNum(d) || Math.abs(d) < 1e-9) return 'var(--muted)'; const g = good(d); if(g == null) return d > 0 ? '#2A62A8' : '#E0884A'; return g ? '#1E9E82' : '#D0603F'; };
+  const colr = d => { if(!isNum(d) || Math.abs(d) < 1e-9) return 'var(--muted)'; const g = good(d); if(g == null) return d > 0 ? '#12A37A' : '#E5484D'; return g ? '#12A37A' : '#E5484D'; };
   $('#chTrendPer').innerHTML = WINS.map(p => {
     const bi = Math.max(0, upto.length - 1 - p), bm = upto[bi], bv = val(bm), span = upto.length - 1 - bi, d = isNum(cv) && isNum(bv) ? cv - bv : null, pc = pctChange(cv, bv), short = span < p;
     return `<button type="button" role="tab" class="per${p === win ? ' on' : ''}" data-win="${p}" aria-selected="${p === win}">
@@ -3180,7 +3213,7 @@ function columnChart(el, labels, values, o={}){
   const ok = D.map((d,i) => ({d, i})).filter(x => isNum(x.d));
   if(!ok.length){ el.innerHTML = '<div class="empty">Trend için en az iki ay gerekiyor.</div>'; return; }
   const good = d => o.good === 'neutral' ? null : (o.good === 'up' ? d > 0 : d < 0);
-  const col = d => { if(Math.abs(d) < 1e-9) return '#8a97ab'; const g = good(d); if(g == null) return d > 0 ? '#2A62A8' : '#E0884A'; return g ? '#1E9E82' : '#D0603F'; };
+  const col = d => { if(Math.abs(d) < 1e-9) return '#8a97ab'; const g = good(d); if(g == null) return d > 0 ? '#12A37A' : '#E5484D'; return g ? '#12A37A' : '#E5484D'; };
   const word = d => d > 0 ? 'artış' : d < 0 ? 'azalış' : 'değişim yok', sg = d => d > 0 ? '+' : d < 0 ? '−' : '', arw = d => d > 0 ? '▲' : d < 0 ? '▼' : '●';
   const mx = ok.reduce((a,b) => b.d > a.d ? b : a), mn = ok.reduce((a,b) => b.d < a.d ? b : a);
   const f0 = ok[0].i - 1, net = values[n-1] - values[f0], np = pctChange(values[n-1], values[f0]), ups = ok.filter(x => x.d > 0).length, dns = ok.filter(x => x.d < 0).length;
@@ -3214,39 +3247,68 @@ function columnChart(el, labels, values, o={}){
     el.style.height = 'auto'; el.innerHTML = h + '</div>'; return;
   }
 
-  // ---- masaüstü ----
-  const H = 300, L = 64, R = Math.max(tg != null ? 84 : 26, Math.ceil((W - 64)/(2*(n-1) + 1)) + 2), T = 22, B = 14;
+  // ---- masaüstü: üstte seviye hattı, altta aynı aylara hizalı değişim sütunları ----
+  const H = 488, L = 64, R = Math.max(tg != null ? 84 : 26, Math.ceil((W - 64)/(2*(n-1) + 1)) + 2), T = 22, LB = 250;
+  const Z0 = 372, HM = 62, MY = H - 10;                       // değişim sıfır çizgisi, en uzun sütun, ay etiketleri
   const pts0 = values.filter(isNum), lo = Math.min(...pts0, tg ?? Infinity), hi = Math.max(...pts0, tg ?? -Infinity), pad = (hi - lo)*.2 || hi*.1 || 1;
   const ticks = niceTicks(Math.max(0, lo - pad), hi + pad*.6, 3), y0 = ticks[0], y1 = ticks[ticks.length-1];
-  const X = i => L + i*(W-L-R)/(n-1), Y = v => T + (1 - (v - y0)/(y1 - y0))*(H-T-B), slot = (W-L-R)/(n-1);
+  const X = i => L + i*(W-L-R)/(n-1), Y = v => T + (1 - (v - y0)/(y1 - y0))*(LB-T), slot = (W-L-R)/(n-1);
   const P = values.map((v,i) => isNum(v) ? [X(i), Y(v), i] : null).filter(Boolean), path = monoPath(P), id = 'fd' + (++GID);
+  const x0 = P[0][0], x1 = P[P.length-1][0], gx = x => ((x - x0)/((x1 - x0) || 1)*100).toFixed(2) + '%';
+  const segStops = [], segCol = []; for(let i = 1; i < P.length; i++){ const d = values[P[i][2]] - values[P[i-1][2]], c = col(d), a0 = P[i-1][0], b0 = P[i][0]; segCol.push(c); segStops.push([gx(a0), c], [gx(b0), c]); }
+  if(!segStops.length) segStops.push(['0%', '#2A62A8']);
+  const stopsHTML = (op = 1) => [['0%', segStops[0][1]], ...segStops, ['100%', segStops[segStops.length-1][1]]].map(([o2, c]) => `<stop offset="${o2}" stop-color="${c}" stop-opacity="${op}"/>`).join('');
+  const amx = Math.max(...ok.map(x => Math.abs(x.d)), 1), bw = Math.min(42, slot*.44);
   let s = `<svg width="${W}" height="${H}" class="fd" role="img" aria-label="${esc(o.name || 'Aylık seyir')}"><defs>
-    <linearGradient id="${id}A" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3c8dbc" stop-opacity=".30"/><stop offset=".7" stop-color="#3c8dbc" stop-opacity=".06"/><stop offset="1" stop-color="#3c8dbc" stop-opacity="0"/></linearGradient>
-    <linearGradient id="${id}S" x1="0" x2="1"><stop offset="0" stop-color="#6aa8e0"/><stop offset="1" stop-color="#16335f"/></linearGradient></defs>`;
-  ticks.forEach(t => s += `<line x1="${L}" x2="${W-R}" y1="${Y(t)}" y2="${Y(t)}" stroke="#16335f" stroke-opacity=".07"/><text x="${L-14}" y="${Y(t)+4}" text-anchor="end">${esc(fmt(t))}</text>`);
-  s += `<path d="${path} L${P[P.length-1][0]} ${H} L${P[0][0]} ${H} Z" fill="url(#${id}A)"/>`;
+    <linearGradient id="${id}S" gradientUnits="userSpaceOnUse" x1="${x0}" x2="${x1}" y1="0" y2="0">${stopsHTML()}</linearGradient>
+    <linearGradient id="${id}H" gradientUnits="userSpaceOnUse" x1="${x0}" x2="${x1}" y1="0" y2="0">${stopsHTML(.30)}</linearGradient>
+    <linearGradient id="${id}V" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".6" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <mask id="${id}M" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}"><rect x="0" y="${T-30}" width="${W}" height="${LB-T+60}" fill="url(#${id}V)"/></mask>
+    <linearGradient id="${id}Z" x1="0" x2="1"><stop offset="0" stop-color="#16335f" stop-opacity="0"/><stop offset=".08" stop-color="#16335f" stop-opacity=".18"/><stop offset=".92" stop-color="#16335f" stop-opacity=".18"/><stop offset="1" stop-color="#16335f" stop-opacity="0"/></linearGradient>
+    <filter id="${id}G" x="-5%" y="-40%" width="110%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
+    <filter id="${id}B" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#16335f" flood-opacity=".22"/></filter></defs>`;
+  // seviye bölgesi
+  ticks.forEach(t => s += `<line x1="${L}" x2="${W-R}" y1="${Y(t)}" y2="${Y(t)}" stroke="#16335f" stroke-opacity=".06" stroke-dasharray="2 6"/><text x="${L-14}" y="${Y(t)+4}" text-anchor="end" style="fill:#9aa6b8">${esc(fmt(t))}</text>`);
+  s += `<g class="fd-area"><path d="${path} L${x1} ${LB+30} L${x0} ${LB+30} Z" fill="url(#${id}H)" opacity=".85" mask="url(#${id}M)"/></g>`;
   if(tg != null){ const yt = Y(tg); s += `<line x1="${L}" x2="${W-R}" y1="${yt}" y2="${yt}" stroke="#D0603F" stroke-opacity=".7" stroke-dasharray="5 5"/><text x="${W-R+10}" y="${yt+4}" style="font-weight:700;fill:#D0603F;font-size:10.5px">Hedef</text><text x="${W-R+10}" y="${yt+17}" style="fill:#D0603F;font-size:10.5px">${esc(o.targetLabel || fmt(tg))}</text>`; }
-  s += `<line class="fd-scr" x1="0" x2="0" y1="${T-10}" y2="${H}" stroke="#16335f" stroke-opacity=".22" stroke-dasharray="3 3"/>`;
-  s += `<path d="${path}" fill="none" stroke="url(#${id}S)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" class="fd-line"/>`;
-  // en sert artış / düşüş işaretleri
+  // değişim bölgesi başlığı + sıfır çizgisi
+  s += `<text x="${L-14}" y="${Z0-HM-14}" text-anchor="end" style="font-size:9px;font-weight:800;letter-spacing:.14em;fill:#9aa6b8">AYLIK</text><text x="${L-14}" y="${Z0-HM-2}" text-anchor="end" style="font-size:9px;font-weight:800;letter-spacing:.14em;fill:#9aa6b8">DEĞİŞİM</text>`;
+  s += `<rect x="${L-24}" y="${Z0-.5}" width="${W-L-R+48}" height="1" fill="url(#${id}Z)"/>`;
+  s += `<line class="fd-scr" x1="0" x2="0" y1="${T-10}" y2="${MY-14}" stroke="#16335f" stroke-opacity=".2" stroke-dasharray="3 4"/>`;
+  // değişim sütunları (üstü yuvarlak, tabanı düz, renk tepeden tabana söner)
+  for(let i = 1; i < n; i++){ const d = D[i]; if(!isNum(d)) continue;
+    const c = col(d), h = Math.max(4, Math.abs(d)/amx*HM), up = d >= 0, x = X(i) - bw/2, r = Math.min(9, bw/2, h), gid = `${id}b${i}`, last = i === n-1;
+    const y = up ? Z0 - h : Z0, dP = up ? `M${x} ${Z0} V${y+r} Q${x} ${y} ${x+r} ${y} H${x+bw-r} Q${x+bw} ${y} ${x+bw} ${y+r} V${Z0} Z`
+                                       : `M${x} ${Z0} H${x+bw} V${y+h-r} Q${x+bw} ${y+h} ${x+bw-r} ${y+h} H${x+r} Q${x} ${y+h} ${x} ${y+h-r} Z`;
+    s += `<defs><linearGradient id="${gid}" x1="0" x2="0" y1="${up ? 0 : 1}" y2="${up ? 1 : 0}"><stop offset="0" stop-color="${c}"/><stop offset="1" stop-color="${c}" stop-opacity=".28"/></linearGradient></defs>`;
+    s += `<g class="fd-bar${up ? ' up' : ' dn'}${last ? ' on' : ''}" data-i="${i}" style="animation-delay:${(.35 + i/n*.6).toFixed(2)}s">
+      ${last ? `<rect x="${x-6}" y="${Math.min(y, Z0)-6}" width="${bw+12}" height="${h+12}" rx="${r+5}" fill="${c}" opacity=".09"/>` : ''}
+      <path d="${dP}" fill="url(#${gid})"${last ? ` filter="url(#${id}B)"` : ''}/>
+      <text x="${X(i)}" y="${up ? y - 22 : y + h + 16}" text-anchor="middle" style="font-weight:800;font-size:${last ? 13.5 : 12.5}px;fill:${c}">${sg(d)}${esc(fD(Math.abs(d)))}</text>
+      <text x="${X(i)}" y="${up ? y - 8 : y + h + 30}" text-anchor="middle" style="font-weight:650;font-size:10.5px;fill:${c};opacity:.72">${sg(d)}${esc(pc(C[i]))}</text></g>`;
+  }
+  // seviye hattı (renk geçişli, ışıltılı) — sütunların üstünde kalsın
+  s += `<path d="${path}" fill="none" stroke="url(#${id}S)" stroke-width="12" stroke-linecap="round" opacity=".3" filter="url(#${id}G)" class="fd-glow" pathLength="1"/>`;
+  s += `<path d="${path}" fill="none" stroke="url(#${id}S)" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" class="fd-line" pathLength="1"/>`;
+  P.forEach(([px, py], j) => { if(j === 0 || j === P.length-1) return; s += `<circle class="fd-pt" cx="${px}" cy="${py}" r="2.8" fill="#fff" stroke="${segCol[Math.min(j-1, segCol.length-1)]}" stroke-width="1.8" style="animation-delay:${(.25 + j/P.length*.9).toFixed(2)}s"/>`; });
   [[mx, 'EN SERT ARTIŞ', mx.d > 0], [mn, 'EN SERT DÜŞÜŞ', mn.d < 0]].forEach(([x, t, on]) => { if(!on) return; const px = X(x.i), py = Y(values[x.i]), up = x.d > 0;
-    s += `<circle cx="${px}" cy="${py}" r="4.5" fill="#fff" stroke="${col(x.d)}" stroke-width="2.2"/><text x="${px}" y="${up ? py - 14 : py + 22}" text-anchor="middle" style="font-weight:800;font-size:9px;letter-spacing:.12em;fill:${col(x.d)}">${t}</text>`; });
-  const li = P[P.length-1];
-  s += `<circle cx="${li[0]}" cy="${li[1]}" r="16" fill="#2A62A8" opacity=".12"/><circle cx="${li[0]}" cy="${li[1]}" r="6" fill="#16335f" stroke="#fff" stroke-width="2.5"/>`;
+    s += `<text x="${px}" y="${up ? py - 14 : py + 22}" text-anchor="middle" style="font-weight:800;font-size:9px;letter-spacing:.12em;fill:${col(x.d)}">${t}</text>`; });
+  const li = P[P.length-1], lc = segCol[segCol.length-1] || '#2A62A8';
+  s += `<circle class="fd-pulse" cx="${li[0]}" cy="${li[1]}" r="9" fill="${lc}"/><circle cx="${li[0]}" cy="${li[1]}" r="6.5" fill="#fff" stroke="${lc}" stroke-width="3"/><circle cx="${li[0]}" cy="${li[1]}" r="2.4" fill="${lc}"/>`;
   s += `<circle class="fd-dot" cx="0" cy="0" r="5.5" fill="#fff" stroke="#16335f" stroke-width="2.5" style="opacity:0"/>`;
+  // ay etiketleri
+  labels.forEach((lb, i) => { const last = i === n-1;
+    s += `<text x="${X(i)}" y="${MY}" text-anchor="middle" class="fd-m" data-i="${i}" style="font-size:10.5px;font-weight:${last ? 800 : 650};letter-spacing:.06em;fill:${last ? '#16335f' : '#7d8aa0'}">${esc(lb.toLocaleUpperCase('tr'))}</text>`;
+    if(i === 0) s += `<text x="${X(0)}" y="${Z0+4}" text-anchor="middle" style="font-size:10px;fill:#9aa6b8">başlangıç</text>`; });
   s += `</svg>`;
-  // değişim bandı: her ay, o noktanın tam altında
-  let band = `<div class="fd-band" style="--L:${L}px;--R:${R}px">`;
-  for(let i = 1; i < n; i++){ const d = D[i]; if(!isNum(d)) continue; const c = col(d);
-    band += `<div class="fd-c${i === n-1 ? ' on' : ''}" data-i="${i}" style="left:${X(i)}px;width:${slot}px"><small>${esc(labels[i])}</small><b style="color:${c}">${arw(d)} ${esc(fD(Math.abs(d)))}</b><i style="color:${c}">${sg(d)}${esc(pc(C[i]))}</i></div>`; }
-  band += `<div class="fd-c0" style="left:${Math.max(X(0), slot/2)}px;width:${slot}px"><small>${esc(labels[0])}</small><b>${esc(fmt(values[0]))}</b><i>başlangıç</i></div></div>`;
-  el.style.height = 'auto'; el.innerHTML = s + band;
-  // kaydırıcı: çizgi + band birlikte; başlık okuması o aya geçer
-  const svg = el.querySelector('svg'), scr = svg.querySelector('.fd-scr'), dot = svg.querySelector('.fd-dot'), cells = el.querySelectorAll('.fd-c');
+  el.style.height = 'auto'; el.innerHTML = s;
+  // kaydırıcı: hat + sütun birlikte; başlık okuması o aya geçer
+  const svg = el.querySelector('svg'), scr = svg.querySelector('.fd-scr'), dot = svg.querySelector('.fd-dot'), bars = svg.querySelectorAll('.fd-bar'), mls = svg.querySelectorAll('.fd-m');
   const focus = i => { const on = i != null;
     scr.style.opacity = on ? 1 : 0; dot.style.opacity = on && isNum(values[i]) ? 1 : 0;
-    if(on){ scr.setAttribute('x1', X(i)); scr.setAttribute('x2', X(i)); if(isNum(values[i])){ dot.setAttribute('cx', X(i)); dot.setAttribute('cy', Y(values[i])); } }
-    cells.forEach(c => c.classList.toggle('hl', on && +c.dataset.i === i)); el.classList.toggle('fd-dim', on); readout(on ? i : n-1); };
+    if(on){ scr.setAttribute('x1', X(i)); scr.setAttribute('x2', X(i)); if(isNum(values[i])){ dot.setAttribute('cx', X(i)); dot.setAttribute('cy', Y(values[i])); dot.setAttribute('stroke', isNum(D[i]) ? col(D[i]) : '#16335f'); } }
+    bars.forEach(b => b.classList.toggle('hl', on && +b.dataset.i === i)); mls.forEach(m => m.classList.toggle('hl', on && +m.dataset.i === i));
+    svg.classList.toggle('fd-dim', on); readout(on ? i : n-1); };
   scr.style.opacity = 0;
   const idxAt = e => { const r = el.getBoundingClientRect(); return Math.max(0, Math.min(n-1, Math.round((e.clientX - r.left - L)/slot))); };
   el.onpointermove = e => focus(idxAt(e)); el.onpointerleave = () => focus(null);
