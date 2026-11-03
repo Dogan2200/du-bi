@@ -1363,6 +1363,22 @@ body.on-cover::before{height:calc(var(--bandH,600px) - 150px)!important}
 
 .wf .wf-hz{fill:transparent;transition:fill .18s}
 .wf .wf-hz.on{fill:rgba(42,98,168,.06)}
+
+/* özet şeridi v2 */
+.cs-strip{border:0!important;gap:0!important;margin:10px 0 6px!important;background:linear-gradient(180deg,#fff,rgba(255,255,255,.6));border-radius:18px;box-shadow:0 1px 2px rgba(16,42,84,.05),0 18px 40px -30px rgba(16,42,84,.4)}
+:root[data-theme="dark"] .cs-strip{background:var(--surface)}
+.cs-i{padding:16px 22px!important}
+.cs-i:first-child{padding-left:22px!important}
+.cs-v{display:flex;align-items:center;gap:9px;margin-top:6px;min-width:0}
+.cs-v b{margin:0!important;font-size:24px!important}
+.cs-ic{flex:none;width:26px;height:26px;border-radius:9px;display:grid;place-items:center;font-style:normal;font-size:11px;color:var(--ic);background:color-mix(in srgb,var(--ic) 12%,transparent)}
+.cs-tag{flex:none;font-style:normal;font-size:11px;font-weight:750;padding:3px 8px;border-radius:999px;color:var(--ic);background:color-mix(in srgb,var(--ic) 10%,transparent);white-space:nowrap}
+.cs-sl{color:var(--faint);font-size:20px;font-weight:300}
+.cs-u{font-size:12px;color:var(--muted);font-weight:600}
+.cs-bar{display:flex;gap:3px;height:5px;border-radius:99px;overflow:hidden;margin:8px 0 2px;background:var(--surface-3)}
+.cs-bar i{display:block;height:100%}
+.cs-i>span{margin-top:6px!important}
+@media(max-width:760px){.cs-i{padding:12px 14px!important}.cs-i:first-child,.cs-i:nth-child(3){padding-left:14px!important}.cs-v b{font-size:18px!important}.cs-tag{display:none}}
 </style>
 </head>
 <body class="auth-lock">
@@ -2941,8 +2957,8 @@ function drawTrend(ctx){
   const n = ctx.trendMonths.length;
   $('#trendTitle').textContent = `${meta.n} · aylık seyir`;
   const l = vals[n-1], p = n > 1 ? vals[n-2] : null, ch = pctChange(l, p);
-  $('#trendSub').innerHTML = (n > 1 ? `<b>${esc(fmtMonth(ctx.cur))}</b>: ${esc(fmtFull(l))} · önceki ay ${esc(fmtFull(p))}${ch != null ? ` · <b style="color:${trendColor(ch, meta.good)}">${ch > 0 ? '▲ +' : '▼ '}${PCT(ch)}</b>` : ''}<br>` : '')
-    + `Son ${n} ay · köprü grafiği: ilk ay seviyesinden başlar, her basamak o ayın önceki aya göre değişimidir (${k === 'doh' ? 'gün' : k === 'turn' ? 'kat' : k === 'health' ? 'puan' : tm('tutar','miktar')} ve yüzde), son sütun bugünkü seviye.`
+  $('#trendSub').innerHTML = (n > 1 ? `<b>${esc(fmtMonth(ctx.cur))}</b> ${esc(fmtFull(l))}${ch != null ? ` · <b style="color:${trendColor(ch, meta.good)}">${ch > 0 ? '▲' : '▼'} ${PCT(Math.abs(ch))} ${ch > 0 ? 'artış' : 'azalış'}</b> <span class="muted">(önceki ay ${esc(fmtFull(p))})</span>` : ''}<br>` : '')
+    + `Son ${n} ay · başlangıç seviyesi → aylık artış / azalış → bugünkü seviye`
     + (n <= 2 ? `<br><span style="color:var(--muted)">Veride ${n} ay bulunduğu için seyir sınırlıdır; yeni aylar eklendikçe grafik zenginleşir.</span>` : '');
   const K = SETTINGS.kpi, target = k === 'doh' ? K.doh.target : k === 'turn' ? K.turn.target : k === 'health' ? SETTINGS.bands.good : null;
   const tLab = target == null ? '' : k === 'doh' ? `≤ ${nf0.format(target)} gün` : k === 'turn' ? `≥ ${nf1.format(target)}×` : `≥ ${nf0.format(target)}`;
@@ -3082,6 +3098,7 @@ function columnChart(el, labels, values, o={}){
   const colOf = d => { const up = d > 0; if(o.good === 'neutral') return up ? ['#2A62A8','#6aa8e0'] : ['#8593aa','#c3cddc'];
     return (o.good === 'up' ? up : !up) ? ['#0f8a5f','#4cc79a'] : ['#c8323f','#ef8b92']; };
   const absMx = Math.max(...D.filter(isNum).map(Math.abs), 1);
+  const word = d => d > 0 ? 'artış' : d < 0 ? 'azalış' : 'değişim yok', arr = d => d > 0 ? '▲ ' : d < 0 ? '▼ ' : '';
   const bigI = D.reduce((b, d, i) => isNum(d) && Math.abs(d) > Math.abs(D[b] ?? 0) ? i : b, 1);
   const show = i => !dense || i === n-1 || i === 0 || i === bigI;
   const id = 'wf' + (++GID);
@@ -3099,17 +3116,17 @@ function columnChart(el, labels, values, o={}){
     if(first || last){
       const y = Y(v), h = Y(y0) - y;
       s += `<rect x="${X(i)-bw/2}" y="${y}" width="${bw}" height="${h}" rx="8" fill="url(#${id}${last ? 'P' : 'S'})" ${last ? `filter="url(#${id}G)"` : ''}/>`;
-      const ex = dense ? (last ? W - R : L) : X(i), ea = dense ? (last ? 'end' : 'start') : 'middle';
-      s += `<text x="${ex}" y="${y-10}" text-anchor="${ea}" style="font-weight:800;font-size:${last ? 13 : 11.5}px;fill:${last ? '#16335f' : 'var(--ink-2)'}">${esc(fmt(v))}</text>`;
-      if(!first){ const d = D[i]; if(isNum(d)){ const [c1] = colOf(d); s += `<text x="${ex}" y="${y-26}" text-anchor="${ea}" style="font-weight:800;font-size:11px;fill:${c1}">${d > 0 ? '▲ +' : d < 0 ? '▼ −' : ''}${esc(fD(Math.abs(d)))} · ${esc(PCT(Math.abs(C[i]||0)))}</text>`; } }
+      const ex = last ? Math.min(W - R, X(i) + bw/2) : dense ? L : X(i), ea = last ? 'end' : dense ? 'start' : 'middle';
+      if(!(dense && first)) s += `<text x="${ex}" y="${y-10}" text-anchor="${ea}" style="font-weight:800;font-size:${last ? 13 : 11.5}px;fill:${last ? '#16335f' : 'var(--ink-2)'}">${esc(fmt(v))}</text>`;
+      if(!first && !dense){ const d = D[i]; if(isNum(d)){ const [c1] = colOf(d); s += `<text x="${ex}" y="${y-26}" text-anchor="${ea}" style="font-weight:800;font-size:11px;fill:${c1}">${arr(d)}${esc(fD(Math.abs(d)))} · ${esc(PCT(Math.abs(C[i]||0)))} ${word(d)}</text>`; } }
     }else{
       const d = D[i]; if(!isNum(d)) return; const [c1, c2] = colOf(d), a = Y(values[i-1]), b = Y(v), top = Math.min(a, b), h = Math.max(3, Math.abs(a - b)), up = d >= 0, gid = `${id}d${i}`;
       s += `<defs><linearGradient id="${gid}" x1="0" x2="0" y1="${up ? 1 : 0}" y2="${up ? 0 : 1}"><stop offset="0" stop-color="${c2}"/><stop offset="1" stop-color="${c1}"/></linearGradient></defs>`;
       s += `<rect x="${X(i)-bw/2}" y="${top}" width="${bw}" height="${h}" rx="${Math.min(7, h/2)}" fill="url(#${gid})"/>`;
       if(show(i)){
         const big = Math.abs(d) >= absMx*.6, ty = up ? top - 8 : top + h + 15, tp = up ? top - 22 : top + h + 28;
-        s += `<text x="${X(i)}" y="${up ? tp : ty}" text-anchor="middle" style="font-weight:${big ? 800 : 750};font-size:${big ? 12 : 11}px;fill:${c1}">${d > 0 ? '+' : d < 0 ? '−' : ''}${esc(fD(Math.abs(d)))}</text>`;
-        s += `<text x="${X(i)}" y="${up ? ty : tp}" text-anchor="middle" style="font-weight:650;font-size:10px;fill:var(--muted)">${C[i] == null ? '' : (C[i] > 0 ? '+' : '−') + esc(PCT(Math.abs(C[i]), Math.abs(C[i]) >= 100 ? 0 : 1))}</text>`;
+        s += `<text x="${X(i)}" y="${up ? tp : ty}" text-anchor="middle" style="font-weight:${big ? 800 : 750};font-size:${big ? 12 : 11}px;fill:${c1}">${arr(d)}${esc(fD(Math.abs(d)))}</text>`;
+        s += `<text x="${X(i)}" y="${up ? ty : tp}" text-anchor="middle" style="font-weight:650;font-size:10px;fill:var(--muted)">${C[i] == null ? '' : esc(PCT(Math.abs(C[i]), Math.abs(C[i]) >= 100 ? 0 : 1)) + ' ' + word(d)}</text>`;
       }
     }
     if(i < n-1 && isNum(values[i+1])) s += `<line x1="${X(i)+bw/2}" x2="${X(i+1)-bw/2}" y1="${Y(v)}" y2="${Y(v)}" stroke="#7d8aa0" stroke-opacity=".55" stroke-dasharray="3 3"/>`;
@@ -3121,7 +3138,7 @@ function columnChart(el, labels, values, o={}){
     if(!dense && isNum(values[i])) s += `<text x="${X(i)}" y="${H-B+35}" text-anchor="middle" style="font-size:10px;fill:var(--muted)">${esc(fmt(values[i]))}</text>`; });
   labels.forEach((lb,i) => { const v = values[i], p = i ? values[i-1] : null, ch = C[i];
     const rows = [[o.name || 'Değer', isNum(v) ? (o.fmtFull || FMT)(v) : '—']]; if(i) rows.push(['Önceki ay', isNum(p) ? (o.fmtFull || FMT)(p) : '—']);
-    if(isNum(D[i])) rows.push(['Değişim', (D[i] > 0 ? '+' : D[i] < 0 ? '−' : '') + fD(Math.abs(D[i]))]); if(ch != null) rows.push(['Değişim (%)', (ch > 0 ? '+' : '') + PCT(ch)]);
+    if(isNum(D[i])) rows.push([D[i] > 0 ? 'Artış' : D[i] < 0 ? 'Azalış' : 'Değişim', fD(Math.abs(D[i])) + (ch != null ? ' · ' + PCT(Math.abs(ch)) : '')]);
     s += `<rect class="wf-hit" data-i="${i}" x="${X(i)-slot/2}" y="0" width="${slot}" height="${H}" fill="transparent" data-tip="${tipHTML(o.fullLabels ? o.fullLabels[i] : lb, rows)}"/>`; });
   el.innerHTML = s + '</svg>';
   const svg = el.querySelector('svg');
@@ -3130,12 +3147,16 @@ function columnChart(el, labels, values, o={}){
   const sumEl = document.getElementById(el.id + 'Sum');
   if(sumEl){ const ok = D.map((d,i) => ({d, i})).filter(x => isNum(x.d)); if(!ok.length){ sumEl.innerHTML = ''; return; }
     const mx = ok.reduce((a,b) => b.d > a.d ? b : a), mn = ok.reduce((a,b) => b.d < a.d ? b : a), f0 = ok[0].i - 1, net = values[n-1] - values[f0], np = pctChange(values[n-1], values[f0]);
-    const ups = ok.filter(x => x.d > 0).length, full = i => o.fullLabels ? o.fullLabels[i] : labels[i], sg = v => v > 0 ? '+' : v < 0 ? '−' : '';
-    const it = (k, v, sub, c) => `<div class="cs-i"><small>${k}</small><b style="${c ? 'color:' + c : ''}">${esc(v)}</b><span>${esc(sub)}</span></div>`;
-    sumEl.innerHTML = it(`${ok.length + 1} ayda net`, sg(net) + fD(Math.abs(net)), `${full(f0)} → ${full(n-1)} · ${sg(net)}${PCT(Math.abs(np || 0))}`, colOf(net)[0])
-      + it('En büyük artış', mx.d > 0 ? '+' + fD(mx.d) : '—', mx.d > 0 ? `${full(mx.i)} · +${PCT(Math.abs(C[mx.i] || 0))}` : 'artış yok', colOf(1)[0])
-      + it('En büyük düşüş', mn.d < 0 ? '−' + fD(Math.abs(mn.d)) : '—', mn.d < 0 ? `${full(mn.i)} · −${PCT(Math.abs(C[mn.i] || 0))}` : 'düşüş yok', colOf(-1)[0])
-      + it('Artan / azalan ay', `${ups} / ${ok.length - ups}`, `ort. aylık ${sg(sum(ok,'d'))}${fD(Math.abs(sum(ok,'d')/ok.length))}`); }
+    const ups = ok.filter(x => x.d > 0).length, dns = ok.filter(x => x.d < 0).length, avg = sum(ok,'d')/ok.length;
+    const ic = d => `<i class="cs-ic" style="--ic:${colOf(d || 1)[0]}">${d > 0 ? '▲' : d < 0 ? '▼' : '●'}</i>`;
+    const tag = (d, p) => `<em class="cs-tag" style="--ic:${colOf(d || 1)[0]}">${esc(PCT(Math.abs(p || 0)))} ${word(d)}</em>`;
+    const it = (k, ico, v, extra, sub) => `<div class="cs-i"><small>${k}</small><div class="cs-v">${ico}<b>${esc(v)}</b>${extra || ''}</div><span>${sub}</span></div>`;
+    sumEl.innerHTML =
+        it('Net değişim', ic(net), fD(Math.abs(net)), tag(net, np), `${esc(labels[f0])} → ${esc(labels[n-1])} · ${ok.length + 1} ay`)
+      + it('En büyük artış', ic(1), mx.d > 0 ? fD(mx.d) : '—', mx.d > 0 ? tag(1, C[mx.i]) : '', mx.d > 0 ? esc(o.fullLabels ? o.fullLabels[mx.i] : labels[mx.i]) : 'artış yok')
+      + it('En büyük azalış', ic(-1), mn.d < 0 ? fD(Math.abs(mn.d)) : '—', mn.d < 0 ? tag(-1, C[mn.i]) : '', mn.d < 0 ? esc(o.fullLabels ? o.fullLabels[mn.i] : labels[mn.i]) : 'azalış yok')
+      + `<div class="cs-i"><small>Artış / azalış ayı</small><div class="cs-v"><b>${ups}</b><span class="cs-sl">/</span><b style="color:${colOf(-1)[0]}">${dns}</b><span class="cs-u">ay</span></div>
+         <div class="cs-bar"><i style="flex:${ups};background:${colOf(1)[0]}"></i><i style="flex:${dns};background:${colOf(-1)[1]}"></i></div><span>Ort. aylık ${avg >= 0 ? 'artış' : 'azalış'} ${esc(fD(Math.abs(avg)))}</span></div>`; }
 }
 let MM_MODE = 'n';
 function renderMinMax(ctx){
