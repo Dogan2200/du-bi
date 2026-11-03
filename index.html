@@ -1888,6 +1888,30 @@ img,svg,canvas,video{max-width:100%}
 .cap-ti small{display:block;font-size:10.5px;color:rgba(255,255,255,.62)}
 .cap-ti strong{font-size:13px;color:#fff;font-variant-numeric:tabular-nums}
 .cap-ti:hover b{text-decoration:underline}
+
+/* sohbet: telefonda (dik ve yatay) tam ekran, klavye açıkken de mesajlar görünür */
+@media(max-width:760px), (max-height:560px){
+  #chatRoot.open .fab{display:none!important}
+  #chatRoot .chat{position:fixed!important;inset:0!important;width:auto!important;height:100dvh!important;max-height:100dvh!important;border-radius:0!important;transform-origin:bottom right}
+  #chatRoot.max .chat{width:auto!important;height:100dvh!important}
+  .chat-h{padding:8px 12px!important;gap:10px!important}
+  .chat-av{width:32px!important;height:32px!important;border-radius:10px!important}
+  .chat-h .t{font-size:13px!important}.chat-h .s{font-size:10.5px!important}
+  .chat-h button{width:30px!important;height:30px!important}
+  #chatMax{display:none!important}
+  .chat-body{padding:10px 12px!important;gap:10px!important;min-height:0}
+  .suggest{padding:6px 10px!important}
+  .suggest button{padding:4px 9px!important;font-size:11px!important}
+  .chat-in{padding:8px 10px calc(8px + env(safe-area-inset-bottom))!important}
+  .chat-in input{height:40px!important}
+  .chat-in button{width:40px!important;height:40px!important}
+  .msg{max-width:96%!important}
+}
+@media(max-height:560px){
+  .chat-h .s{display:none}
+  .suggest{display:none!important}
+  .chat-body{padding:8px 14px!important}
+}
 </style>
 </head>
 <body class="auth-lock">
