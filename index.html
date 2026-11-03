@@ -1835,6 +1835,18 @@ details.grp>summary .chev{width:22px!important;height:22px!important;font-size:1
   .bar-row .bv{grid-column:2;grid-row:1}
 }
 @media(max-width:380px){ .qmonth i{display:none!important} }
+
+/* telefon: ekran genişliğine tam oturma (iOS/Android) */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden;max-width:100%}
+body{overflow-x:hidden;max-width:100vw}
+img,svg,canvas,video{max-width:100%}
+@media(max-width:760px){
+  /* iOS, 16px altı yazı kutularına dokununca sayfayı büyütür ve büyük kalır: hepsi 16px */
+  input,select,textarea,.fld input,.fld select,.inp,.controls .sel,.dd .dd-search input,.chat-in input,table.dt thead tr.sf-filter input{font-size:16px!important}
+  table.dt thead tr.sf-filter input{height:30px!important}
+  main.wrap,.app-header .wrap{max-width:100vw;overflow-x:clip}
+  .chart,.chart svg,.fd,.dn-svg{max-width:100%}
+}
 </style>
 </head>
 <body class="auth-lock">
