@@ -1415,6 +1415,21 @@ body.on-cover::before{height:calc(var(--bandH,600px) - 150px)!important}
 .fl2-r .v b{display:block;font-size:13px;font-weight:750;line-height:1.15}
 .fl2-r .v small{font-size:10.5px;color:var(--muted)}
 @media(max-width:640px){.cs-strip{display:block!important}.fr-v{font-size:34px}.fr-s{text-align:left;margin-top:10px;font-size:12.5px}}
+
+/* seviye eğrisi + değişim bandı */
+#chTrend{position:relative}
+.fd-line{filter:drop-shadow(0 6px 10px rgba(22,51,95,.18))}
+.fd-scr,.fd-dot{transition:opacity .15s}
+.fd-band{position:relative;height:74px;margin-top:4px;border-top:1px solid rgba(16,42,84,.10)}
+.fd-c,.fd-c0{position:absolute;top:0;transform:translateX(-50%);text-align:center;padding-top:12px;height:100%;box-sizing:border-box;transition:opacity .18s,background .18s;border-radius:0 0 12px 12px}
+.fd-c small,.fd-c0 small{display:block;font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.fd-c b,.fd-c0 b{display:block;font-size:14px;font-weight:800;margin-top:5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.fd-c0 b{color:var(--ink-2);font-size:13px}
+.fd-c i,.fd-c0 i{display:block;font-style:normal;font-size:11px;font-weight:650;margin-top:1px;opacity:.82}
+.fd-c0 i{color:var(--muted)}
+.fd-c.on{background:linear-gradient(180deg,rgba(42,98,168,.08),transparent)}
+.fd-dim .fd-c:not(.hl){opacity:.38}
+.fd-c.hl{background:linear-gradient(180deg,rgba(42,98,168,.10),transparent)}
 </style>
 </head>
 <body class="auth-lock">
@@ -2994,7 +3009,7 @@ function drawTrend(ctx){
   $('#trendTitle').textContent = `${meta.n} · aylık seyir`;
   const l = vals[n-1], p = n > 1 ? vals[n-2] : null, ch = pctChange(l, p);
   $('#trendSub').innerHTML = ''
-    + `Son ${n} ay · çizgi seviyeyi, iki ay arasındaki her parça o ayın artış / azalışını gösterir · üzerine gelin`
+    + `Son ${n} ay · eğri seviyeyi, alttaki bant her ayın önceki aya göre artış / azalışını gösterir · üzerine gelin`
     + (n <= 2 ? `<br><span style="color:var(--muted)">Veride ${n} ay bulunduğu için seyir sınırlıdır; yeni aylar eklendikçe grafik zenginleşir.</span>` : '');
   const K = SETTINGS.kpi, target = k === 'doh' ? K.doh.target : k === 'turn' ? K.turn.target : k === 'health' ? SETTINGS.bands.good : null;
   const tLab = target == null ? '' : k === 'doh' ? `≤ ${nf0.format(target)} gün` : k === 'turn' ? `≥ ${nf1.format(target)}×` : `≥ ${nf0.format(target)}`;
@@ -3121,86 +3136,96 @@ function shareBars(el, ctx, key, cur){
   el.insertAdjacentHTML('beforeend', `<div class="note mt10">Toplam ${cur.length} kayıt</div>`);
 }
 function trendColor(ch, good){ if(ch == null || good === 'neutral' || Math.abs(ch) < .05) return 'var(--ink-2)'; return (good === 'up' ? ch > 0 : ch < 0) ? 'var(--pos)' : 'var(--neg)'; }
+function monoPath(P){
+  /* monoton kübik eğri (Fritsch–Carlson): veride olmayan tepe/çukur üretmez */
+  const n = P.length; if(n < 2) return ''; if(n === 2) return `M${P[0][0]} ${P[0][1]} L${P[1][0]} ${P[1][1]}`;
+  const dx = [], dy = [], m = [], t = [];
+  for(let i = 0; i < n-1; i++){ dx[i] = P[i+1][0] - P[i][0]; dy[i] = P[i+1][1] - P[i][1]; m[i] = dy[i]/dx[i]; }
+  t[0] = m[0]; t[n-1] = m[n-2];
+  for(let i = 1; i < n-1; i++) t[i] = m[i-1]*m[i] <= 0 ? 0 : (m[i-1] + m[i]) / 2;
+  for(let i = 0; i < n-1; i++){ if(m[i] === 0){ t[i] = t[i+1] = 0; continue; } const a = t[i]/m[i], b = t[i+1]/m[i], h = a*a + b*b; if(h > 9){ const k = 3/Math.sqrt(h); t[i] = k*a*m[i]; t[i+1] = k*b*m[i]; } }
+  let d = `M${P[0][0]} ${P[0][1]}`;
+  for(let i = 0; i < n-1; i++){ const h = dx[i]/3; d += ` C${P[i][0]+h} ${P[i][1]+t[i]*h} ${P[i+1][0]-h} ${P[i+1][1]-t[i+1]*h} ${P[i+1][0]} ${P[i+1][1]}`; }
+  return d;
+}
 function columnChart(el, labels, values, o={}){
-  /* "Akış hattı": seviye çizgisi + her ara o ayın önceki aya göre değişimi (tutar ve yüzde) */
+  /* Seviye eğrisi + aylık değişim bandı: üstte pürüzsüz alan, altta her ayın artış/azalışı tek satır */
   const fmt = o.fmt || FMTc, fD = o.fmtD || fmt, fF = o.fmtFull || FMT, n = labels.length, tg = isNum(o.target) ? o.target : null;
   const full = i => o.fullLabels ? o.fullLabels[i] : labels[i];
   const D = values.map((v,i) => i && isNum(v) && isNum(values[i-1]) ? v - values[i-1] : null), C = values.map((v,i) => i ? pctChange(v, values[i-1]) : null);
   const ok = D.map((d,i) => ({d, i})).filter(x => isNum(x.d));
   if(!ok.length){ el.innerHTML = '<div class="empty">Trend için en az iki ay gerekiyor.</div>'; return; }
   const good = d => o.good === 'neutral' ? null : (o.good === 'up' ? d > 0 : d < 0);
-  const col = d => { const g = good(d); if(Math.abs(d) < 1e-9) return '#8a97ab'; if(g == null) return d > 0 ? '#2A62A8' : '#6aa3d6'; return g ? '#1E9E82' : '#D0603F'; };
-  const word = d => d > 0 ? 'artış' : d < 0 ? 'azalış' : 'değişim yok', sg = d => d > 0 ? '+' : d < 0 ? '−' : '';
+  const col = d => { if(Math.abs(d) < 1e-9) return '#8a97ab'; const g = good(d); if(g == null) return d > 0 ? '#2A62A8' : '#E0884A'; return g ? '#1E9E82' : '#D0603F'; };
+  const word = d => d > 0 ? 'artış' : d < 0 ? 'azalış' : 'değişim yok', sg = d => d > 0 ? '+' : d < 0 ? '−' : '', arw = d => d > 0 ? '▲' : d < 0 ? '▼' : '●';
   const mx = ok.reduce((a,b) => b.d > a.d ? b : a), mn = ok.reduce((a,b) => b.d < a.d ? b : a);
   const f0 = ok[0].i - 1, net = values[n-1] - values[f0], np = pctChange(values[n-1], values[f0]), ups = ok.filter(x => x.d > 0).length, dns = ok.filter(x => x.d < 0).length;
+  const pc = c => PCT(Math.abs(c || 0), Math.abs(c || 0) >= 100 ? 0 : 1);
 
   // ---- başlık okuması (kutusuz) ----
   const sumEl = document.getElementById(el.id + 'Sum');
-  const readout = i => { if(!sumEl) return; const d = D[i], c = C[i];
+  const readout = i => { if(!sumEl) return; const d = D[i];
     sumEl.querySelector('.fr-v').textContent = isNum(values[i]) ? fF(values[i]) : '—';
     sumEl.querySelector('.fr-m').textContent = full(i) + (i === n-1 ? ' · bugün' : '');
-    sumEl.querySelector('.fr-d').innerHTML = isNum(d) ? `<b style="color:${col(d)}">${d > 0 ? '▲' : d < 0 ? '▼' : '●'} ${esc(fD(Math.abs(d)))} · ${esc(PCT(Math.abs(c || 0)))} ${word(d)}</b> <span>önceki aya göre</span>` : '<span>ilk ay</span>'; };
+    sumEl.querySelector('.fr-d').innerHTML = isNum(d) ? `<b style="color:${col(d)}">${arw(d)} ${esc(fD(Math.abs(d)))} · ${esc(pc(C[i]))} ${word(d)}</b> <span>önceki aya göre</span>` : '<span>başlangıç ayı</span>'; };
   if(sumEl){
     sumEl.innerHTML = `<div class="fr-l"><div class="fr-m"></div><div class="fr-v"></div><div class="fr-d"></div></div>
-      <p class="fr-s">${esc(String(ok.length + 1))} ayda <b style="color:${col(net)}">${sg(net)}${esc(fD(Math.abs(net)))} (${sg(net)}${esc(PCT(Math.abs(np || 0)))})</b> net ${word(net)}<br>
+      <p class="fr-s">${ok.length + 1} ayda <b style="color:${col(net)}">${sg(net)}${esc(fD(Math.abs(net)))} (${sg(net)}${esc(pc(np))})</b> net ${word(net)}<br>
       <span><b>${ups}</b> ay artış · <b>${dns}</b> ay azalış</span><br>
       <span>En sert artış <b>${esc(labels[mx.i])}</b> ${mx.d > 0 ? '+' + esc(fD(mx.d)) : '—'} · en sert düşüş <b>${esc(labels[mn.i])}</b> ${mn.d < 0 ? '−' + esc(fD(Math.abs(mn.d))) : '—'}</span></p>`;
     readout(n-1);
   }
 
   const W = Math.max(320, el.clientWidth || 700);
-  // ---- mobil: değişim merdiveni ----
+  // ---- mobil: küçük eğri + değişim merdiveni ----
   if(W < 640){
     const amx = Math.max(...ok.map(x => Math.abs(x.d)), 1);
-    const P = values.map((v,i) => isNum(v) ? i : null).filter(i => i != null), lo = Math.min(...P.map(i => values[i])), hi = Math.max(...P.map(i => values[i])), sw = W, sh = 70;
-    const sx = i => 6 + i/(n-1)*(sw-12), sy = v => 8 + (1 - (v - lo)/((hi - lo) || 1))*(sh-16);
-    const lp = P.map(i => `${sx(i)},${sy(values[i])}`).join(' ');
-    let h = `<svg class="fl2-sp" width="${sw}" height="${sh}"><polyline points="${lp}" fill="none" stroke="#2A62A8" stroke-width="2" stroke-linejoin="round"/><circle cx="${sx(P[P.length-1])}" cy="${sy(values[P[P.length-1]])}" r="4.5" fill="#16335f"/></svg><div class="fl2-lad">`;
+    const Pi = values.map((v,i) => isNum(v) ? i : null).filter(i => i != null), lo = Math.min(...Pi.map(i => values[i])), hi = Math.max(...Pi.map(i => values[i])), sh = 76;
+    const sx = i => 6 + i/(n-1)*(W-12), sy = v => 8 + (1 - (v - lo)/((hi - lo) || 1))*(sh-16), pts = Pi.map(i => [sx(i), sy(values[i])]), gid = 'fs' + (++GID);
+    let h = `<svg class="fl2-sp" width="${W}" height="${sh}"><defs><linearGradient id="${gid}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3c8dbc" stop-opacity=".28"/><stop offset="1" stop-color="#3c8dbc" stop-opacity="0"/></linearGradient></defs>
+      <path d="${monoPath(pts)} L${pts[pts.length-1][0]} ${sh} L${pts[0][0]} ${sh} Z" fill="url(#${gid})"/><path d="${monoPath(pts)}" fill="none" stroke="#2A62A8" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="${pts[pts.length-1][0]}" cy="${pts[pts.length-1][1]}" r="4.5" fill="#16335f" stroke="#fff" stroke-width="2"/></svg><div class="fl2-lad">`;
     for(let i = n-1; i >= 1; i--){ const d = D[i]; if(!isNum(d)) continue; const w = Math.abs(d)/amx*50;
-      h += `<div class="fl2-r${i === n-1 ? ' on' : ''}"><span class="m">${esc(labels[i])}</span><span class="b"><i style="${d >= 0 ? 'left:50%' : `right:50%`};width:${w}%;background:${col(d)}"></i></span><span class="v"><b style="color:${col(d)}">${sg(d)}${esc(fD(Math.abs(d)))}</b><small>${sg(d)}${esc(PCT(Math.abs(C[i] || 0)))}</small></span></div>`; }
+      h += `<div class="fl2-r${i === n-1 ? ' on' : ''}"><span class="m">${esc(labels[i])}</span><span class="b"><i style="${d >= 0 ? 'left:50%' : 'right:50%'};width:${w}%;background:${col(d)}"></i></span><span class="v"><b style="color:${col(d)}">${arw(d)} ${esc(fD(Math.abs(d)))}</b><small>${sg(d)}${esc(pc(C[i]))}</small></span></div>`; }
     el.style.height = 'auto'; el.innerHTML = h + '</div>'; return;
   }
 
-  // ---- masaüstü: akış hattı ----
-  const H = el.clientHeight || 400, L = 64, R = tg != null ? 84 : 26, T = 40, B = 40;
-  const pts = values.filter(isNum), lo = Math.min(...pts, tg ?? Infinity), hi = Math.max(...pts, tg ?? -Infinity), pad = (hi - lo)*.22 || hi*.1 || 1;
-  const ticks = niceTicks(Math.max(0, lo - pad), hi + pad, 3), y0 = ticks[0], y1 = ticks[ticks.length-1];
-  const X = i => L + i*(W-L-R)/(n-1), Y = v => T + (1 - (v - y0)/(y1 - y0))*(H-T-B);
-  const id = 'fl' + (++GID);
-  let s = `<svg width="${W}" height="${H}" class="fl2" role="img" aria-label="${esc(o.name || 'Aylık seyir')}"><defs>
-    <linearGradient id="${id}A" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3c8dbc" stop-opacity=".20"/><stop offset="1" stop-color="#3c8dbc" stop-opacity="0"/></linearGradient></defs>`;
+  // ---- masaüstü ----
+  const H = 300, L = 64, R = Math.max(tg != null ? 84 : 26, Math.ceil((W - 64)/(2*(n-1) + 1)) + 2), T = 22, B = 14;
+  const pts0 = values.filter(isNum), lo = Math.min(...pts0, tg ?? Infinity), hi = Math.max(...pts0, tg ?? -Infinity), pad = (hi - lo)*.2 || hi*.1 || 1;
+  const ticks = niceTicks(Math.max(0, lo - pad), hi + pad*.6, 3), y0 = ticks[0], y1 = ticks[ticks.length-1];
+  const X = i => L + i*(W-L-R)/(n-1), Y = v => T + (1 - (v - y0)/(y1 - y0))*(H-T-B), slot = (W-L-R)/(n-1);
+  const P = values.map((v,i) => isNum(v) ? [X(i), Y(v), i] : null).filter(Boolean), path = monoPath(P), id = 'fd' + (++GID);
+  let s = `<svg width="${W}" height="${H}" class="fd" role="img" aria-label="${esc(o.name || 'Aylık seyir')}"><defs>
+    <linearGradient id="${id}A" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3c8dbc" stop-opacity=".30"/><stop offset=".7" stop-color="#3c8dbc" stop-opacity=".06"/><stop offset="1" stop-color="#3c8dbc" stop-opacity="0"/></linearGradient>
+    <linearGradient id="${id}S" x1="0" x2="1"><stop offset="0" stop-color="#6aa8e0"/><stop offset="1" stop-color="#16335f"/></linearGradient></defs>`;
   ticks.forEach(t => s += `<line x1="${L}" x2="${W-R}" y1="${Y(t)}" y2="${Y(t)}" stroke="#16335f" stroke-opacity=".07"/><text x="${L-14}" y="${Y(t)+4}" text-anchor="end">${esc(fmt(t))}</text>`);
-  const P = values.map((v,i) => isNum(v) ? [X(i), Y(v), i] : null).filter(Boolean);
-  s += `<path d="M${P[0][0]} ${Y(y0)} ${P.map(p => `L${p[0]} ${p[1]}`).join(' ')} L${P[P.length-1][0]} ${Y(y0)} Z" fill="url(#${id}A)"/>`;
+  s += `<path d="${path} L${P[P.length-1][0]} ${H} L${P[0][0]} ${H} Z" fill="url(#${id}A)"/>`;
   if(tg != null){ const yt = Y(tg); s += `<line x1="${L}" x2="${W-R}" y1="${yt}" y2="${yt}" stroke="#D0603F" stroke-opacity=".7" stroke-dasharray="5 5"/><text x="${W-R+10}" y="${yt+4}" style="font-weight:700;fill:#D0603F;font-size:10.5px">Hedef</text><text x="${W-R+10}" y="${yt+17}" style="fill:#D0603F;font-size:10.5px">${esc(o.targetLabel || fmt(tg))}</text>`; }
-  s += `<line class="fl2-scr" x1="0" x2="0" y1="${T-14}" y2="${H-B}" stroke="#16335f" stroke-opacity=".18"/>`;
-  // segmentler + etiketler
-  for(let i = 1; i < n; i++){ const d = D[i]; if(!isNum(d)) continue;
-    const ax = X(i-1), ay = Y(values[i-1]), bx = X(i), by = Y(values[i]), c = col(d), mxp = (ax+bx)/2, myp = (ay+by)/2, up = d >= 0;
-    s += `<path class="fl2-seg" data-i="${i}" d="M${ax} ${ay} L${bx} ${by}" stroke="${c}" stroke-width="3" stroke-linecap="round" fill="none"/>`;
-    const ext = i === mx.i && mx.d > 0 ? 'EN SERT ARTIŞ' : i === mn.i && mn.d < 0 ? 'EN SERT DÜŞÜŞ' : '';
-    const base = up ? Math.min(ay, by) - 14 : Math.max(ay, by) + 22;
-    const l1 = up ? base - 13 : base, l2 = up ? base : base + 13, tagY = up ? l1 - 15 : l2 + 15;
-    s += `<g class="fl2-lab" data-i="${i}"><text x="${mxp}" y="${l1}" text-anchor="middle" style="font-weight:750;font-size:12.5px;fill:${c}">${sg(d)}${esc(fD(Math.abs(d)))}</text>
-      <text x="${mxp}" y="${l2}" text-anchor="middle" style="font-weight:600;font-size:10.5px;fill:${c};opacity:.72">${sg(d)}${esc(PCT(Math.abs(C[i] || 0), Math.abs(C[i] || 0) >= 100 ? 0 : 1))}</text>
-      ${ext ? `<text x="${mxp}" y="${tagY}" text-anchor="middle" style="font-weight:800;font-size:9px;letter-spacing:.12em;fill:var(--muted)">${ext}</text>` : ''}</g>`;
-  }
-  P.forEach(([x, y, i]) => { const last = i === n-1;
-    s += last ? `<circle cx="${x}" cy="${y}" r="15" fill="#2A62A8" opacity=".12"/><circle class="fl2-pt" data-i="${i}" cx="${x}" cy="${y}" r="6" fill="#16335f" stroke="#fff" stroke-width="2.5"/>`
-              : `<circle class="fl2-pt" data-i="${i}" cx="${x}" cy="${y}" r="4" fill="#fff" stroke="#16335f" stroke-width="2"/>`; });
-  const step = Math.ceil(n / Math.max(2, Math.floor((W-L-R)/58)));
-  labels.forEach((lb,i) => { if(i % step === 0 || i === n-1) s += `<text class="fl2-x" data-i="${i}" x="${X(i)}" y="${H-12}" text-anchor="middle" style="${i === n-1 ? 'font-weight:800;fill:var(--ink)' : 'font-weight:600'}">${esc(lb)}</text>`; });
-  s += `<rect class="fl2-hit" x="${L-20}" y="0" width="${W-L-R+40}" height="${H}" fill="transparent"/>`;
-  el.innerHTML = s + '</svg>';
-  // kaydırıcı: başlık okuması o aya geçer, komşu segmentler öne çıkar
-  const svg = el.querySelector('svg'), scr = svg.querySelector('.fl2-scr');
-  const focus = i => { scr.setAttribute('x1', X(i)); scr.setAttribute('x2', X(i)); scr.style.opacity = i == null ? 0 : 1;
-    svg.classList.toggle('dim', i != null);
-    svg.querySelectorAll('[data-i]').forEach(e => { const k = +e.dataset.i; e.classList.toggle('hl', i != null && (k === i || (k === i+1 && e.classList.contains('fl2-seg')) || (e.classList.contains('fl2-lab') && (k === i || k === i+1)))); });
-    readout(i == null ? n-1 : i); };
+  s += `<line class="fd-scr" x1="0" x2="0" y1="${T-10}" y2="${H}" stroke="#16335f" stroke-opacity=".22" stroke-dasharray="3 3"/>`;
+  s += `<path d="${path}" fill="none" stroke="url(#${id}S)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" class="fd-line"/>`;
+  // en sert artış / düşüş işaretleri
+  [[mx, 'EN SERT ARTIŞ', mx.d > 0], [mn, 'EN SERT DÜŞÜŞ', mn.d < 0]].forEach(([x, t, on]) => { if(!on) return; const px = X(x.i), py = Y(values[x.i]), up = x.d > 0;
+    s += `<circle cx="${px}" cy="${py}" r="4.5" fill="#fff" stroke="${col(x.d)}" stroke-width="2.2"/><text x="${px}" y="${up ? py - 14 : py + 22}" text-anchor="middle" style="font-weight:800;font-size:9px;letter-spacing:.12em;fill:${col(x.d)}">${t}</text>`; });
+  const li = P[P.length-1];
+  s += `<circle cx="${li[0]}" cy="${li[1]}" r="16" fill="#2A62A8" opacity=".12"/><circle cx="${li[0]}" cy="${li[1]}" r="6" fill="#16335f" stroke="#fff" stroke-width="2.5"/>`;
+  s += `<circle class="fd-dot" cx="0" cy="0" r="5.5" fill="#fff" stroke="#16335f" stroke-width="2.5" style="opacity:0"/>`;
+  s += `</svg>`;
+  // değişim bandı: her ay, o noktanın tam altında
+  let band = `<div class="fd-band" style="--L:${L}px;--R:${R}px">`;
+  for(let i = 1; i < n; i++){ const d = D[i]; if(!isNum(d)) continue; const c = col(d);
+    band += `<div class="fd-c${i === n-1 ? ' on' : ''}" data-i="${i}" style="left:${X(i)}px;width:${slot}px"><small>${esc(labels[i])}</small><b style="color:${c}">${arw(d)} ${esc(fD(Math.abs(d)))}</b><i style="color:${c}">${sg(d)}${esc(pc(C[i]))}</i></div>`; }
+  band += `<div class="fd-c0" style="left:${Math.max(X(0), slot/2)}px;width:${slot}px"><small>${esc(labels[0])}</small><b>${esc(fmt(values[0]))}</b><i>başlangıç</i></div></div>`;
+  el.style.height = 'auto'; el.innerHTML = s + band;
+  // kaydırıcı: çizgi + band birlikte; başlık okuması o aya geçer
+  const svg = el.querySelector('svg'), scr = svg.querySelector('.fd-scr'), dot = svg.querySelector('.fd-dot'), cells = el.querySelectorAll('.fd-c');
+  const focus = i => { const on = i != null;
+    scr.style.opacity = on ? 1 : 0; dot.style.opacity = on && isNum(values[i]) ? 1 : 0;
+    if(on){ scr.setAttribute('x1', X(i)); scr.setAttribute('x2', X(i)); if(isNum(values[i])){ dot.setAttribute('cx', X(i)); dot.setAttribute('cy', Y(values[i])); } }
+    cells.forEach(c => c.classList.toggle('hl', on && +c.dataset.i === i)); el.classList.toggle('fd-dim', on); readout(on ? i : n-1); };
   scr.style.opacity = 0;
-  svg.addEventListener('pointermove', e => { const r = svg.getBoundingClientRect(), x = e.clientX - r.left; const i = Math.max(0, Math.min(n-1, Math.round((x - L)/((W-L-R)/(n-1))))); focus(i); });
-  svg.addEventListener('pointerleave', () => focus(null));
+  const idxAt = e => { const r = el.getBoundingClientRect(); return Math.max(0, Math.min(n-1, Math.round((e.clientX - r.left - L)/slot))); };
+  el.onpointermove = e => focus(idxAt(e)); el.onpointerleave = () => focus(null);
 }
 let MM_MODE = 'n';
 function renderMinMax(ctx){
