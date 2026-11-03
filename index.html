@@ -2480,6 +2480,73 @@ body.vg-loading::after{content:"";position:fixed;left:0;top:0;height:3px;width:1
   #loginBackdrop .login-shell,#loginBackdrop .login-art li,.auth-backdrop.open .modal{animation-duration:.01s!important}
 }
 /* /team:v_giris */
+/* team:v_ipucu — veri görselleştirme bitiş katmanı: cam ipucu, lejantlar, eksen, segment hover */
+:root{--tip-bg:rgba(255,255,255,.9);--tip-line:rgba(22,51,95,.12);--tip-ink:#16335f;--tip-k:#5b6b82;--tip-sep:rgba(22,51,95,.08);
+  --tip-sh:0 1px 0 rgba(255,255,255,.9) inset,0 18px 40px -16px rgba(16,42,84,.38),0 4px 12px -6px rgba(16,42,84,.18);
+  --tip-up:#12A37A;--tip-dn:#E5484D;--leg-ring:rgba(22,51,95,.10)}
+:root:not([data-theme="light"]){--tip-bg:rgba(20,26,38,.88);--tip-line:rgba(255,255,255,.12);--tip-ink:#eef3fb;--tip-k:#9aa8bf;--tip-sep:rgba(255,255,255,.08);
+  --tip-sh:0 1px 0 rgba(255,255,255,.06) inset,0 22px 50px -18px rgba(0,0,0,.8);--tip-up:#3fcf8e;--tip-dn:#ff7b82;--leg-ring:rgba(255,255,255,.10)}
+#tip{position:fixed;left:0;top:0;z-index:300;pointer-events:none;box-sizing:border-box;min-width:168px;max-width:min(320px,calc(100vw - 16px));
+  padding:10px 12px 9px;border-radius:14px;background:var(--tip-bg);border:1px solid var(--tip-line);box-shadow:var(--tip-sh);
+  -webkit-backdrop-filter:blur(16px) saturate(1.6);backdrop-filter:blur(16px) saturate(1.6);
+  font:500 12px/1.4 var(--font);color:var(--tip-ink);letter-spacing:.005em;
+  opacity:0;transform:translateY(6px) scale(.98);transform-origin:var(--ax,50%) 100%;transition:opacity .14s var(--ease),transform .16s var(--ease);will-change:transform,opacity}
+#tip.below{transform:translateY(-6px) scale(.98);transform-origin:var(--ax,50%) 0}
+#tip.on{opacity:1;transform:none}
+#tip::after{content:"";position:absolute;left:var(--ax,50%);bottom:-6px;width:10px;height:10px;margin-left:-6px;background:inherit;
+  border:1px solid var(--tip-line);border-top:0;border-left:0;transform:rotate(45deg);border-bottom-right-radius:3px;clip-path:polygon(100% 0,100% 100%,0 100%);
+  -webkit-backdrop-filter:none;backdrop-filter:none}
+#tip.below::after{bottom:auto;top:-6px;transform:rotate(225deg)}
+#tip .tt{display:flex;align-items:center;gap:8px;font-weight:750;font-size:12.5px;letter-spacing:-.005em;color:var(--tip-ink);
+  margin:0 0 7px;padding-bottom:7px;border-bottom:1px solid var(--tip-sep);overflow-wrap:anywhere}
+#tip .tk{flex:none;width:9px;height:9px;border-radius:50%;box-shadow:0 0 0 3px var(--leg-ring),inset 0 0 0 1px rgba(0,0,0,.08)}
+#tip .tk.none{background:linear-gradient(135deg,#2A62A8,#14A38B)}
+#tip .tr{display:flex;justify-content:space-between;align-items:baseline;gap:18px;padding:2px 0;color:var(--tip-k);font-size:11.5px}
+#tip .tr span{min-width:0}
+#tip .tr b{color:var(--tip-ink);font-weight:700;font-variant-numeric:tabular-nums;text-align:right;max-width:62%;overflow-wrap:anywhere}
+#tip .tr b.up,#tip .tr b.dn{display:inline-flex;align-items:center;gap:4px;padding:0 6px;border-radius:6px}
+#tip .tr b.up{color:var(--tip-up);background:color-mix(in srgb,var(--tip-up) 12%,transparent)}
+#tip .tr b.dn{color:var(--tip-dn);background:color-mix(in srgb,var(--tip-dn) 12%,transparent)}
+#tip .tr b.up::before{content:"▲";font-size:7px}
+#tip .tr b.dn::before{content:"▼";font-size:7px}
+#tip .tr.long{flex-direction:column;align-items:flex-start;gap:1px}
+#tip .tr.long b{text-align:left;max-width:100%;font-weight:600}
+#tip.nohead .tr:first-child{padding-top:0}
+#tip.touch{font-size:12.5px}
+#tip.touch .tr{font-size:12px;padding:3px 0}
+@media (max-width:640px){#tip{max-width:calc(100vw - 16px);padding:10px 12px}}
+@media (prefers-reduced-motion:reduce){#tip{transition:opacity .1s}#tip,#tip.below{transform:none}}
+
+/* lejantlar: tek dil — yuvarlak nokta + yumuşak halka, sakin tipografi, tablo rakamları */
+.fl-leg,.tier-legend,.abc-legend,.cv-leg{font-size:11.5px!important;letter-spacing:.005em;color:var(--ink-2);gap:6px 16px!important;line-height:1.35}
+.fl-leg span,.tier-legend span,.abc-legend span,.cv-leg span,.cap-leg span{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.fl-leg i,.tier-legend i,.abc-legend i,.cv-leg i,.cap-leg i{flex:none;width:8px!important;height:8px!important;border-radius:50%!important;border:0!important;
+  box-shadow:0 0 0 3px var(--leg-ring),inset 0 0 0 1px rgba(0,0,0,.08)!important}
+.fl-leg b,.tier-legend b,.abc-legend b,.cv-leg b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+.cv-leg em{font-variant-numeric:tabular-nums}
+.cap-leg{font-size:11.5px;gap:6px 16px}
+.cap-leg i{box-shadow:0 0 0 3px rgba(255,255,255,.14),inset 0 0 0 1px rgba(255,255,255,.25)!important}
+.cap-leg b{font-weight:700;font-variant-numeric:tabular-nums}
+.ag-r i{width:8px!important;height:8px!important;border-radius:50%!important;justify-self:center;box-shadow:0 0 0 3px var(--leg-ring),inset 0 0 0 1px rgba(0,0,0,.08)}
+.dn-r i{box-shadow:0 0 0 3px var(--leg-ring)!important}
+.dn-a,.dn-r b{font-variant-numeric:tabular-nums}
+@media (max-width:640px){.fl-leg span,.tier-legend span,.abc-legend span,.cv-leg span,.cap-leg span{white-space:normal}}
+
+/* eksen ve ızgara: sakin, ince, tablo rakamları */
+.chart text{fill:var(--axis);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.chart text.lbl-strong{fill:var(--ink);letter-spacing:-.005em}
+.chart line[stroke="var(--grid)"]{stroke-dasharray:2 4;shape-rendering:crispEdges}
+
+/* parçalı çubuklar: odak segment öne, diğerleri geri çekilir (fare ve dokunma) */
+.ag-bar>div,.mm-bar>div,.cv-stack>div,.cap-bar>div,.fl-split>i,.tierbar>div,.abc-bar>div{transition:opacity .18s var(--ease),transform .2s var(--ease),filter .2s,box-shadow .2s;cursor:default}
+:is(.ag-bar,.mm-bar,.cv-stack,.cap-bar,.fl-split,.tierbar,.abc-bar):is(:hover,:has(>.tip-on))>:not(:hover):not(.tip-on){opacity:.42;filter:saturate(.7)}
+:is(.ag-bar,.mm-bar,.cv-stack,.cap-bar,.fl-split,.tierbar,.abc-bar)>:is(:hover,.tip-on){transform:translateY(-1px);filter:saturate(1.12) brightness(1.05);
+  box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px color-mix(in srgb,#2A62A8 45%,transparent),0 8px 16px -8px rgba(16,42,84,.45)}
+.cap-card :is(.cap-bar)>:is(:hover,.tip-on){box-shadow:0 0 0 2px rgba(255,255,255,.85),0 8px 16px -8px rgba(0,0,0,.5)}
+.dn-arc.tip-on{filter:drop-shadow(0 6px 10px rgba(22,51,95,.25))}
+.dn-svg:has(.dn-arc.tip-on) .dn-arc:not(.tip-on),.dn-svg:has(.dn-arc:hover) .dn-arc:not(:hover){opacity:.5}
+.dn-arc{transition:stroke-width .2s,filter .2s,opacity .2s}
+.chart rect[data-tip].tip-on:not([fill="transparent"]){filter:brightness(1.08) saturate(1.1)}
 </style>
 </head>
 <body class="auth-lock">
@@ -3685,17 +3752,84 @@ function buildExcessPack(ctx){
    ===================================================================== */
 
 /* ---------------- Tooltip ---------------- */
+/* team:v_ipucu — cam ipucu: renk anahtarı, fark renklendirme, ok, kenar-akıllı konum, dokunmatik destek */
 (function(){
   const tip = $('#tip');
-  document.addEventListener('mouseover', e => { const t = e.target.closest('[data-tip]'); if(!t) return; tip.innerHTML = t.getAttribute('data-tip'); tip.classList.add('on'); });
-  document.addEventListener('mousemove', e => {
-    if(!tip.classList.contains('on')) return;
-    const w = tip.offsetWidth, h = tip.offsetHeight;
-    let x = e.clientX + 14, y = e.clientY + 14;
-    if(x + w > innerWidth - 8) x = e.clientX - w - 14; if(y + h > innerHeight - 8) y = e.clientY - h - 14;
+  tip.setAttribute('role', 'tooltip');
+  let cur = null, mode = null;
+  const vw = () => document.documentElement.clientWidth || innerWidth;
+  const vh = () => (window.visualViewport ? visualViewport.height : innerHeight);
+  const okCol = v => v && v !== 'none' && v !== 'transparent' && !/^rgba\(0, 0, 0, 0\)$/.test(v);
+  function keyColor(t){
+    const kc = getComputedStyle(t).getPropertyValue('--kc').trim(); if(kc) return kc;
+    if(t instanceof SVGElement){
+      for(const a of ['fill','stroke']){
+        const v = t.getAttribute(a); if(!okCol(v)) continue;
+        const m = v.match(/url\(#([^)]+)\)/);
+        if(m){ const st = document.getElementById(m[1]); const s0 = st && st.querySelector('stop'); if(s0) return s0.getAttribute('stop-color') || getComputedStyle(s0).stopColor; continue; }
+        return v;
+      }
+      const svg = t.ownerSVGElement, p = svg && svg.querySelector('path[stroke]:not([stroke="none"])');
+      if(p) return p.getAttribute('stroke');
+      return null;
+    }
+    const bg = t.style.background || t.style.backgroundColor; if(bg) return bg;
+    const c = t.querySelector('[style*="background"]'); if(c) return c.style.background || c.style.backgroundColor;
+    return null;
+  }
+  function fill(t){
+    tip.innerHTML = t.getAttribute('data-tip');
+    tip.querySelectorAll('.tr b').forEach(b => {
+      const v = b.textContent.trim();
+      if(/^\+\s*[\d%$]/.test(v)) b.classList.add('up');
+      else if(/^[−-]\s*[\d%$]/.test(v)) b.classList.add('dn');
+      if(v.length > 26) b.parentNode.classList.add('long');
+    });
+    const col = keyColor(t) || (tip.querySelector('b.up') ? 'var(--tip-up)' : tip.querySelector('b.dn') ? 'var(--tip-dn)' : null), tt = tip.querySelector('.tt');
+    if(tt){ const k = document.createElement('i'); k.className = 'tk'; if(col) k.style.background = col; else k.classList.add('none'); tt.prepend(k); }
+    tip.classList.toggle('nohead', !tt);
+  }
+  function place(cx, cy, gap){
+    const w = tip.offsetWidth, h = tip.offsetHeight, W = vw(), H = vh(), m = 8;
+    let x = Math.round(cx - w/2), y = Math.round(cy - h - gap), below = false;
+    if(y < m){ y = Math.round(cy + gap + (mode === 'touch' ? 10 : 4)); below = true; }
+    if(below && y + h > H - m) y = Math.max(m, H - h - m);
+    x = Math.max(m, Math.min(W - w - m, x));
+    tip.classList.toggle('below', below);
+    tip.style.setProperty('--ax', Math.max(14, Math.min(w - 14, cx - x)) + 'px');
     tip.style.left = x + 'px'; tip.style.top = y + 'px';
-  });
-  document.addEventListener('mouseout', e => { const t = e.target.closest('[data-tip]'); if(t && !t.contains(e.relatedTarget)) tip.classList.remove('on'); });
+  }
+  function show(t, cx, cy, how){
+    if(cur !== t){ if(cur) cur.classList.remove('tip-on'); cur = t; t.classList.add('tip-on'); fill(t); }
+    mode = how; tip.classList.toggle('touch', how === 'touch');
+    place(cx, cy, how === 'touch' ? 22 : 14);
+    tip.classList.add('on');
+  }
+  function hide(){ tip.classList.remove('on'); if(cur) cur.classList.remove('tip-on'); cur = null; mode = null; }
+  const tgt = e => e.target && e.target.closest ? e.target.closest('[data-tip]') : null;
+  // fare / kalem
+  document.addEventListener('pointerover', e => { if(e.pointerType === 'touch') return; const t = tgt(e); if(t) show(t, e.clientX, e.clientY, 'mouse'); });
+  document.addEventListener('pointermove', e => {
+    if(e.pointerType === 'touch' || mode !== 'mouse') return;
+    const t = tgt(e); if(t && t !== cur) { show(t, e.clientX, e.clientY, 'mouse'); return; }
+    if(cur) place(e.clientX, e.clientY, 14);
+  }, {passive:true});
+  document.addEventListener('pointerout', e => { if(e.pointerType === 'touch' || mode !== 'mouse') return; const t = tgt(e); if(t && !t.contains(e.relatedTarget)) hide(); });
+  // dokunmatik: dokun → göster, başka yere dokun → gizle
+  let lastTouch = 0;
+  document.addEventListener('pointerdown', e => { if(e.pointerType !== 'touch') return; lastTouch = Date.now(); const t = tgt(e); if(!t && !tip.contains(e.target)) hide(); }, true);
+  document.addEventListener('click', e => {
+    if(Date.now() - lastTouch > 800) return;
+    const t = tgt(e); if(!t) return;
+    show(t, e.clientX, e.clientY, 'touch');
+  }, true);
+  // klavye
+  document.addEventListener('focusin', e => { const t = tgt(e); if(!t || t === document.body || !t.matches(':focus-visible')) return; const r = t.getBoundingClientRect(); show(t, r.left + r.width/2, r.top, 'key'); });
+  document.addEventListener('focusout', e => { if(mode === 'key') hide(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') hide(); });
+  // kaydırma / boyut değişimi: ipucu çapasından kopmasın
+  addEventListener('scroll', () => { if(mode) hide(); }, {passive:true, capture:true});
+  addEventListener('resize', () => { if(mode) hide(); });
 })();
 const tipHTML = (title, rows) => esc(`<div class="tt">${esc(title)}</div>` + rows.map(([k,v]) => `<div class="tr"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join(''));
 
