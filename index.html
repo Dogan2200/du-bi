@@ -2944,6 +2944,12 @@ body:not([data-tab="overview"]) #headline{display:none}
 .dm-g td .dm-s{font-size:10.5px}
 .dm-g td.dm-pc .muted{font-size:11px}
 @media(max-width:760px){.dm-g{table-layout:auto;min-width:900px}}
+
+.dm-cv{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
+.dm-cv strong{font-size:12.5px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.dm-cv .dm-d1{font-size:10.5px!important;font-weight:500!important;grid-template-columns:80px 1px 48px;column-gap:7px}
+.dm-cv .dm-d1 b,.dm-cv .dm-d1 em{font-weight:500!important;font-size:10.5px!important}
+.dm-cv .dm-d1 i{height:11px}
 </style>
 </head>
 <body class="auth-lock">
@@ -4714,14 +4720,14 @@ function renderDepotMatrix(ctx){
   const mx = Math.max(...groups.map(x => x.kal), 1), mxd = Math.max(...list.map(x => x.kal), 1);
   const dcell = (cur, prev, p) => { if(!p.m) return '<td class="num dm-pc"><span class="muted">—</span></td>'; if(!prev) return '<td class="num dm-pc"><span class="muted">yeni</span></td>';
     const dv = cur - prev, dp = (cur/prev - 1)*100, up = dv >= 0;
-    return `<td class="num dm-pc" data-tip="${tipHTML(`${fmtMonth(p.m)} → ${fmtMonth(ctx.cur)}`, [['O ay', FMTF(prev)], ['Bu ay', FMTF(cur)], ['Fark', (up ? '+' : '−') + FMTF(Math.abs(dv))]])}"><span class="dm-d1 ${up ? 'warnc' : 'pos'}"><b>${up ? '▲' : '▼'} ${esc(FMTc(Math.abs(dv)))}</b><i></i><em>${up ? '+' : '−'}${PCT(Math.abs(dp))}</em></span></td>`; };
+    return `<td class="num dm-pc" data-tip="${tipHTML(`${fmtMonth(p.m)} → ${fmtMonth(ctx.cur)}`, [['O ay', FMTF(prev)], ['Bu ay', FMTF(cur)], ['Fark', (up ? '+' : '−') + FMTF(Math.abs(dv))]])}"><span class="dm-cv"><strong>${esc(FMTc(prev))}</strong><span class="dm-d1 ${up ? 'warnc' : 'pos'}"><b>${up ? '▲' : '▼'} ${esc(FMTc(Math.abs(dv)))}</b><i></i><em>${up ? '+' : '−'}${PCT(Math.abs(dp))}</em></span></span></td>`; };
   const kcell = (o, m) => `<td class="num"><b>${esc(FMTc(o.kal))}</b><div class="dm-s">${PCT(o.share)}</div></td>`;
   const head = P.map(p => `<th class="num dm-ph"${p.part ? ` title="Veri ${mi + 1} ay; kıyas ${fmtMonth(p.m)} ile"` : ''}>${p.n === 1 ? 'Önceki ay' : p.n + ' ay'}${p.part ? '<sup>*</sup>' : ''}${p.m ? `<small>${esc(fmtMonth(p.m, true))} → ${esc(fmtMonth(ctx.cur, true))}</small>` : ''}</th>`).join('');
   el.innerHTML = `<div class="table-wrap"><table class="dt dm dm-g"><thead><tr><th>Depo sınıfı / depo</th><th class="num">Kalan · pay</th>${head}</tr></thead><tbody>
     ${groups.map((g, gi) => `<tr class="dm-grp" data-g="${gi}" tabindex="0" aria-expanded="false"><td><span class="dm-chev">›</span><b>${esc(g.Ad)}</b><div class="dm-s">${nf0.format(g.deps.length)} depo · ${nf0.format(g.n)} kalem</div></td>${kcell(g, mx)}${P.map(p => dcell(g.kal, p.cls.get(g.Ad) || 0, p)).join('')}</tr>
       ${g.deps.map(o => `<tr class="dm-ch" data-g="${gi}" hidden><td${xfAttr([['Depo', o.Ad]])}><b>${esc(o.Ad)}</b><div class="dm-s">${nf0.format(o.n)} kalem</div></td>${kcell(o, mxd)}${P.map(p => dcell(o.kal, p.dep.get(o.Ad) || 0, p)).join('')}</tr>`).join('')}`).join('')}
     </tbody></table></div>
-    <div class="note mt10">Fark | yüzde: kalan stokta başlıktaki döneme göre değişim · artış turuncu, azalış yeşil · üzerine gelince dönem tutarları görünür${P.some(p => p.part) ? ` · * veri ${mi + 1} ay olduğu için en eski ayla (${fmtMonth(P.find(p => p.part).m)}) kıyaslanır` : ''}. Sınıfa tıklayınca depolar açılır.</div>`;
+    <div class="note mt10">Üstte o ayın kalan stoğu, altında bu aya göre fark | yüzde · artış turuncu, azalış yeşil · üzerine gelince dönem tutarları görünür${P.some(p => p.part) ? ` · * veri ${mi + 1} ay olduğu için en eski ayla (${fmtMonth(P.find(p => p.part).m)}) kıyaslanır` : ''}. Sınıfa tıklayınca depolar açılır.</div>`;
   const tb = el.querySelector('tbody');
   const tog = tr => { const on = tr.getAttribute('aria-expanded') !== 'true'; tr.setAttribute('aria-expanded', on); tr.classList.toggle('open', on);
     tb.querySelectorAll(`tr.dm-ch[data-g="${tr.dataset.g}"]`).forEach(x => x.hidden = !on); };
