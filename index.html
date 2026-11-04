@@ -2832,6 +2832,9 @@ body:not([data-tab="overview"]) #headline{display:none}
 .ex-fu{margin-top:12px} .ex-fu>div{display:grid;grid-template-columns:minmax(0,1fr) 90px 140px 60px;gap:8px;font-size:10.5px;padding:4px 0;border-bottom:1px dashed #e3e9f2}
 .ex-fu em{font-style:normal;color:#6b7a90} .ex-fu b,.ex-fu i{text-align:right;font-style:normal;font-weight:700}
 .ex-f{display:flex;justify-content:space-between;margin-top:14px;padding-top:8px;border-top:1px solid #e3e9f2;font-size:9.5px;color:#6b7a90}
+.hdl-t p{font-size:14.5px!important;font-weight:600!important;line-height:1.4!important}
+@media(max-width:760px){.hdl-t p{font-size:13.5px!important}}
+.ex-hl p{font-size:13px!important}
 </style>
 </head>
 <body class="auth-lock">
@@ -4497,7 +4500,7 @@ function headlineData(ctx, I){
     : top.key === 'dead' ? `asıl risk <b>hareketsiz stok</b> (${esc(FMTc(M.deadV))})` : top.key === 'cov' ? `asıl risk <b>${nf0.format(M.covN)} kalemde aşırı kapsam</b> (${esc(FMTc(M.covX))})`
     : `asıl risk <b>max üstü fazla stok</b> (${esc(FMTc(M.aboveGap))})`;
   let cap = 0; try{ cap = capitalOpp(ctx, I).net || 0; }catch(e){}
-  const txt = `${esc(monthLoc(ctx.cur))} ${dir || 'stok ' + esc(FMTc(M.kal))}; ${risk}.${cap > 0 ? ` <b>${esc(FMTc(cap))}</b> ${tm('sermaye serbest bırakılabilir', 'fazla stok azaltılabilir')}.` : ''}`;
+  const txt = `${esc(monthLoc(ctx.cur))} ${dir || 'stok ' + esc(FMTc(M.kal))}`;
   return {txt, g, health:M.health};
 }
 function renderHeadline(ctx, I){
