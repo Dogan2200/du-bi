@@ -2921,6 +2921,10 @@ body:not([data-tab="overview"]) #headline{display:none}
 .dm-g tr.dm-tot td:first-child{padding-left:38px!important}
 .dm-g th sup{font-size:9px;margin-left:2px;color:var(--muted)}
 .dm-g td.num,.dm-g th.num{padding-left:10px;padding-right:14px}
+.dm-pv{display:inline-flex;flex-direction:column;align-items:flex-end;line-height:1.3}
+.dm-pv b{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.dm-pv small{font-size:11px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dm-pv small i{font-style:normal;margin:0 6px;color:var(--line-2,#c9d3e2);font-weight:400}
 </style>
 </head>
 <body class="auth-lock">
@@ -3102,7 +3106,7 @@ body:not([data-tab="overview"]) #headline{display:none}
 
   <section class="panel" role="tabpanel" id="panel-overview">
     <div class="card dm-card">
-      <div class="card-h"><div><div class="eyebrow">Depo karnesi</div><div class="card-t">Depo performans matrisi</div><div class="card-s" id="dmSub">Kalan stok · önceki ay, 3, 6, 9 ve 12 ay öncesine göre fark</div></div><button class="btn xl-btn" type="button" data-export-tbl>⤓ Excel</button></div>
+      <div class="card-h"><div><div class="eyebrow">Depo karnesi</div><div class="card-t">Depo performans matrisi</div><div class="card-s" id="dmSub">Kalan stok · önceki ay, 3, 6, 9 ve 12 ay öncesiyle kıyas</div></div><button class="btn xl-btn" type="button" data-export-tbl>⤓ Excel</button></div>
       <div class="dm-per" id="dmPer" role="tablist" aria-label="Kıyas dönemi"></div>
       <div id="depoMatrix"></div>
     </div>
@@ -4691,15 +4695,14 @@ function renderDepotMatrix(ctx){
   const mx = Math.max(...groups.map(x => x.kal), 1), mxd = Math.max(...list.map(x => x.kal), 1);
   const dcell = (cur, prev, p) => { if(!p.m) return '<td class="num"><span class="muted">—</span></td>'; if(!prev) return '<td class="num"><span class="muted">yeni</span></td>';
     const dv = cur - prev, dp = (cur/prev - 1)*100, up = dv >= 0;
-    return `<td class="num" data-tip="${tipHTML(`${fmtMonth(p.m)} → ${fmtMonth(ctx.cur)}`, [['O ay', FMTF(prev)], ['Bu ay', FMTF(cur)], ['Fark', (up ? '+' : '−') + FMTF(Math.abs(dv))]])}"><span class="dm-dv ${up ? 'warnc' : 'pos'}"><b>${up ? '▲' : '▼'} ${esc(FMTc(Math.abs(dv)))}</b><small>${up ? '+' : '−'}${PCT(Math.abs(dp))}</small></span></td>`; };
-  const kcell = (o, m) => `<td class="num"><b>${esc(FMTc(o.kal))}</b><div class="dm-s">${PCT(o.share)}</div><span class="dm-bar"><i style="width:${Math.max(0,o.kal)/m*100}%"></i></span></td>`;
+    return `<td class="num" data-tip="${tipHTML(`${fmtMonth(p.m)} → ${fmtMonth(ctx.cur)}`, [['O ay', FMTF(prev)], ['Bu ay', FMTF(cur)], ['Fark', (up ? '+' : '−') + FMTF(Math.abs(dv))]])}"><span class="dm-pv"><b>${esc(FMTc(prev))}</b><small class="${up ? 'warnc' : 'pos'}">${up ? '▲' : '▼'} ${esc(FMTc(Math.abs(dv)))}<i>|</i>${up ? '+' : '−'}${PCT(Math.abs(dp))}</small></span></td>`; };
+  const kcell = (o, m) => `<td class="num"><b>${esc(FMTc(o.kal))}</b><div class="dm-s">${PCT(o.share)}</div></td>`;
   const head = P.map(p => `<th class="num"${p.part ? ` title="Veri ${mi + 1} ay; kıyas ${fmtMonth(p.m)} ile"` : ''}>${p.n === 1 ? 'Önceki ay' : p.n + ' ay'}${p.part ? '<sup>*</sup>' : ''}</th>`).join('');
   el.innerHTML = `<div class="table-wrap"><table class="dt dm dm-g"><thead><tr><th>Depo sınıfı / depo</th><th class="num">Kalan · pay</th>${head}</tr></thead><tbody>
-    <tr class="dm-tot"><td><b>Toplam</b><div class="dm-s">${nf0.format(list.length)} depo · ${nf0.format(M.items)} kalem</div></td><td class="num"><b>${esc(FMTc(M.kal))}</b><div class="dm-s">%100</div></td>${P.map(p => dcell(M.kal, p.tot, p)).join('')}</tr>
     ${groups.map((g, gi) => `<tr class="dm-grp" data-g="${gi}" tabindex="0" aria-expanded="false"><td><span class="dm-chev">›</span><b>${esc(g.Ad)}</b><div class="dm-s">${nf0.format(g.deps.length)} depo · ${nf0.format(g.n)} kalem</div></td>${kcell(g, mx)}${P.map(p => dcell(g.kal, p.cls.get(g.Ad) || 0, p)).join('')}</tr>
       ${g.deps.map(o => `<tr class="dm-ch" data-g="${gi}" hidden><td${xfAttr([['Depo', o.Ad]])}><b>${esc(o.Ad)}</b><div class="dm-s">${nf0.format(o.n)} kalem</div></td>${kcell(o, mxd)}${P.map(p => dcell(o.kal, p.dep.get(o.Ad) || 0, p)).join('')}</tr>`).join('')}`).join('')}
     </tbody></table></div>
-    <div class="note mt10">Her sütun bu ayın kalan stoğunu o dönemle kıyaslar: fark tutarı ve yüzdesi · artış turuncu, azalış yeşil${P.some(p => p.part) ? ` · * veri ${mi + 1} ay olduğu için en eski ayla (${fmtMonth(P.find(p => p.part).m)}) kıyaslanır` : ''}. Depo sınıfına tıklayınca bağlı depolar açılır.</div>`;
+    <div class="note mt10">Her sütunda üstte o dönemin kalan stoğu, altta bu aya göre fark tutarı | yüzdesi · artış turuncu, azalış yeşil${P.some(p => p.part) ? ` · * veri ${mi + 1} ay olduğu için en eski ayla (${fmtMonth(P.find(p => p.part).m)}) kıyaslanır` : ''}. Depo sınıfına tıklayınca bağlı depolar açılır.</div>`;
   const tb = el.querySelector('tbody');
   const tog = tr => { const on = tr.getAttribute('aria-expanded') !== 'true'; tr.setAttribute('aria-expanded', on); tr.classList.toggle('open', on);
     tb.querySelectorAll(`tr.dm-ch[data-g="${tr.dataset.g}"]`).forEach(x => x.hidden = !on); };
