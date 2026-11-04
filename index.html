@@ -3106,7 +3106,7 @@ body:not([data-tab="overview"]) #headline{display:none}
     </div>
     <div class="card mt16">
       <div class="card-h"><div><div class="eyebrow">Planlama kalitesi</div><div class="card-t">Min-Max uyum haritası ve parametre eksikliği</div><div class="card-s">Kalemlerin stok seviyesi tanımlı min-max bandına göre nerede · hangi kalemlerde min / max atanmamış</div></div>
-        <div class="seg" id="mmMode"><button type="button" data-mm="n" class="active">Kalem</button><button type="button" data-mm="v">Tutar</button></div></div>
+        <div class="seg" id="mmMode"><button type="button" data-mm="n">Kalem</button><button type="button" data-mm="v" class="active">Tutar</button></div></div>
       <div class="mm-grid"><div id="mmViz"></div><div id="pgViz"></div></div>
     </div>
     <div class="card mt16">
@@ -4949,7 +4949,7 @@ function columnChart(el, labels, values, o={}){
   const idxAt = e => { const r = el.getBoundingClientRect(); return Math.max(0, Math.min(n-1, Math.round((e.clientX - r.left - L)/slot))); };
   el.onpointermove = e => focus(idxAt(e)); el.onpointerleave = () => focus(null);
 }
-let MM_MODE = 'n';
+let MM_MODE = 'v';
 function renderMinMax(ctx){
   const el = $('#mmViz'); if(!el) return;
   const pg = $('#pgViz'); if(pg) pg.innerHTML = paramGapHTML(ctx);
