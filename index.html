@@ -2873,6 +2873,13 @@ body:not([data-tab="overview"]) #headline{display:none}
   .tabs{display:flex!important;width:100%!important;max-width:none!important;box-sizing:border-box;justify-content:space-between}
   .tabs .tab{flex:1 1 auto;justify-content:center}
 }
+.cap-ac{display:block;font-style:normal;font-size:11px;font-weight:650;color:#9fd0ff;margin-top:3px}
+
+/* eğilim + risk kartı: tam hiza */
+#panel-overview .g-73{align-items:stretch!important}
+#panel-overview .g-73>.card{margin-top:0!important;margin-bottom:0!important;align-self:stretch!important;height:auto!important}
+#panel-overview .g-73>.cap-card{display:flex;flex-direction:column}
+#panel-overview .g-73>.cap-card #capital{flex:1;display:flex;flex-direction:column;justify-content:space-between}
 </style>
 </head>
 <body class="auth-lock">
@@ -3059,15 +3066,6 @@ body:not([data-tab="overview"]) #headline{display:none}
     </div>
     <div class="grid g-73 mt16">
       <div class="card">
-        <div class="card-h"><div><div class="eyebrow">Ne yapmalı</div><div class="card-t">Öncelikli aksiyon planı</div><div class="card-s">Aciliyete ve parasal etkiye göre sıralı; her aksiyonun sorumlusu ve süresiyle</div></div></div>
-        <div class="plan" id="plan"></div>
-      </div>
-      <div class="card cap-card">
-        <div class="card-h"><div><div class="eyebrow">Finansal risk</div><div class="card-t" id="capTitle">Risk altındaki stok</div><div class="card-s">Dikkat gerektiren finansal riskler · kısa özet</div></div></div>
-        <div id="capital"></div>
-      </div>
-    </div>
-    <div class="card mt16">
       <div class="card-h"><div><div class="eyebrow">Eğilim</div><div class="card-t" id="trendTitle">Aylık seyir</div><div class="card-s" id="trendSub"></div></div>
         <div class="chart-tools"><label class="lim" for="trendMetric">Gösterge
           <select class="sel" id="trendMetric">
@@ -3077,6 +3075,11 @@ body:not([data-tab="overview"]) #headline{display:none}
       <div class="cs-strip" id="chTrendSum"></div>
       <div class="per-strip" id="chTrendPer" role="tablist" aria-label="Dönem"></div>
       <div class="chart" id="chTrend" style="height:400px"></div>
+    </div>
+      <div class="card cap-card">
+        <div class="card-h"><div><div class="eyebrow">Finansal risk</div><div class="card-t" id="capTitle">Risk altındaki stok</div><div class="card-s">Dikkat gerektiren finansal riskler · kısa özet</div></div></div>
+        <div id="capital"></div>
+      </div>
     </div>
     <div class="grid g2 mt16">
       <div class="card">
@@ -4747,12 +4750,12 @@ function renderCapital(ctx, I){
     <div class="cap-sub">toplam stoğun <b>${PCT(M.kal ? C.net/M.kal*100 : 0)}</b>'i atıl veya fazla stokta</div>
     ${(() => { const rag = id => { const r = (M.card || []).find(x => x.id === id); const sc = r ? r.score : null; return sc == null ? 'mid' : sc >= 80 ? 'ok' : sc >= 50 ? 'mid' : 'bad'; };
       const L = [
-        {t:'Min altı açık', v:M.belowGap, n:M.belowN, s:'stoksuz kalma riski', r:rag('stockout')},
-        {t:'Hareketsiz stok', v:M.deadV, n:M.deadN, s:`${SETTINGS.deadMonths}+ ay hareket yok`, r:rag('dead')},
-        {t:'Aşırı kapsam', v:M.covX, n:M.covN, s:`${SETTINGS.covMax}+ gün yetecek stok`, r:M.covX > 0 ? 'mid' : 'ok'},
-        {t:'Max üstü fazla', v:M.aboveGap, n:M.aboveN, s:'planlanan üst sınırın üstünde', r:rag('excess')}].filter(x => x.v > 0)
+        {t:'Min altı açık', v:M.belowGap, n:M.belowN, s:'stoksuz kalma riski', r:rag('stockout'), a:'Acil tedarik / transfer · Satın alma · bu hafta'},
+        {t:'Hareketsiz stok', v:M.deadV, n:M.deadN, s:`${SETTINGS.deadMonths}+ ay hareket yok`, r:rag('dead'), a:'Tasfiye / transfer kararı · Depo · 30 gün'},
+        {t:'Aşırı kapsam', v:M.covX, n:M.covN, s:`${SETTINGS.covMax}+ gün yetecek stok`, r:M.covX > 0 ? 'mid' : 'ok', a:'Yeni alımları dondur · Satın alma · bu ay'},
+        {t:'Max üstü fazla', v:M.aboveGap, n:M.aboveN, s:'planlanan üst sınırın üstünde', r:rag('excess'), a:'Min-max revizyonu · Planlama · 30 gün'}].filter(x => x.v > 0)
         .sort((a, b) => ({bad:0, mid:1, ok:2})[a.r] - ({bad:0, mid:1, ok:2})[b.r] || b.v - a.v);
-      return `<div class="cap-th">Dikkat gerektirenler</div><div class="cap-al">${L.map(x => `<div class="cap-a ${x.r}" data-tip="${tipHTML(x.t, [['Tutar', FMTF(x.v)], ['Kalem', nf0.format(x.n || 0)]])}"><i></i><div><b>${esc(x.t)}</b><small>${nf0.format(x.n || 0)} kalem · ${esc(x.s)}</small></div><strong>${esc(FMTc(x.v))}</strong></div>`).join('')}</div>`; })()}
+      return `<div class="cap-th">Dikkat gerektirenler</div><div class="cap-al">${L.map(x => `<div class="cap-a ${x.r}" data-tip="${tipHTML(x.t, [['Tutar', FMTF(x.v)], ['Kalem', nf0.format(x.n || 0)]])}"><i></i><div><b>${esc(x.t)}</b><small>${nf0.format(x.n || 0)} kalem · ${esc(x.s)}</small>${x.a ? `<em class="cap-ac">→ ${esc(x.a)}</em>` : ''}</div><strong>${esc(FMTc(x.v))}</strong></div>`).join('')}</div>`; })()}
     <div class="cap-top"><div class="cap-th">En yüksek riskli 3 kalem</div>${top3.map((x, k) => `<div class="cap-ti"${xfAttr([['StokAdi', x.r.StokAdi]])}><em>${k+1}</em><div><b>${esc(x.r.StokAdi)}</b><small>${esc(x.r.Depo)} · ${ACT[x.cat]}</small></div><strong>${esc(FMTc(x.net))}</strong></div>`).join('')}</div>`;
 }
 function shareBars(el, ctx, key, cur){
