@@ -4758,9 +4758,7 @@ function renderFlow(ctx){
       ${[125, 375, 625, 875].map(x => `<line x1="${x}" x2="${x}" y1="0" y2="${H}" stroke="#fff" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/>`).join('')}
     </svg>
     <div class="fm-foot"><span>Net <b class="${net >= 0 ? 'up' : 'dn'}">${net >= 0 ? '+' : '−'}${esc(FMTc(Math.abs(net)))}</b> · ${pct(Math.abs(net), dev)}</span><span>Tüketim <b>${pct(cik, top)}</b></span><span>Giriş / çıkış <b>${cik ? (gir/cik).toFixed(2).replace('.', ',') + '×' : '—'}</b></span><span>Yolda <b>${esc(FMTc(M.git))}</b></span>${Math.abs(adj) > Math.max(1, kal*0.0005) ? `<span>Kayıt farkı <b>${esc(FMTc(adj))}</b></span>` : ''}${P ? `<span class="fm-ref">▲▼ ${esc(pv)}'e göre</span>` : ''}</div>
-  </div>
-  <div class="fl-split">${split.map(x => `<i style="flex:${x[1]};background:${x[2]}" ${tip(x[0], [['Kalan', FMT(x[1])], ['Pay', pct(x[1], kal)]])}>${segPct(kal ? x[1]/kal*100 : 0)}</i>`).join('')}</div>
-  <div class="fl-leg">${split.map(x => `<span><i style="background:${x[2]}"></i>${x[0]} <b>${esc(FMTc(x[1]))}</b> · ${pct(x[1], kal)}</span>`).join('')}</div>`;
+  </div>`;
 }
 function renderCapital(ctx, I){
   const el = $('#capital'); if(!el) return;
