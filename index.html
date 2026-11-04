@@ -4403,7 +4403,6 @@ function renderKPIs(ctx){
     <div class="k-val" title="${esc(k.f === 'm' && isNum(k.n) ? FMTF(k.n) : k.v)}" ${isNum(k.n) ? `data-num="${k.n}" data-fmt="${k.f}"` : ''}>${esc(k.v)}</div>
     <div class="k-mid">${String(k.d).replace(/^(<span class="delta[^"]*">)([▲▼●]) ?/, '$1<i class="dg">$2</i>')}<span class="k-pv">${esc(k.pv)}</span></div>
     <div class="k-spark-w">${sparkline(k.sp, '#ffffff', 300)}</div>
-    ${f.goal ? (() => { const sc = Math.max(f.goal.v, f.goal.t)*1.25 || 1; return `<div class="k-goal" style="--gc:${f.c}" title="Hedef çizgisi"><i style="width:${Math.min(100, f.goal.v/sc*100)}%"></i><b style="left:${f.goal.t/sc*100}%"></b></div>`; })() : ''}
     <div class="k-foot"><i></i>${esc(f.t)}</div></article>`; }).join('');
   countUp();
 }
