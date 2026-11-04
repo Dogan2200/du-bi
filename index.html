@@ -2867,6 +2867,12 @@ body:not([data-tab="overview"]) #headline{display:none}
 #panel-compare .tbl-bar .btn,#panel-compare .tbl-bar .sel{height:34px}
 @media(max-width:900px){#panel-compare .card-h{padding-right:0}#panel-compare .tbl-bar{position:static;margin:0 0 8px!important}#panel-compare .card + .card{margin-top:22px!important}}
 #panel-compare table.dt td:first-child,#panel-compare table.dt th:first-child{white-space:nowrap;min-width:150px}
+
+/* sekme çubuğu: sayfa genişliğinde, sekmeler eşit dağılır */
+@media(min-width:761px){
+  .tabs{display:flex!important;width:100%!important;max-width:none!important;box-sizing:border-box;justify-content:space-between}
+  .tabs .tab{flex:1 1 auto;justify-content:center}
+}
 </style>
 </head>
 <body class="auth-lock">
