@@ -2835,6 +2835,18 @@ body:not([data-tab="overview"]) #headline{display:none}
 .hdl-t p{font-size:14.5px!important;font-weight:600!important;line-height:1.4!important}
 @media(max-width:760px){.hdl-t p{font-size:13.5px!important}}
 .ex-hl p{font-size:13px!important}
+
+/* finansal risk özeti */
+.cap-al{margin-top:4px}
+.cap-card .cap-sub{margin-bottom:18px}
+.cap-al{display:grid;margin-bottom:6px}
+.cap-a{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.12)}
+.cap-a:last-child{border-bottom:0}
+.cap-a>i{width:8px;height:8px;border-radius:50%;background:#ffc46b;box-shadow:0 0 0 3px rgba(255,196,107,.18)}
+.cap-a.bad>i{background:#ff8a8f;box-shadow:0 0 0 3px rgba(255,138,143,.2)} .cap-a.ok>i{background:#5ee0b0;box-shadow:0 0 0 3px rgba(94,224,176,.18)}
+.cap-a b{display:block;font-size:13px;color:#fff;font-weight:700} .cap-a small{display:block;font-size:11px;color:rgba(255,255,255,.65);margin-top:1px}
+.cap-a strong{font-size:15px;color:#fff;font-weight:800;font-variant-numeric:tabular-nums}
+.cap-top{margin-top:10px}
 </style>
 </head>
 <body class="auth-lock">
@@ -3025,7 +3037,7 @@ body:not([data-tab="overview"]) #headline{display:none}
         <div class="plan" id="plan"></div>
       </div>
       <div class="card cap-card">
-        <div class="card-h"><div><div class="eyebrow">Finansal fırsat</div><div class="card-t" id="capTitle">Serbest bırakılabilir sermaye</div><div class="card-s">Hareketsiz, max üstü ve aşırı kapsamlı stokların net etkisi</div></div></div>
+        <div class="card-h"><div><div class="eyebrow">Finansal risk</div><div class="card-t" id="capTitle">Risk altındaki stok</div><div class="card-s">Dikkat gerektiren finansal riskler · kısa özet</div></div></div>
         <div id="capital"></div>
       </div>
     </div>
@@ -4422,11 +4434,11 @@ function insights(ctx){
     plan.push({key:'min', risk:true, title:'Kritik min altı kalemleri tamamla', owner:'Satın alma · Planlama', when:'Bu hafta', impact:sum(crit,'Impact'), impLab:'kapatılacak açık',
       t:`Kritik <b>${crit.length}</b> min altı kalem için acil tedarik veya depolar arası transfer başlatın (en büyük açık: <b>${esc(mn.all[0].StokAdi)}</b>, ${FMTc(mn.all[0].Gap)}).`}); }
   if(nm.all.length){ const t10 = nm.all.slice(0,10), v = sum(t10,'Impact');
-    plan.push({key:'dead', title:'Hareketsiz stokları tasfiye et / transfer et', owner:'Depo · Satın alma', when:'30 gün', impact:v, impLab:'serbest kalacak sermaye',
+    plan.push({key:'dead', title:'Hareketsiz stokları tasfiye et / transfer et', owner:'Depo · Satın alma', when:'30 gün', impact:v, impLab:'bağlı sermaye',
       t:`Hareketsiz ilk 10 kalem (<b>${FMTc(v)}</b>, hareketsizin ${PCT(v/(M.deadV||1)*100)}'i) için tasfiye / iç transfer kararı alın. Başta: <b>${esc(t10[0].StokAdi)}</b> @ ${esc(t10[0].Depo)}.`}); }
   if(ex.all.length){ const v = sum(ex.all,'Impact');
     plan.push({key:'cov', title:'Aşırı kapsamlı kalemlerde alımı dondur', owner:'Satın alma', when:'Bu ay', impact:v, impLab:'önlenecek fazla stok',
-      t:`Kapsamı ${SETTINGS.covMax}+ gün olan <b>${ex.all.length}</b> kalemde yeni alımları dondurun; ${tm('serbest bırakılabilir sermaye','önlenebilir fazla stok')} ≈ <b>${FMTc(v)}</b>.`}); }
+      t:`Kapsamı ${SETTINGS.covMax}+ gün olan <b>${ex.all.length}</b> kalemde yeni alımları dondurun; ${tm('bağlı fazla sermaye','fazla stok')} ≈ <b>${FMTc(v)}</b>.`}); }
   if(mxp.all.length){ const v = sum(mxp.all.slice(0,10),'Impact');
     plan.push({key:'max', title:'Min-max parametrelerini revize et', owner:'Planlama', when:'30 gün', impact:v, impLab:'ilk 10 max üstü fazla',
       t:`Max üstü ilk 10 kalemde min-max parametrelerini son ${SETTINGS.avgMonths} ay tüketimine göre revize edin (ilk 10 fazla: <b>${FMTc(v)}</b>).`}); }
@@ -4517,7 +4529,7 @@ function buildExecSheet(ctx){
   const K = [['Toplam stok', FMTc(M.kal), dl(M.kal, P.kal, 'neutral'), `${nf0.format(M.items)} kalem`],
     ['Aylık tüketim', FMTc(M.cik), dl(M.cik, P.cik, 'up'), `giriş ${FMTc(M.gir)}`],
     ['Stok gün kapsamı', M.doh != null ? nf0.format(Math.round(M.doh)) + ' gün' : '—', dl(M.doh, P.doh, 'down'), dc ? `hedef ≤ ${nf0.format(dc.target)} gün` : ''],
-    [tm('Serbest bırakılabilir sermaye', 'Azaltılabilir fazla stok'), FMTc(C.net), '', M.kal ? `stoğun ${PCT(C.net/M.kal*100)}'i` : '']];
+    [tm('Risk altındaki stok', 'Riskli fazla stok'), FMTc(C.net), '', M.kal ? `stoğun ${PCT(C.net/M.kal*100)}'i` : '']];
   const top3 = (I.plan || []).slice(0, 3);
   const cs = QB && QB.sel && QB.sel.size && QB.sel.size < (ALL.Ulke || []).length ? [...QB.sel].join(', ') : 'Tüm şirketler';
   return `<header class="ex-h"><div><b>D/U BI</b><span>Stok Yönetici Özeti</span></div><div class="ex-m"><b>${esc(fmtMonth(ctx.cur))}</b><span>${esc(cs)} · ${ANALYSIS_MODE === 'tutar' ? 'tutar' : 'miktar'} bazında</span></div></header>
@@ -4697,22 +4709,26 @@ function renderFlow(ctx){
 function renderCapital(ctx, I){
   const el = $('#capital'); if(!el) return;
   const C = capitalOpp(ctx, I), M = ctx.M;
-  const tt = $('#capTitle'); if(tt) tt.textContent = tm('Serbest bırakılabilir sermaye', 'Azaltılabilir fazla stok');
-  if(!C.net){ el.innerHTML = '<div class="empty">Serbest bırakılabilir sermaye tespit edilmedi.</div>'; return; }
+  const tt = $('#capTitle'); if(tt) tt.textContent = tm('Risk altındaki stok', 'Riskli fazla stok');
+  if(!C.net){ el.innerHTML = '<div class="empty">Finansal risk taşıyan stok tespit edilmedi.</div>'; return; }
   const outM = M.doh ? M.kal*30/M.doh : 0, months = outM ? C.net/outM : null;
   const top3 = C.items.slice(0,3), t3 = sum(top3,'net'), t20 = sum(C.items.slice(0,20),'net');
-  const ACT = {dead:'Tasfiye / transfer', mx:'Alımı durdur', cov:'Siparişi dondur'};
+  const ACT = {dead:'Hareketsiz', mx:'Max üstü', cov:'Aşırı kapsam'};
   // tamamı serbest kalırsa sağlık skoru
   const kal2 = Math.max(0, M.kal - C.net), sc2 = scorecard({doh:outM ? kal2/outM*30 : null, turn:(M.dev + kal2) > 0 && outM ? outM*12/((M.dev + kal2)/2) : null,
     stockout:M.minDef ? M.sMin*100 : null, excess:M.maxDef ? 0 : null, dead:0}).health;
   const tip = tipHTML('Nasıl hesaplanır', [['Net', 'Kalemler kategoriler arasında bir kez, en büyük etkisiyle sayılır'], ['Brüt', FMTF(C.gross)], ['İlk 20 kalem', `${FMTc(t20)} · ${PCT(t20/C.net*100)}`]]);
   el.innerHTML = `<div class="cap-big" data-tip="${tip}">${esc(FMTc(C.net))}</div>
-    <div class="cap-sub">nakde çevrilebilir stok · toplam stoğun <b>${PCT(M.kal ? C.net/M.kal*100 : 0)}</b>'i${months ? ` · <b>${nf1.format(months)} aylık</b> tüketime eşit` : ''}</div>
-    <div class="cap-kpi"><div><small>İlk 3 kalemle</small><b>${esc(FMTc(t3))}</b><span>fırsatın ${PCT(t3/C.net*100)}'i · hızlı kazanç</span></div>
-      <div><small>Sağlık skoru</small><b>${M.health ?? '—'} <i>→</i> ${sc2 ?? '—'}</b><span>tamamı serbest kalırsa</span></div></div>
-    <div class="cap-bar">${C.cats.filter(x => x.v > 0).map(x => `<div style="width:${x.v/C.net*100}%;background:${x.c}" data-tip="${tipHTML(x.t, [['Tutar', FMTF(x.v)], ['Pay', PCT(x.v/C.net*100)], ['Kalem', nf0.format(x.n)]])}">${segPct(x.v/C.net*100)}</div>`).join('')}</div>
-    <div class="cap-leg">${C.cats.filter(x => x.v > 0).map(x => `<span><i style="background:${x.c}"></i>${esc(x.t)} <b>${esc(FMTc(x.v))}</b></span>`).join('')}</div>
-    <div class="cap-top"><div class="cap-th">Önce bunlara karar verin</div>${top3.map((x, k) => `<div class="cap-ti"${xfAttr([['StokAdi', x.r.StokAdi]])}><em>${k+1}</em><div><b>${esc(x.r.StokAdi)}</b><small>${esc(x.r.Depo)} · ${ACT[x.cat]}</small></div><strong>${esc(FMTc(x.net))}</strong></div>`).join('')}</div>`;
+    <div class="cap-sub">toplam stoğun <b>${PCT(M.kal ? C.net/M.kal*100 : 0)}</b>'i atıl veya fazla stokta</div>
+    ${(() => { const rag = id => { const r = (M.card || []).find(x => x.id === id); const sc = r ? r.score : null; return sc == null ? 'mid' : sc >= 80 ? 'ok' : sc >= 50 ? 'mid' : 'bad'; };
+      const L = [
+        {t:'Min altı açık', v:M.belowGap, n:M.belowN, s:'stoksuz kalma riski', r:rag('stockout')},
+        {t:'Hareketsiz stok', v:M.deadV, n:M.deadN, s:`${SETTINGS.deadMonths}+ ay hareket yok`, r:rag('dead')},
+        {t:'Aşırı kapsam', v:M.covX, n:M.covN, s:`${SETTINGS.covMax}+ gün yetecek stok`, r:M.covX > 0 ? 'mid' : 'ok'},
+        {t:'Max üstü fazla', v:M.aboveGap, n:M.aboveN, s:'planlanan üst sınırın üstünde', r:rag('excess')}].filter(x => x.v > 0)
+        .sort((a, b) => ({bad:0, mid:1, ok:2})[a.r] - ({bad:0, mid:1, ok:2})[b.r] || b.v - a.v);
+      return `<div class="cap-th">Dikkat gerektirenler</div><div class="cap-al">${L.map(x => `<div class="cap-a ${x.r}" data-tip="${tipHTML(x.t, [['Tutar', FMTF(x.v)], ['Kalem', nf0.format(x.n || 0)]])}"><i></i><div><b>${esc(x.t)}</b><small>${nf0.format(x.n || 0)} kalem · ${esc(x.s)}</small></div><strong>${esc(FMTc(x.v))}</strong></div>`).join('')}</div>`; })()}
+    <div class="cap-top"><div class="cap-th">En yüksek riskli 3 kalem</div>${top3.map((x, k) => `<div class="cap-ti"${xfAttr([['StokAdi', x.r.StokAdi]])}><em>${k+1}</em><div><b>${esc(x.r.StokAdi)}</b><small>${esc(x.r.Depo)} · ${ACT[x.cat]}</small></div><strong>${esc(FMTc(x.net))}</strong></div>`).join('')}</div>`;
 }
 function shareBars(el, ctx, key, cur){
   const M = ctx.M; cur = cur || groupAgg(ctx.monthRows, key, ctx.c);
@@ -5433,7 +5449,7 @@ function exportFullWorkbook(){
     ['Toplam kalan', M.kal, ctx.P?.kal ?? '', '', ''], ['Çıkan', M.cik, ctx.P?.cik ?? '', '', ''], ['Giren', M.gir, ctx.P?.gir ?? '', '', ''],
     ...(M.card||[]).map(r => [r.def.name, r.v ?? '', '', r.target, ragOf(r.score).t]),
     ['Performans skoru', M.health ?? '', ctx.P?.health ?? '', '', healthGrade(M.health).t],
-    [tm('Serbest bırakılabilir sermaye (net)','Önlenebilir fazla stok (net)'), capitalOpp(ctx, I).net, '', '', '']];
+    [tm('Risk altındaki stok (net)','Riskli fazla stok (net)'), capitalOpp(ctx, I).net, '', '', '']];
   const grp = key => [['Ad','Devreden','Giren','Çıkan','Kalan','Pay %','Min','Max'], ...groupAgg(ctx.monthRows, key, ctx.c).map(x => [x.Ad, x.dev, x.gir, x.cik, x.kal, M.kal ? +(x.kal/M.kal*100).toFixed(2) : 0, x.min, x.max])];
   const pack = (p, extra) => [['Stok','Depo','Üst Grup','FSN','MTRL','Kalan', ...extra.map(e => e[0]), 'Etki','Yorum'], ...p.all.map(x => [x.StokAdi, x.Depo, x.UstGrup, x.FSN, x.MTRL, x.Bal, ...extra.map(e => x[e[1]] ?? ''), x.Impact, x.Smart])];
   const ch = itemChanges(ctx), ag = agingList(ctx), pl = paretoList(ctx.monthRows, ctx.c, rowKey);
