@@ -2961,6 +2961,55 @@ body:not([data-tab="overview"]) #headline{display:none}
 .dm-g td:first-child b{font-size:12px!important}
 .dm-g td .dm-s{font-size:10px!important}
 .dm-g tbody td{padding-top:9px!important;padding-bottom:9px!important}
+
+/* ===== Olağan dışı durumlar (patron görünümü) ===== */
+.an-hd p{margin:0 0 16px;font-size:15px;line-height:1.5;color:var(--navy);font-weight:500}
+.an-hd b{font-weight:800} .an-hd b.neg{color:#E5484D}
+.an-q{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:22px}
+.an-q button{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px 14px;border-radius:16px;background:#fff;border:1px solid var(--line);transition:border-color .15s, box-shadow .15s, transform .15s}
+.an-q button:hover{border-color:color-mix(in srgb,var(--qc) 45%,transparent);transform:translateY(-1px)}
+.an-q button.on{border-color:var(--qc);box-shadow:0 0 0 3px color-mix(in srgb,var(--qc) 14%,transparent)}
+.an-q button.zero{opacity:.55}
+.an-qi{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:15px;font-weight:800;color:var(--qc);background:color-mix(in srgb,var(--qc) 11%,transparent)}
+.an-qt b{display:block;font-size:13px;color:var(--ink);font-weight:750} .an-qt small{display:block;font-size:11px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.an-qn{text-align:right} .an-qn b{display:block;font-size:20px;font-weight:800;color:var(--qc);line-height:1.1} .an-qn small{font-size:10.5px;color:var(--muted);font-weight:650}
+@media(max-width:1100px){.an-q{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.an-q{grid-template-columns:1fr}.an-qt small{white-space:normal}}
+.an-grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:24px;align-items:start}
+.an-side{min-width:0}
+@media(max-width:1000px){.an-grid{grid-template-columns:1fr}}
+.an-lh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.an-lh b{font-size:14px;color:var(--navy)} .an-lh span{font-size:11.5px;color:var(--muted)} .an-lh a{color:#2A62A8;font-weight:650;font-size:12px;margin-left:8px}
+.an-l{display:grid}
+.an-r{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;padding:14px 0 14px 14px;border-bottom:1px solid var(--line);position:relative}
+.an-r::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:3px;background:#E89A2C}
+.an-r.bad::before{background:#E5484D} .an-r.low::before{background:#b8c2d1}
+.an-r.neg{opacity:.45}
+.an-t{display:flex;gap:6px;align-items:center;margin-bottom:5px}
+.an-sv{font-size:9.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:6px}
+.an-sv.bad{color:#c3343a;background:rgba(229,72,77,.1)} .an-sv.mid{color:#b06a0c;background:rgba(232,154,44,.12)} .an-sv.low{color:#5b6b82;background:rgba(22,51,95,.06)}
+.an-tag{font-size:10.5px;font-weight:700;color:var(--qc)}
+.an-n{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;cursor:pointer} .an-n b{font-size:13.5px;color:var(--ink)} .an-n small{font-size:11px;color:var(--muted)}
+.an-x{font-size:12.5px;color:var(--ink-2);margin-top:3px;line-height:1.5} .an-x b{color:var(--ink)}
+.an-e{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.an-e>b{font-size:15px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums} .an-e>small{font-size:10px;color:var(--muted)}
+.an-fb{display:flex;gap:6px;margin-top:6px}
+.an-fb button{all:unset;cursor:pointer;height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--line);font:650 11px var(--font);color:var(--muted);white-space:nowrap;transition:all .15s}
+.an-fb button:hover{color:var(--ink);border-color:rgba(42,98,168,.35)}
+.an-fb button.on[data-v="1"]{background:rgba(18,163,122,.1);border-color:rgba(18,163,122,.35);color:#0b7a5a}
+.an-fb button.on[data-v="-1"]{background:rgba(229,72,77,.08);border-color:rgba(229,72,77,.3);color:#c3343a}
+.an-side{border-left:1px solid var(--line);padding-left:22px;box-sizing:border-box;overflow:hidden}
+@media(max-width:1000px){.an-side{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:16px}}
+.an-sh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px} .an-sh2{margin-top:22px}
+.an-sh .seg button{height:24px;padding:0 10px;font-size:11px}
+.an-c{display:grid;grid-template-columns:minmax(0,1fr) 44px 64px;gap:10px;align-items:center;padding:7px 0;cursor:pointer}
+.an-c>div{min-width:0} .an-c span{display:block;font-size:12.5px;color:var(--ink);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .an-c em{font-style:normal;font-size:10.5px;color:var(--muted)}
+.an-c i{height:6px;border-radius:9px;background:rgba(42,98,168,.08);overflow:hidden} .an-c u{display:block;height:100%;background:#2A62A8;border-radius:9px}
+.an-c b{text-align:right;font-size:12px;font-weight:800;color:var(--navy)}
+.an-ln{display:flex;gap:18px;font-size:12.5px;color:var(--ink-2)} .an-ln b{color:var(--navy);font-size:16px;margin-right:3px}
+.an-side p{margin:8px 0 0;font-size:11.5px;line-height:1.55;color:var(--muted)} .an-side p b{color:var(--ink-2)}
+@media(max-width:760px){.an-r{grid-template-columns:1fr;gap:8px}.an-e{flex-direction:row;align-items:center;justify-content:space-between;text-align:left}.an-e>small{display:none}.an-fb{margin-top:0}.an-hd p{font-size:13.5px}}
+:root[data-theme="dark"] .an-q button{background:var(--dk-glass,rgba(255,255,255,.06))}
 </style>
 </head>
 <body class="auth-lock">
@@ -3134,6 +3183,7 @@ body:not([data-tab="overview"]) #headline{display:none}
     <button class="tab" role="tab" aria-selected="false" data-tab="max"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V7m0 0-5 5m5-5 5 5"/></svg>Max Üstü <span class="badge" id="bdg-max" hidden></span></button>
     <button class="tab" role="tab" aria-selected="false" data-tab="excess"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>Aşırı Kapsam <span class="badge" id="bdg-excess" hidden></span></button>
     <button class="tab" role="tab" aria-selected="false" data-tab="pareto"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-6M22 20H2"/></svg>Pareto · ABC</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="anom"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>Aykırı Durumlar<span class="num" id="anomBadge" hidden></span></button>
     <button class="tab" role="tab" aria-selected="false" data-tab="ai"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M9 11h7M9 15h7"/></svg>Yönetici Brifingi</button>
   </nav>
 
@@ -3216,6 +3266,25 @@ body:not([data-tab="overview"]) #headline{display:none}
       <div class="mini-kpis" id="paretoKpis"></div>
       <div id="paretoViz" class="mt16"></div>
       <div id="paretoGroups" class="mt16"></div>
+    </div>
+  </section>
+
+  <section class="panel" role="tabpanel" id="panel-anom">
+    <div class="card an-card">
+      <div class="card-h"><div><div class="eyebrow">İstisna yönetimi</div><div class="card-t">Olağan dışı durumlar</div><div class="card-s" id="anSub">—</div></div>
+        <div class="chart-tools"><label class="lim">Kıyas <select class="sel" id="anWin"><option value="3">Son 3 ay</option><option value="6" selected>Son 6 ay</option><option value="12">Son 12 ay</option></select></label></div></div>
+      <div class="an-hd" id="anHd"></div>
+      <div class="an-q" id="anQ" role="tablist" aria-label="Hazır sorular"></div>
+      <div class="an-grid">
+        <div><div class="an-lh" id="anLh"></div><div id="anList"></div></div>
+        <aside class="an-side">
+          <div class="an-sh"><div class="eyebrow">Nerede yoğun?</div><div class="seg" id="anDim"><button type="button" data-d="Depo" class="active">Depo</button><button type="button" data-d="UstGrup">Grup</button></div></div>
+          <div id="anConc"></div>
+          <div class="an-sh an-sh2"><div class="eyebrow">Değerlendirmeniz</div></div>
+          <div id="anLearn"></div>
+        </aside>
+      </div>
+      <div class="note mt10" id="anNote"></div>
     </div>
   </section>
 
@@ -3790,6 +3859,12 @@ function buildDemoData(){
       });
     });
   });
+  // demo: son ayda veride ilk kez görülen kalemler (aykırı durum örneği)
+  { const last = rows.reduce((m, r) => r.Donem > m ? r.Donem : m, ''), ref = rows.find(r => r.Donem === last && r.Depo === 'Merkez Ana Depo') || rows.find(r => r.Donem === last);
+    if(ref) [['STK-11301 Endüstriyel Kahve Makinesi', 'Sarf Malzeme', 2, 9200, 0], ['STK-11302 Laboratuvar Test Kiti (yeni)', 'Kimyasal', 40, 310, 6]].forEach(([nm, ust, q, pr, out]) => {
+      const T = v => Math.round(v * pr * 100) / 100;
+      rows.push({Donem:last, Ulke:ref.Ulke, DepoSinifi:ref.DepoSinifi, Depo:ref.Depo, UstGrup:ust, AltGrup:ust, StokAdi:nm, MTRL:ref.MTRL, FSN:'Slow Moving', Departman:ref.Departman,
+        Devreden:0, Giren:T(q), Cikan:T(out), Kalan:T(q - out), DevredenM:0, GirenM:q, CikanM:out, KalanM:q - out, MinMiktar:0, MaxMiktar:0, MinTutar:0, MaxTutar:0, Demo:true}); }); }
   return rows;
 }
 function loadDemo(){ ingestRows(buildDemoData(), `Demo veri · ${DEMO_COMPANY} (varsayımsal)`); return true; }
@@ -4424,7 +4499,7 @@ function renderPanel(tab){
   if(!CTX || !DIRTY[tab]) return; DIRTY[tab] = false;
   try{
     ({cover:renderCover, overview:renderOverview, compare:renderCompare, nomove:() => renderRisk('nomove'), min:() => renderRisk('min'),
-      max:() => renderRisk('max'), excess:() => renderRisk('excess'), pareto:renderPareto, ai:renderReport}[tab] || (()=>{}))(CTX);
+      max:() => renderRisk('max'), excess:() => renderRisk('excess'), pareto:renderPareto, anom:renderAnom, ai:renderReport}[tab] || (()=>{}))(CTX);
   }catch(err){ console.error(err); const p = $('#panel-' + tab); if(p) p.insertAdjacentHTML('afterbegin', `<div class="empty">Bu bölüm çizilirken hata oluştu: ${esc(err.message)}</div>`); }
 }
 
@@ -5456,6 +5531,116 @@ function paretoChart(el, list){
   el.innerHTML = s + '</svg>';
 }
 
+
+/* =====================================================================
+   PANEL: Aykırı durumlar — satır bazında bulgular + 👍/👎 geri bildirimle öğrenen sıralama
+   ===================================================================== */
+const AN_RULES = {
+  all:   {q:'Önce bunlara bakın', t:'Tümü'},
+  new:   {q:'İlk kez alınanlar', d:'Daha önce hiç alınmamış kalemler', t:'İlk kez', c:'#7c5cff', ic:'✦'},
+  price: {q:'Fiyatı artanlar', d:'Birim fiyatı normalin belirgin üstünde', t:'Fiyat artışı', c:'#E5484D', ic:'↑'},
+  swap:  {q:'Pahalısına geçilenler', d:'Aynı grupta daha pahalı kaleme geçiş', t:'Pahalı geçiş', c:'#d9822b', ic:'⇄'},
+  spike: {q:'Tüketimi sıçrayanlar', d:'Bu ay normalin katlarca üstünde tüketim', t:'Tüketim sıçraması', c:'#2A62A8', ic:'⚡'},
+  git:   {q:'Yolda bekleyenler', d:'Aylardır teslim alınmayan mal', t:'Yolda bekleme', c:'#14A38B', ic:'⏳'},
+  rep:   {q:'Tekrar edenler', d:'Arka arkaya aylarda aynı sorun', t:'Tekrar eden', c:'#16335f', ic:'↻'}};
+const AN_UI = {q:'all', dim:'Depo', showHidden:false};
+const AN_FB_KEY = 'dubi.anomFb.v1';
+function anFbLoad(){ try{ return JSON.parse(localStorage.getItem(AN_FB_KEY) || '{}') || {}; }catch(e){ return {}; } }
+function anFbSave(o){ try{ localStorage.setItem(AN_FB_KEY, JSON.stringify(o)); }catch(e){} }
+const anUnit = (t, q) => q > 0 ? t / q : null;
+function anomScan(ctx, curM, W){
+  const A = ctx.allMonths, ci = A.indexOf(curM); if(ci < 1) return [];
+  const base = A.slice(Math.max(0, ci - W), ci), bset = new Set(base), out = [];
+  const by = new Map(), firstSeen = new Map();
+  for(const r of ctx.base){ const mi = A.indexOf(r.Donem); if(mi < 0 || mi > ci) continue;
+    const nm = r.StokAdi || '—'; if((r.Giren||0) > 0 || (r.Kalan||0) > 0 || (r.Devreden||0) > 0){ if(!firstSeen.has(nm) || mi < firstSeen.get(nm)) firstSeen.set(nm, mi); }
+    if(mi !== ci && !bset.has(r.Donem)) continue;
+    const k = rowKey(r); let o = by.get(k); if(!o){ o = {k, r, cur:null, b:{gT:0, gQ:0, kT:0, kQ:0, cT:0, cQ:0, n:0}}; by.set(k, o); }
+    if(mi === ci) o.cur = r; else { const b = o.b; b.gT += r.Giren||0; b.gQ += r.GirenM||0; b.kT += r.Kalan||0; b.kQ += r.KalanM||0; b.cT += r.Cikan||0; b.cQ += r.CikanM||0; b.n++; } }
+  const nb = Math.max(1, base.length), item = o => ({k:o.k, name:o.r.StokAdi || '—', depo:o.r.Depo || '—', r:o.cur || o.r, m:curM});
+  // 1) ilk kez alınan kalem
+  for(const o of by.values()){ const r = o.cur; if(!r || !((r.Giren||0) > 0)) continue;
+    if(firstSeen.get(r.StokAdi || '—') === ci) out.push({...item(o), rule:'new', imp:r.Giren, sev:r.Giren > 20000 ? 3 : 2,
+      txt:`Daha önce hiç alınmamış; bu ay ilk kez <b>${nf0.format(r.GirenM||0)} birim</b> (${esc(FMTc(r.Giren))}) girdi.`}); }
+  // 2) birim maliyet artışı
+  for(const o of by.values()){ const r = o.cur; if(!r) continue; const b = o.b;
+    const u = anUnit(r.Giren, r.GirenM) ?? anUnit(r.Kalan, r.KalanM), ub = anUnit(b.gT, b.gQ) ?? anUnit(b.kT, b.kQ);
+    if(!(u > 0) || !(ub > 0)) continue; const p = (u/ub - 1)*100, q = (r.GirenM||0) || (r.KalanM||0), imp = (u - ub)*q;
+    if(p >= 15 && imp >= 500) out.push({...item(o), rule:'price', imp, sev:p >= 50 ? 3 : p >= 25 ? 2 : 1, p,
+      txt:`Birim fiyatı son ${base.length} ayın ortalamasına göre <b>%${nf0.format(p)} arttı</b> (${esc(MONEY(ub))} → ${esc(MONEY(u))}).`}); }
+  // 3) tüketim sıçraması
+  for(const o of by.values()){ const r = o.cur; if(!r) continue; const avg = o.b.cT / nb, cur = r.Cikan || 0;
+    if(avg > 0 && cur > avg*3 && cur - avg >= 5000) out.push({...item(o), rule:'spike', imp:cur - avg, sev:cur > avg*6 ? 3 : 2,
+      txt:`Bu ay <b>normalin ${nf1.format(cur/avg)} katı</b> tüketildi: ${esc(FMTc(cur))} (normalde ayda ${esc(FMTc(avg))}).`}); }
+  // 4) daha pahalı alternatife geçiş (aynı alt grup + depo)
+  const grp = new Map(); for(const o of by.values()){ if(!o.cur) continue; const g = (o.r.AltGrup || o.r.UstGrup || '—') + '|' + (o.r.Depo || ''); if(!grp.has(g)) grp.set(g, []); grp.get(g).push(o); }
+  for(const L of grp.values()){ if(L.length < 2) continue;
+    const st = L.map(o => ({o, c:o.cur.CikanM||0, cb:o.b.cQ/nb, u:anUnit(o.cur.Cikan, o.cur.CikanM) ?? anUnit(o.cur.Kalan, o.cur.KalanM)}));
+    const down = st.filter(x => x.cb > 0 && x.c <= x.cb*.5), up = st.filter(x => x.c > 0 && x.c >= Math.max(1, x.cb)*1.5);
+    for(const d of down) for(const u of up){ if(!(u.u > 0) || !(d.u > 0) || u.u < d.u*1.15) continue; const imp = (u.u - d.u)*u.c; if(imp < 1000) continue;
+      out.push({...item(u.o), rule:'swap', imp, sev:u.u > d.u*1.5 ? 3 : 2, from:d.o.r.StokAdi,
+        txt:`Aynı gruptaki <b>${esc(d.o.r.StokAdi)}</b> yerine bu kalem kullanılmaya başlandı; birim fiyatı <b>${nf1.format(u.u/d.u)} kat</b> daha yüksek (${esc(MONEY(d.u))} → ${esc(MONEY(u.u))}).`}); } }
+  // 5) uzun süredir yolda
+  for(const o of by.values()){ const r = o.cur; if(!r || !isGIT(r) || !((r.Kalan||0) > 0)) continue; let n = 1;
+    for(let i = ci - 1; i >= 0; i--){ const pr = (ctx.byMonth.get(A[i]) || []).find(x => rowKey(x) === o.k); if(pr && (pr.Kalan||0) > 0) n++; else break; }
+    if(n >= 3) out.push({...item(o), rule:'git', imp:r.Kalan, sev:n >= 5 ? 3 : 2, n, txt:`<b>${n} aydır yolda</b>; ${esc(FMTc(r.Kalan))} tutarında mal hâlâ teslim alınmadı.`}); }
+  return out;
+}
+function anomAll(ctx, W){
+  const cur = anomScan(ctx, ctx.cur, W), A = ctx.allMonths, ci = A.indexOf(ctx.cur);
+  // tekrar eden: son 3 ayın en az 2'sinde fiyat / tüketim bulgusu
+  const hist = new Map(); [1, 2].forEach(d => { const m = A[ci - d]; if(!m) return; anomScan(ctx, m, W).filter(f => f.rule === 'price' || f.rule === 'spike').forEach(f => hist.set(f.rule + '|' + f.k, (hist.get(f.rule + '|' + f.k) || 0) + 1)); });
+  cur.filter(f => f.rule === 'price' || f.rule === 'spike').forEach(f => { const h = hist.get(f.rule + '|' + f.k) || 0;
+    if(h >= 1) cur.push({...f, rule:'rep', base:f.rule, sev:3, txt:`Son 3 ayın <b>${h + 1}</b>'inde ${f.rule === 'price' ? 'fiyat artışı' : 'tüketim sıçraması'} görüldü; geçici değil, <b>tekrar eden bir sorun</b>.`}); });
+  // geri bildirimle öğrenen sıralama
+  const fb = anFbLoad(), rs = {}; Object.entries(fb).forEach(([id, v]) => { const r = id.split('|')[0]; rs[r] = rs[r] || {u:0, d:0}; v > 0 ? rs[r].u++ : rs[r].d++; });
+  const mx = Math.max(1, ...cur.map(f => f.imp || 0));
+  cur.forEach(f => { f.id = f.rule + '|' + f.k; f.fb = fb[f.id] || 0; const s = rs[f.rule] || {u:0, d:0}, w = clamp((1 + s.u)/(1 + s.d), .35, 2.5);
+    f.w = w; f.score = (f.sev*0.6 + (f.imp/mx)*4) * w * (f.fb > 0 ? 1.4 : 1); });
+  return {list:cur.sort((a, b) => b.score - a.score), rs};
+}
+function renderAnom(ctx){
+  const W = +($('#anWin').value || 6), R = anomAll(ctx, W), all = R.list, fb = anFbLoad();
+  const vis = all.filter(f => AN_UI.showHidden || f.fb >= 0), hiddenN = all.filter(f => f.fb < 0).length;
+  const repK = new Set(vis.filter(f => f.rule === 'rep').map(f => f.base + '|' + f.k)), uniq = vis.filter(f => !repK.has(f.rule + '|' + f.k));
+  const of = k => vis.filter(f => f.rule === k), urgent = uniq.filter(f => f.sev >= 3), totImp = sum(uniq, 'imp');
+  $('#anSub').textContent = `${fmtMonth(ctx.cur)} · son ${W} ayın normaliyle kıyas · kalem ve depo bazında`;
+  const bd = $('#anomBadge'); if(bd){ bd.hidden = !urgent.length; bd.textContent = urgent.length; }
+  $('#anHd').innerHTML = uniq.length ? `<p>${esc(monthLoc(ctx.cur))} <b>${nf0.format(uniq.length)} olağan dışı durum</b> tespit edildi${urgent.length ? `; <b class="neg">${nf0.format(urgent.length)}'i acil</b> bakılmalı` : ''}. Toplam etki <b>${esc(FMTc(totImp))}</b>.</p>` : `<p>${esc(monthLoc(ctx.cur))} olağan dışı bir durum görülmedi.</p>`;
+  $('#anQ').innerHTML = Object.entries(AN_RULES).filter(([k]) => k !== 'all').map(([k, r]) => { const L = of(k);
+      return `<button type="button" role="tab" data-q="${k}" class="${AN_UI.q === k ? 'on' : ''}${L.length ? '' : ' zero'}" style="--qc:${r.c}">
+        <span class="an-qi">${r.ic}</span><span class="an-qt"><b>${esc(r.q)}</b><small>${esc(r.d)}</small></span>
+        <span class="an-qn"><b>${L.length}</b><small>${L.length ? esc(FMTc(sum(L, 'imp'))) : '—'}</small></span></button>`; }).join('');
+  const per = {}, bySev = a => a.slice().sort((x, y) => (y.fb > 0) - (x.fb > 0) || y.sev - x.sev || y.imp - x.imp), L = bySev(AN_UI.q === 'all' ? uniq.filter(f => (per[f.rule] = (per[f.rule] || 0) + 1) <= 3) : of(AN_UI.q)), show = L.slice(0, AN_UI.q === 'all' ? 8 : 30);
+  $('#anLh').innerHTML = `<div><b>${esc(AN_UI.q === 'all' ? 'Önce bunlara bakın' : AN_RULES[AN_UI.q].q)}</b>${AN_UI.q !== 'all' ? ` <a href="#" data-all>← tümüne dön</a>` : ''}</div><span>${nf0.format(L.length)} bulgu${L.length > show.length ? ` · ilk ${show.length}` : ''}${hiddenN ? ` · <a href="#" data-hid>${AN_UI.showHidden ? 'önemsizleri gizle' : nf0.format(hiddenN) + ' önemsiz gizli'}</a>` : ''}</span>`;
+  const SV = {3:['Acil','bad'], 2:['İncele','mid'], 1:['Bilgi','low']};
+  $('#anList').innerHTML = show.length ? `<div class="an-l">${show.map(f => { const R0 = AN_RULES[f.rule], sv = SV[f.sev] || SV[2];
+    return `<div class="an-r ${sv[1]}${f.fb < 0 ? ' neg' : ''}${f.fb > 0 ? ' pos' : ''}" data-id="${esc(f.id)}">
+      <div class="an-b"><div class="an-t"><span class="an-sv ${sv[1]}">${sv[0]}</span><span class="an-tag" style="--qc:${R0.c}">${R0.ic} ${esc(R0.t)}</span></div>
+        <div class="an-n"${xfAttr([['Depo', f.depo], ['StokAdi', f.name]])}><b>${esc(f.name)}</b><small>${esc(f.depo)}</small></div>
+        <div class="an-x">${f.txt}</div></div>
+      <div class="an-e"><b>${esc(FMTc(f.imp))}</b><small>etki</small>
+        <div class="an-fb"><button type="button" data-v="1" class="${f.fb > 0 ? 'on' : ''}">👍 Doğru</button><button type="button" data-v="-1" class="${f.fb < 0 ? 'on' : ''}">👎 Önemsiz</button></div></div></div>`; }).join('')}</div>`
+    : `<div class="empty">Bu soru için ${fmtMonth(ctx.cur)} ayında bulgu yok.</div>`;
+  const D = AN_UI.dim, agg = new Map(); L.forEach(f => { const v = (f.r && f.r[D]) || '—'; const o = agg.get(v) || {n:0, imp:0}; o.n++; o.imp += f.imp || 0; agg.set(v, o); });
+  const ag = [...agg.entries()].sort((a, b) => b[1].imp - a[1].imp).slice(0, 5), am = Math.max(1, ...ag.map(x => x[1].imp));
+  $('#anConc').innerHTML = ag.length ? ag.map(([k, o]) => `<div class="an-c"${xfAttr([[D, k]])}><div><span>${esc(k)}</span><em>${o.n} bulgu</em></div><i><u style="width:${o.imp/am*100}%"></u></i><b>${esc(FMTc(o.imp))}</b></div>`).join('') : '<div class="empty">—</div>';
+  const fv = Object.values(fb), up = fv.filter(v => v > 0).length, dn = fv.filter(v => v < 0).length;
+  $('#anLearn').innerHTML = `<div class="an-ln"><span><b>${up}</b> doğru</span><span><b>${dn}</b> önemsiz</span></div>
+    <p>Rapor değerlendirmelerinizden öğrenir: <b>önemsiz</b> dediğiniz bulgu bir daha gösterilmez, o türün önceliği düşer; <b>doğru</b> dedikleriniz öne çıkar.</p>`;
+  $('#anNote').innerHTML = 'Tedarikçi ve sipariş / teslim tarihi veride olmadığı için tedarikçi ve tedarik süresi analizleri şimdilik yapılamıyor; bu alanlar eklendiğinde bu sayfaya gelecek.';
+}
+function wireAnom(){
+  const re = () => { if(CTX) renderAnom(CTX); };
+  $('#anWin').onchange = re;
+  $('#anQ').onclick = e => { const b = e.target.closest('button[data-q]'); if(!b) return; AN_UI.q = AN_UI.q === b.dataset.q ? 'all' : b.dataset.q; re(); };
+  $('#anDim').onclick = e => { const b = e.target.closest('button[data-d]'); if(!b) return; AN_UI.dim = b.dataset.d; $$('#anDim button').forEach(x => x.classList.toggle('active', x === b)); re(); };
+  $('#panel-anom').addEventListener('click', e => {
+    const h = e.target.closest('[data-hid]'); if(h){ e.preventDefault(); AN_UI.showHidden = !AN_UI.showHidden; re(); return; }
+    const al = e.target.closest('[data-all]'); if(al){ e.preventDefault(); AN_UI.q = 'all'; re(); return; }
+    const b = e.target.closest('.an-fb button'); if(!b) return; e.stopPropagation();
+    const id = b.closest('.an-r').dataset.id, v = +b.dataset.v, o = anFbLoad(); if(o[id] === v) delete o[id]; else o[id] = v; anFbSave(o); re(); });
+}
 /* =====================================================================
    PANEL: Yönetici Brifingi
    ===================================================================== */
@@ -5691,7 +5876,7 @@ function wireUI(){
   $('#modeSwitch').addEventListener('click', e => { const b = e.target.closest('button[data-mode]'); if(!b) return; ANALYSIS_MODE = b.dataset.mode; syncModeUI(); saveState(); renderAll(); });
   $('#btnClear').onclick = () => { const keep = FILTERS.Donem; FILTERS = EMPTY_FILTERS(); FILTERS.Donem = keep.length ? keep : []; buildMS(); renderAll(); saveState(); toast('Filtreler temizlendi'); };
   $('#btnUpload').onclick = () => $('#file').click();
-  wireQbar(); wireFToggle();
+  wireQbar(); wireFToggle(); wireAnom();
   $('#btnSave').onclick = exportSingleHTML;
   $('#btnTheme').onclick = () => applyTheme(document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
   $('#btnLink').onclick = openSources;
