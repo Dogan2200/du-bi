@@ -2880,6 +2880,17 @@ body:not([data-tab="overview"]) #headline{display:none}
 #panel-overview .g-73>.card{margin-top:0!important;margin-bottom:0!important;align-self:stretch!important;height:auto!important}
 #panel-overview .g-73>.cap-card{display:flex;flex-direction:column}
 #panel-overview .g-73>.cap-card #capital{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+
+/* depo karnesi: sınıf → depo */
+.dm-g tr.dm-grp{cursor:pointer}
+.dm-g tr.dm-grp td{background:rgba(42,98,168,.04)}
+.dm-g tr.dm-grp:hover td{background:rgba(42,98,168,.08)}
+.dm-g tr.dm-grp td:first-child{position:relative;padding-left:38px!important}
+.dm-chev{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;display:grid;place-items:center;border-radius:50%;background:rgba(42,98,168,.12);color:#2A62A8;font-weight:800;font-size:12px;line-height:1;transition:transform .2s}
+.dm-g tr.dm-grp.open .dm-chev{transform:translateY(-50%) rotate(90deg)}
+.dm-g tr.dm-ch td:first-child{padding-left:38px!important;box-shadow:inset 3px 0 0 rgba(42,98,168,.18)}
+.dm-g tr.dm-ch td{background:transparent}
+:root[data-theme="dark"] .dm-g tr.dm-grp td{background:rgba(150,195,255,.05)}
 </style>
 </head>
 <body class="auth-lock">
@@ -4642,25 +4653,42 @@ function depotMatrix(ctx){
 function renderDepotMatrix(ctx){
   const el = $('#depoMatrix'); if(!el) return;
   const list = depotMatrix(ctx); if(!list.length){ el.innerHTML = '<div class="empty">Kayıt yok.</div>'; return; }
-  const K = SETTINGS.kpi;
+  const K = SETTINGS.kpi, c = ctx.c, M = ctx.M;
   const cl = (v, good, bad, low=true) => v == null ? '' : (low ? (v <= good ? 'ok' : v >= bad ? 'bad' : 'mid') : (v >= good ? 'ok' : v <= bad ? 'bad' : 'mid'));
   const score = o => { const s = [cl(o.doh, K.doh.target, SETTINGS.covMax), cl(o.turn, K.turn.target, K.turn.worst, false), o.below ? (o.minDef && o.below/o.minDef > .15 ? 'bad' : 'mid') : 'ok', cl(o.deadPct, K.dead.target, K.dead.worst), cl(o.excPct, K.excess.target, K.excess.worst)].filter(Boolean);
     const b = s.filter(x => x === 'bad').length, m2 = s.filter(x => x === 'mid').length; return b >= 2 ? ['bad','Kritik'] : b || m2 >= 2 ? ['mid','İzlenmeli'] : ['ok','İyi']; };
-  const mx = Math.max(...list.map(x => x.kal), 1);
-  el.innerHTML = `<div class="table-wrap"><table class="dt dm"><thead><tr><th>Depo</th><th class="num">Kalan · pay</th><th class="num">Δ Önc. ay</th><th class="num">Çıkan</th><th class="num">Kapsam</th><th class="num">Devir</th><th class="num">Min altı</th><th class="num">Max üstü</th><th class="num">Hareketsiz</th><th>Durum</th></tr></thead><tbody>
-    ${list.map(o => { const sc = score(o);
-      return `<tr><td${xfAttr([['Depo', o.Ad]])}><b>${esc(o.Ad)}</b><div class="dm-s">${esc(o.cls || '')} · ${nf0.format(o.n)} kalem</div></td>
-      <td class="num" data-v="${o.kal}"><b>${esc(FMTc(o.kal))}</b><div class="dm-s">${PCT(o.share)}</div><span class="dm-bar"><i style="width:${Math.max(0,o.kal)/mx*100}%"></i></span></td>
-      <td class="num" data-v="${o.d ?? ''}">${o.d == null ? '<span class="muted">yeni</span>' : `<span class="${o.d > 0 ? 'warnc' : 'pos'}">${o.d > 0 ? '▲' : '▼'} ${PCT(Math.abs(o.d))}</span>`}</td>
-      <td class="num" data-v="${o.cik}">${esc(FMTc(o.cik))}</td>
-      <td class="num" data-v="${o.doh ?? ''}"><span class="dm-c ${o.git ? '' : cl(o.doh, K.doh.target, SETTINGS.covMax)}">${o.doh == null ? 'çıkış yok' : nf0.format(Math.round(o.doh)) + ' g'}</span></td>
-      <td class="num" data-v="${o.turn ?? ''}"><span class="dm-c ${o.git ? '' : cl(o.turn, K.turn.target, K.turn.worst, false)}">${o.turn == null ? '—' : nf1.format(o.turn) + '×'}</span></td>
-      <td class="num" data-v="${o.below}"><span class="dm-c ${o.below ? (o.minDef && o.below/o.minDef > .15 ? 'bad' : 'mid') : 'ok'}">${nf0.format(o.below)}</span>${o.below ? `<div class="dm-s">açık ${esc(FMTc(o.belowGap))}</div>` : ''}</td>
-      <td class="num" data-v="${o.aboveGap}"><span class="dm-c ${cl(o.excPct, K.excess.target, K.excess.worst)}">${esc(FMTc(o.aboveGap))}</span><div class="dm-s">${PCT(o.excPct)}</div></td>
-      <td class="num" data-v="${o.deadPct}"><span class="dm-c ${o.git ? '' : cl(o.deadPct, K.dead.target, K.dead.worst)}">${PCT(o.deadPct)}</span><div class="dm-s">${esc(FMTc(o.dead))}</div></td>
-      <td><span class="dm-st ${sc[0]}"><i></i>${sc[1]}</span></td></tr>`; }).join('')}</tbody></table></div>
-    <div class="note mt10">Renkler hedeflere göre: yeşil hedefte · sarı izlenmeli · kırmızı kritik. Gün kapsamı hedef ≤ ${K.doh.target} g, kritik ≥ ${SETTINGS.covMax} g · Devir hedef ≥ ${K.turn.target}× · Hareketsiz hedef ≤ %${K.dead.target}. Depo adına tıklayınca rapor o depoya göre süzülür.</div>`;
-  enhanceTable(el.querySelector('table'));
+  // depo sınıfı toplamları
+  const prevC = new Map(groupAgg(ctx.prevRows, 'DepoSinifi', c).map(x => [x.Ad, x.kal]));
+  const avgC = avgOutMap(ctx.cur, ctx.byMonth, ctx.allMonths, c, r => r.DepoSinifi || 'Belirtilmemiş');
+  const G = new Map();
+  list.forEach(o => { const k = o.cls || 'Belirtilmemiş'; let g = G.get(k);
+    if(!g){ g = {Ad:k, git:o.git, dev:0, gir:0, cik:0, kal:0, n:0, minDef:0, below:0, belowGap:0, above:0, aboveGap:0, dead:0, deps:[]}; G.set(k, g); }
+    ['dev','gir','cik','kal','n','minDef','below','belowGap','above','aboveGap','dead'].forEach(f => g[f] += o[f] || 0); g.git = g.git && o.git; g.deps.push(o); });
+  const groups = [...G.values()].map(g => { const a = avgC.get(g.Ad) || 0;
+    return Object.assign(g, {share:M.kal ? g.kal/M.kal*100 : 0, d:pctChange(g.kal, prevC.get(g.Ad)), doh:a > 0 ? g.kal/a*30 : null,
+      turn:(g.dev + g.kal) > 0 && a > 0 ? a*12/((g.dev + g.kal)/2) : null, deadPct:g.kal > 0 ? g.dead/g.kal*100 : 0, excPct:g.kal > 0 ? g.aboveGap/g.kal*100 : 0}); })
+    .sort((a, b) => b.kal - a.kal);
+  const mx = Math.max(...groups.map(x => x.kal), 1), mxd = Math.max(...list.map(x => x.kal), 1);
+  const cells = (o, m) => { const sc = score(o);
+    return `<td class="num"><b>${esc(FMTc(o.kal))}</b><div class="dm-s">${PCT(o.share)}</div><span class="dm-bar"><i style="width:${Math.max(0,o.kal)/m*100}%"></i></span></td>
+      <td class="num">${o.d == null ? '<span class="muted">yeni</span>' : `<span class="${o.d > 0 ? 'warnc' : 'pos'}">${o.d > 0 ? '▲' : '▼'} ${PCT(Math.abs(o.d))}</span>`}</td>
+      <td class="num">${esc(FMTc(o.cik))}</td>
+      <td class="num"><span class="dm-c ${o.git ? '' : cl(o.doh, K.doh.target, SETTINGS.covMax)}">${o.doh == null ? 'çıkış yok' : nf0.format(Math.round(o.doh)) + ' g'}</span></td>
+      <td class="num"><span class="dm-c ${o.git ? '' : cl(o.turn, K.turn.target, K.turn.worst, false)}">${o.turn == null ? '—' : nf1.format(o.turn) + '×'}</span></td>
+      <td class="num"><span class="dm-c ${o.below ? (o.minDef && o.below/o.minDef > .15 ? 'bad' : 'mid') : 'ok'}">${nf0.format(o.below)}</span>${o.below ? `<div class="dm-s">açık ${esc(FMTc(o.belowGap))}</div>` : ''}</td>
+      <td class="num"><span class="dm-c ${cl(o.excPct, K.excess.target, K.excess.worst)}">${esc(FMTc(o.aboveGap))}</span><div class="dm-s">${PCT(o.excPct)}</div></td>
+      <td class="num"><span class="dm-c ${o.git ? '' : cl(o.deadPct, K.dead.target, K.dead.worst)}">${PCT(o.deadPct)}</span><div class="dm-s">${esc(FMTc(o.dead))}</div></td>
+      <td><span class="dm-st ${sc[0]}"><i></i>${sc[1]}</span></td>`; };
+  el.innerHTML = `<div class="table-wrap"><table class="dt dm dm-g"><thead><tr><th>Depo sınıfı / depo</th><th class="num">Kalan · pay</th><th class="num">Δ Önc. ay</th><th class="num">Çıkan</th><th class="num">Kapsam</th><th class="num">Devir</th><th class="num">Min altı</th><th class="num">Max üstü</th><th class="num">Hareketsiz</th><th>Durum</th></tr></thead><tbody>
+    ${groups.map((g, gi) => `<tr class="dm-grp" data-g="${gi}" tabindex="0" aria-expanded="false"><td><span class="dm-chev">›</span><b>${esc(g.Ad)}</b><div class="dm-s">${nf0.format(g.deps.length)} depo · ${nf0.format(g.n)} kalem</div></td>${cells(g, mx)}</tr>
+      ${g.deps.map(o => `<tr class="dm-ch" data-g="${gi}" hidden><td${xfAttr([['Depo', o.Ad]])}><b>${esc(o.Ad)}</b><div class="dm-s">${nf0.format(o.n)} kalem</div></td>${cells(o, mxd)}</tr>`).join('')}`).join('')}
+    </tbody></table></div>
+    <div class="note mt10">Depo sınıfına tıklayınca bağlı depolar açılır · depo adına tıklayınca rapor o depoya göre süzülür. Renkler hedeflere göre: yeşil hedefte · sarı izlenmeli · kırmızı kritik.</div>`;
+  const tb = el.querySelector('tbody');
+  const tog = tr => { const on = tr.getAttribute('aria-expanded') !== 'true'; tr.setAttribute('aria-expanded', on); tr.classList.toggle('open', on);
+    tb.querySelectorAll(`tr.dm-ch[data-g="${tr.dataset.g}"]`).forEach(x => x.hidden = !on); };
+  tb.addEventListener('click', e => { const tr = e.target.closest('tr.dm-grp'); if(tr) tog(tr); });
+  tb.addEventListener('keydown', e => { const tr = e.target.closest('tr.dm-grp'); if(tr && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); tog(tr); } });
 }
 /* ---------- Stok yaşlandırma ---------- */
 function renderAging(ctx){
@@ -4815,13 +4843,12 @@ function columnChart(el, labels, values, o={}){
 
   // ---- başlık okuması (kutusuz) ----
   const sumEl = document.getElementById(el.id + 'Sum');
-  const readout = i => { if(!sumEl) return; const d = D[i];
+  const readout = i => { if(!sumEl || !sumEl.querySelector('.fr-v')) return; const d = D[i];
     sumEl.querySelector('.fr-v').textContent = isNum(values[i]) ? fF(values[i]) : '—';
     sumEl.querySelector('.fr-m').textContent = full(i) + (i === n-1 ? ' · bugün' : '');
     sumEl.querySelector('.fr-d').innerHTML = isNum(d) ? `<b style="color:${col(d)}">${arw(d)} ${esc(fD(Math.abs(d)))} · ${esc(pc(C[i]))} ${word(d)}</b> <span>önceki aya göre</span>` : '<span>başlangıç ayı</span>'; };
   if(sumEl){
-    sumEl.innerHTML = `<div class="fr-l"><div class="fr-m"></div><div class="fr-v"></div><div class="fr-d"></div></div>`;
-    readout(n-1);
+    sumEl.innerHTML = ''; sumEl.hidden = true;   // üst özet kaldırıldı; son ayın değişimi grafikte son noktada yazar
   }
 
   const W = Math.max(320, el.clientWidth || 700);
@@ -4897,6 +4924,10 @@ function columnChart(el, labels, values, o={}){
     s += `<text x="${px}" y="${up ? py - 14 : py + 22}" text-anchor="middle" style="font-weight:800;font-size:9px;letter-spacing:.12em;fill:${col(x.d)}">${t}</text>`; });
   const li = P[P.length-1], lc = segCol[segCol.length-1] || '#2A62A8';
   s += `<circle class="fd-pulse" cx="${li[0]}" cy="${li[1]}" r="9" fill="${lc}"/><circle cx="${li[0]}" cy="${li[1]}" r="6.5" fill="#fff" stroke="${lc}" stroke-width="3"/><circle cx="${li[0]}" cy="${li[1]}" r="2.4" fill="${lc}"/>`;
+  { const dl = D[n-1]; if(isNum(dl)){ const cl = col(dl), up = dl >= 0, ty = up ? li[1] - 20 : li[1] + 30;
+    s += `<g class="fd-endl" style="paint-order:stroke;stroke:#f3f6fb;stroke-width:5px;stroke-linejoin:round">
+      <text x="${li[0] - 16}" y="${ty}" text-anchor="end" style="font-weight:800;font-size:13.5px;fill:${cl}">${sg(dl)}${esc(fD(Math.abs(dl)))}</text>
+      <text x="${li[0] - 16}" y="${ty + 15}" text-anchor="end" style="font-weight:700;font-size:11px;fill:${cl}">${sg(dl)}${esc(pc(C[n-1]))}</text></g>`; } }
   s += `<circle class="fd-dot" cx="0" cy="0" r="5.5" fill="#fff" stroke="#16335f" stroke-width="2.5" style="opacity:0"/>`;
   // ay etiketleri
   labels.forEach((lb, i) => { const last = i === n-1;
