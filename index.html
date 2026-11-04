@@ -3013,11 +3013,7 @@ body:not([data-tab="overview"]) #headline{display:none}
   <section class="panel" role="tabpanel" id="panel-cover"><div id="coverWrap"></div></section>
 
   <section class="panel" role="tabpanel" id="panel-overview">
-    <div class="card fu-card" id="followCard" hidden>
-      <div class="card-h"><div><div class="eyebrow">Takip</div><div class="card-t">Geçen ay verilen kararların sonucu</div><div class="card-s" id="followSub"></div></div></div>
-      <div id="followViz"></div>
-    </div>
-    <div class="card fl-card mt16">
+    <div class="card fl-card">
       <div class="card-h"><div><div class="eyebrow">Stok akışı</div><div class="card-t">Devredenden kalana</div><div class="card-s" id="flowSub">Dönem başı stok · girişler · tüketim · dönem sonu</div></div></div>
       <div id="flowViz"></div>
     </div>
@@ -4556,14 +4552,13 @@ function buildExecSheet(ctx){
     ['Aylık tüketim', FMTc(M.cik), dl(M.cik, P.cik, 'up'), `giriş ${FMTc(M.gir)}`],
     ['Stok gün kapsamı', M.doh != null ? nf0.format(Math.round(M.doh)) + ' gün' : '—', dl(M.doh, P.doh, 'down'), dc ? `hedef ≤ ${nf0.format(dc.target)} gün` : ''],
     [tm('Serbest bırakılabilir sermaye', 'Azaltılabilir fazla stok'), FMTc(C.net), '', M.kal ? `stoğun ${PCT(C.net/M.kal*100)}'i` : '']];
-  const top3 = (I.plan || []).slice(0, 3), fr = followRows(ctx);
+  const top3 = (I.plan || []).slice(0, 3);
   const cs = QB && QB.sel && QB.sel.size && QB.sel.size < (ALL.Ulke || []).length ? [...QB.sel].join(', ') : 'Tüm şirketler';
   return `<header class="ex-h"><div><b>D/U BI</b><span>Stok Yönetici Özeti</span></div><div class="ex-m"><b>${esc(fmtMonth(ctx.cur))}</b><span>${esc(cs)} · ${ANALYSIS_MODE === 'tutar' ? 'tutar' : 'miktar'} bazında</span></div></header>
     <section class="ex-hl"><p>${h.txt}</p><span class="ex-hs" style="--hc:${h.g.c}">Sağlık <b>${h.health ?? '—'}</b> · ${esc(h.g.t)}</span></section>
     <section class="ex-k">${K.map(k => `<div><small>${esc(k[0])}</small><b>${esc(k[1])}</b>${k[2]}<span>${esc(k[3])}</span></div>`).join('')}</section>
     <section class="ex-tr"><h4>Kalan stok · son ${mo.length} ay</h4>${trendSvg(mo.map(m => ctx.mm[m].kal), mo.map(m => fmtMonth(m, true)), 700, 170)}</section>
     <section class="ex-dc"><h4>Karar verilecek ${top3.length} konu</h4>${top3.map((p, i) => `<div class="ex-d"><span class="ex-n">${i + 1}</span><div><b>${esc(p.title)}</b><p>${p.t}</p><small>Sorumlu: ${esc(p.owner)} · Süre: ${esc(p.when)}${actGet(ctx.cur, p.key) ? ` · Durum: ${esc(ACT_ST[actGet(ctx.cur, p.key)])}` : ''}</small></div><div class="ex-i"><b>${esc(FMTc(p.impact))}</b><small>${esc(p.impLab)}</small></div></div>`).join('')}</section>
-    ${fr.length ? `<section class="ex-fu"><h4>Geçen ayın kararları · ${esc(fmtMonth(ctx.prev))} → ${esc(fmtMonth(ctx.cur))}</h4>${fr.filter(r => r.lab).map(r => `<div><span>${esc(r.title)}</span><em>${esc(ACT_ST[r.st] || '—')}</em><b>${esc(FMTc(r.a))} → ${esc(FMTc(r.b))}</b><i class="${r.d <= 0 ? 'up' : 'dn'}">${r.d == null ? '' : (r.d <= 0 ? '▼ ' : '▲ ') + esc(PCT(Math.abs(r.d)))}</i></div>`).join('')}</section>` : ''}
     <footer class="ex-f"><span>Hazırlayan: ${esc(s ? s.username : '—')} · ${esc(new Date().toLocaleDateString('tr-TR'))}</span><span>Gizli — yalnızca şirket içi kullanım</span></footer>`;
 }
 function printExec(){
@@ -4579,7 +4574,7 @@ function printExec(){
 function renderOverview(ctx){
   const I = insights(ctx), M = ctx.M, g = healthGrade(M.health);
   if($('#briefChip')) $('#briefChip').innerHTML = `Sağlık: <b style="color:${g.c}">${esc(g.t)} · ${M.health ?? '—'}</b>`;
-  renderHeadline(ctx, I); renderFollow(ctx); renderFlow(ctx); renderPlan(I); wirePlanStatus(); renderCapital(ctx, I); renderDepotMatrix(ctx); renderAging(ctx);
+  renderHeadline(ctx, I); renderFlow(ctx); renderPlan(I); wirePlanStatus(); renderCapital(ctx, I); renderDepotMatrix(ctx); renderAging(ctx);
   const lvl = x => /stoksuz|Konsantrasyon|GIT\) payı yüksek/.test(x) ? 'neg' : /risk sinyali yok/.test(x) ? 'pos' : 'warn';
   const lvlT = {neg:'Yüksek risk', warn:'Dikkat', pos:'Normal'};
   // KPI'larda, stok akışında ve aksiyon planında olan maddeler burada tekrar edilmez
