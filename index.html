@@ -2881,7 +2881,7 @@ body:not([data-tab="overview"]) #headline{display:none}
         <p style="margin-top:14px">Stok performansı, risk ve sermaye verimliliği — tek ekranda, yönetim kalitesinde.</p>
       </div>
       <ul>
-        <li><i>◆</i> Stok sağlık skoru ve devir hızı</li>
+        <li><i>◆</i> Gün kapsamı ve devir hızı</li>
         <li><i>◆</i> Min / Max, hareketsiz ve aşırı stok riski</li>
         <li><i>◆</i> Pareto ABC analizi</li>
         <li><i>◆</i> Veriyle konuşan akıllı asistan</li>
@@ -3066,7 +3066,7 @@ body:not([data-tab="overview"]) #headline{display:none}
         <div class="chart-tools"><label class="lim" for="trendMetric">Gösterge
           <select class="sel" id="trendMetric">
             <option value="kal">Kalan stok</option><option value="cik">Çıkan (tüketim)</option><option value="gir">Giren</option>
-            <option value="doh">Gün kapsamı</option><option value="turn">Devir hızı</option><option value="health">Sağlık skoru</option>
+            <option value="doh">Gün kapsamı</option><option value="turn">Devir hızı</option>
           </select></label></div></div>
       <div class="cs-strip" id="chTrendSum"></div>
       <div class="per-strip" id="chTrendPer" role="tablist" aria-label="Dönem"></div>
@@ -4501,8 +4501,7 @@ function headlineData(ctx, I){
 function renderHeadline(ctx, I){
   const el = $('#headline'); if(!el) return; const h = headlineData(ctx, I);
   el.innerHTML = `<div class="hdl-t"><small>${esc(fmtMonth(ctx.cur))} · ay manşeti</small><p>${h.txt}</p></div>
-    <div class="hdl-r"><span class="hdl-h" style="--hc:${h.g.c}"><em>Sağlık</em><b>${h.health ?? '—'}</b><i>${esc(h.g.t)}</i></span>
-    <button type="button" class="btn hdl-pdf" id="btnExecPdf"><svg viewBox="0 0 24 24" fill="none"><path d="M7 3h7l5 5v13H7z M14 3v5h5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 14h6M10 17h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Tek sayfa PDF</button></div>`;
+    <div class="hdl-r"><button type="button" class="btn hdl-pdf" id="btnExecPdf"><svg viewBox="0 0 24 24" fill="none"><path d="M7 3h7l5 5v13H7z M14 3v5h5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 14h6M10 17h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Tek sayfa PDF</button></div>`;
   $('#btnExecPdf').onclick = printExec;
 }
 function followRows(ctx){
@@ -4553,7 +4552,7 @@ function buildExecSheet(ctx){
   const top3 = (I.plan || []).slice(0, 3);
   const cs = QB && QB.sel && QB.sel.size && QB.sel.size < (ALL.Ulke || []).length ? [...QB.sel].join(', ') : 'Tüm şirketler';
   return `<header class="ex-h"><div><b>D/U BI</b><span>Stok Yönetici Özeti</span></div><div class="ex-m"><b>${esc(fmtMonth(ctx.cur))}</b><span>${esc(cs)} · ${ANALYSIS_MODE === 'tutar' ? 'tutar' : 'miktar'} bazında</span></div></header>
-    <section class="ex-hl"><p>${h.txt}</p><span class="ex-hs" style="--hc:${h.g.c}">Sağlık <b>${h.health ?? '—'}</b> · ${esc(h.g.t)}</span></section>
+    <section class="ex-hl"><p>${h.txt}</p></section>
     <section class="ex-k">${K.map(k => `<div><small>${esc(k[0])}</small><b>${esc(k[1])}</b>${k[2]}<span>${esc(k[3])}</span></div>`).join('')}</section>
     <section class="ex-tr"><h4>Kalan stok · son ${mo.length} ay</h4>${trendSvg(mo.map(m => ctx.mm[m].kal), mo.map(m => fmtMonth(m, true)), 700, 170)}</section>
     <section class="ex-dc"><h4>Karar verilecek ${top3.length} konu</h4>${top3.map((p, i) => `<div class="ex-d"><span class="ex-n">${i + 1}</span><div><b>${esc(p.title)}</b><p>${p.t}</p><small>Sorumlu: ${esc(p.owner)} · Süre: ${esc(p.when)}${actGet(ctx.cur, p.key) ? ` · Durum: ${esc(ACT_ST[actGet(ctx.cur, p.key)])}` : ''}</small></div><div class="ex-i"><b>${esc(FMTc(p.impact))}</b><small>${esc(p.impLab)}</small></div></div>`).join('')}</section>
@@ -4590,7 +4589,7 @@ const TREND_META = {
   kal:{n:'Kalan stok', good:'neutral'}, cik:{n:'Çıkan (tüketim)', good:'up'}, gir:{n:'Giren', good:'neutral'},
   doh:{n:'Gün kapsamı', good:'down'}, turn:{n:'Devir hızı', good:'up'}, health:{n:'Sağlık skoru', good:'up'}};
 function drawTrend(ctx){
-  const k = RISK_UI.trend || 'kal'; $('#trendMetric').value = k; const meta = TREND_META[k];
+  const k = RISK_UI.trend && RISK_UI.trend !== 'health' ? RISK_UI.trend : 'kal'; $('#trendMetric').value = k; const meta = TREND_META[k];
   const upto = ctx.allMonths.slice(0, ctx.allMonths.indexOf(ctx.cur) + 1), val = m => (ctx.get(m) || {})[k];
   const WINS = [3, 6, 9, 12], win = WINS.includes(RISK_UI.trendWin) ? RISK_UI.trendWin : 12;
   const fi = RISK_UI.trendFrom ? upto.indexOf(RISK_UI.trendFrom) : -1;
@@ -5096,8 +5095,6 @@ function coverCountryHTML(ctx){
       <header class="cv-c-top">
         ${shareRing(share, col)}
         <div class="cv-c-id"><span class="cv-c-k">Ülke / Proje</span><b>${esc(u)}${SAMPLE_SET.has(u) ? '<span class="cv-c-tag">Örnek veri</span>' : ''}</b><small>${nf0.format(M.items)} kalem · ${nf0.format(dep)} depo</small></div>
-        ${comp.length ? `<div class="cv-c-comp">${comp.map(r => `<div data-tip="${tipHTML(r.def.name, [['Değer', r.v == null ? '—' : r.def.unit === '%' ? PCT(r.v) : r.def.unit === '×' ? nf1.format(r.v) + '×' : nf0.format(Math.round(r.v)) + ' gün'], ['Puan', r.score + ' / 100'], ['Hedef', (r.def.better === 'low' ? '≤ ' : '≥ ') + r.target + (r.def.unit === '%' ? '%' : r.def.unit === '×' ? '×' : ' gün')]])}"><span>${esc(r.def.short)}</span><i><u style="width:${Math.max(3, r.score)}%;background:${scoreCol(r.score)}"></u></i><b>${r.score}</b></div>`).join('')}</div>` : ''}
-        <div class="cv-c-hs" style="--hc:${g.c}"><small>Sağlık skoru</small><b>${M.health != null ? M.health : '—'}</b><span>${esc(g.t)}</span>${multi ? `<div class="cv-c-hr">${rankChip(rankOf(L, u, y => y.M.health, 'high'))}</div>` : ''}</div>
       </header>
       <div class="cv-c-body">
         <div class="cv-c-main">
@@ -5136,8 +5133,7 @@ function coverCountryHTML(ctx){
     ['Devir hızı', x => x.M.turn, v => nf1.format(v) + '×', 'high'],
     ['Min altı açık / stok', x => pc(x, 'belowGap'), v => PCT(v), 'low'],
     ['Max üstü fazla / stok', x => pc(x, 'aboveGap'), v => PCT(v), 'low'],
-    ['Hareketsiz / stok', x => pc(x, 'deadV'), v => PCT(v), 'low'],
-    ['Sağlık skoru', x => x.M.health, v => nf0.format(v), 'high']];
+    ['Hareketsiz / stok', x => pc(x, 'deadV'), v => PCT(v), 'low']];
   const matrix = !multi ? '' : `<div class="cv-mx"><div class="cv-lab">Ülke karşılaştırma matrisi <span>★ en iyi · kırmızı en zayıf</span></div>
     <div class="table-wrap"><table class="cv-mxt"><thead><tr><th>Gösterge</th>${L.map(x => `<th class="num"${xfAttr([['Ulke', x.u]])}>${esc(x.u)}${SAMPLE_SET.has(x.u) ? ' <small class="muted">(örnek)</small>' : ''}</th>`).join('')}</tr></thead><tbody>
     ${rows.map(([t, f, fm, better]) => { const vals = L.map(f), ok = vals.filter(v => v != null && isFinite(v));
@@ -5373,9 +5369,8 @@ function paretoChart(el, list){
 function renderReport(ctx){
   const I = insights(ctx), M = ctx.M, g = healthGrade(M.health), s = readSession();
     $('#aiOut').innerHTML = `<div class="eyebrow">${esc(fmtMonth(ctx.cur))} · ${ANALYSIS_MODE === 'tutar' ? 'Tutarsal' : 'Miktarsal'} görünüm${s ? ' · hazırlayan: ' + esc(s.username) : ''}</div>
-    <h2>Stok sağlığı: ${esc(g.t)} (${M.health ?? '—'}/100)</h2>
-    <p><b>${nf0.format(M.items)}</b> kalem üzerinden otomatik hazırlanmıştır.</p><!-- Skor, 5 standart KPI'nın (ASCM/SCOR tanımları) şirket hedeflerine göre puanlanıp ağırlıklı ortalamasının alınmasıyla hesaplanır:</p>
-    <ul>${(M.card || []).map(r => `<li><b>${esc(r.def.name)}</b>: ${esc(kpiFmt(r.def, r.v))} (hedef ${esc(kpiFmt(r.def, r.target))}, kritik ${esc(kpiFmt(r.def, r.worst))}) → <b>${r.score ?? '—'}</b> puan × ağırlık %${r.w}</li>`).join('')}</ul>-->
+    <h2>Stok yönetici brifingi · ${esc(fmtMonth(ctx.cur))}</h2>
+    <p><b>${nf0.format(M.items)}</b> kalem üzerinden otomatik hazırlanmıştır.</p>
     <h3>1 · Ne oldu</h3><ul>${I.what.map(x => `<li>${x}</li>`).join('')}</ul>
     <h3>2 · Neden önemli</h3><ul>${I.why.map(x => `<li>${x}</li>`).join('')}</ul>
     <h3>3 · Önerilen aksiyonlar (öncelik sırasıyla)</h3><ol style="padding-left:18px">${I.act.map(x => `<li>${x}</li>`).join('')}</ol>
@@ -5383,7 +5378,7 @@ function renderReport(ctx){
     ${(() => { const ch = itemChanges(ctx), ag = agingList(ctx).slice(0,5);
       return `<h3>5 · Önceki aydan artışa en çok neden olan 5 stok</h3>${ch && ch.up.length ? `<ol style="padding-left:18px">${ch.up.slice(0,5).map(x => `<li><b>${esc(x.name)}</b> (${esc(x.depo)}): ${esc(FMTc(x.prev))} → ${esc(FMTc(x.cur))}, <b>+${esc(FMTc(x.d))}</b> · katkı ${PCT(x.d/ch.grossUp*100)}</li>`).join('')}</ol>` : '<p>Önceki ay verisi yok veya artış yok.</p>'}
       <h3>6 · En uzun süredir bekleyen 5 stok</h3>${ag.length ? `<ol style="padding-left:18px">${ag.map(x => `<li><b>${esc(x.name)}</b> (${esc(x.depo)}): <b>${esc(ageText(x))}</b> · ${esc(FMTc(x.val))}</li>`).join('')}</ol>` : '<p>Bekleyen stok yok.</p>'}`; })()}
-    <details class="rp-meth"><summary>Yöntem notları ve skor hesabı</summary><ul>${(M.card || []).map(r => `<li><b>${esc(r.def.name)}</b>: ${esc(kpiFmt(r.def, r.v))} (hedef ${esc(kpiFmt(r.def, r.target))}, kritik ${esc(kpiFmt(r.def, r.worst))}) → <b>${r.score ?? '—'}</b> puan × ağırlık %${r.w}</li>`).join('')}</ul><ul>${KPI_DEFS.map(d => `<li><b>${esc(d.name)}</b> = ${esc(d.formula)} <span class="muted">(${esc(d.std)})</span></li>`).join('')}<li>Ortalama tüketim penceresi: son ${SETTINGS.avgMonths} ay · Hareketsiz süresi: ${SETTINGS.deadMonths} ay · Kapsam hedefi ${SETTINGS.covTarget} gün, aşırı kapsam eşiği ${SETTINGS.covMax} gün.</li><li>Pareto ABC: A ≤ %80, B ≤ %95, C > %95 kümülatif çıkış.</li><li>Bekleme süresi: stoklu kalemin veri içindeki son çıkış ayından bu yana geçen ay sayısı.</li></ul></details>`;
+    <details class="rp-meth"><summary>Yöntem notları</summary><ul>${KPI_DEFS.map(d => `<li><b>${esc(d.name)}</b> = ${esc(d.formula)} <span class="muted">(${esc(d.std)})</span></li>`).join('')}<li>Ortalama tüketim penceresi: son ${SETTINGS.avgMonths} ay · Hareketsiz süresi: ${SETTINGS.deadMonths} ay · Kapsam hedefi ${SETTINGS.covTarget} gün, aşırı kapsam eşiği ${SETTINGS.covMax} gün.</li><li>Pareto ABC: A ≤ %80, B ≤ %95, C > %95 kümülatif çıkış.</li><li>Bekleme süresi: stoklu kalemin veri içindeki son çıkış ayından bu yana geçen ay sayısı.</li></ul></details>`;
 }
 
 /* =====================================================================
@@ -5484,7 +5479,6 @@ function exportFullWorkbook(){
   const kpi = [['Gösterge','Değer','Önceki ay','Hedef','Durum'],
     ['Toplam kalan', M.kal, ctx.P?.kal ?? '', '', ''], ['Çıkan', M.cik, ctx.P?.cik ?? '', '', ''], ['Giren', M.gir, ctx.P?.gir ?? '', '', ''],
     ...(M.card||[]).map(r => [r.def.name, r.v ?? '', '', r.target, ragOf(r.score).t]),
-    ['Performans skoru', M.health ?? '', ctx.P?.health ?? '', '', healthGrade(M.health).t],
     [tm('Risk altındaki stok (net)','Riskli fazla stok (net)'), capitalOpp(ctx, I).net, '', '', '']];
   const grp = key => [['Ad','Devreden','Giren','Çıkan','Kalan','Pay %','Min','Max'], ...groupAgg(ctx.monthRows, key, ctx.c).map(x => [x.Ad, x.dev, x.gir, x.cik, x.kal, M.kal ? +(x.kal/M.kal*100).toFixed(2) : 0, x.min, x.max])];
   const pack = (p, extra) => [['Stok','Depo','Üst Grup','FSN','MTRL','Kalan', ...extra.map(e => e[0]), 'Etki','Yorum'], ...p.all.map(x => [x.StokAdi, x.Depo, x.UstGrup, x.FSN, x.MTRL, x.Bal, ...extra.map(e => x[e[1]] ?? ''), x.Impact, x.Smart])];
@@ -5937,7 +5931,7 @@ function ansIntro(ctx){
 function ansSummary(ctx){
   const M = ctx.M, P = ctx.P, g = healthGrade(M.health), I = insights(ctx);
   return {html:`${H(`${esc(fmtMonth(ctx.cur))} genel görünüm`)}${AK([
-      ['Toplam kalan', FMT(M.kal)], ['Sağlık skoru', `<span style="color:${g.c}">${M.health ?? '—'} · ${esc(g.t)}</span>`],
+      ['Toplam kalan', FMT(M.kal)], ['Devir hızı', M.turn != null ? nf1.format(M.turn) + '×' : '—'],
       ['Çıkan', FMT(M.cik)], ['Gün kapsamı', M.doh != null ? nf0.format(Math.round(M.doh)) + ' gün' : '—'],
       ['Min altı', nf0.format(M.belowN) + ' kalem'], ['Hareketsiz', FMTc(M.deadV)]])}
     <ul>${I.why.slice(0,3).map(x => `<li>${x}</li>`).join('')}</ul>${TIP('Öncelik: ' + I.act[0])}`,
@@ -6038,13 +6032,6 @@ function ansAging(ctx, ent){
     ${TIP('Uzun bekleyen stoklar için kullanım planı, iç transfer veya tasfiye kararı verin; GIT kalemlerinde teslim/kabul sürecini kontrol edin.')}`,
     follow:['Hareketsiz stoklar','Artışa neden olan stoklar','Ne yapmalıyız?']};
 }
-function ansHealth(ctx){
-  const M = ctx.M, g = healthGrade(M.health), rows = (M.card || []).filter(r => r.score != null).sort((a,b) => (b.lost||0) - (a.lost||0));
-  return {html:`${H(`Stok performans skoru: <span style="color:${g.c}">${M.health} / 100 · ${esc(g.t)}</span>`)}5 standart KPI hedefe göre puanlanır (hedef = 100, kritik eşik = 0) ve ağırlıklı ortalaması alınır:
-    ${rows.map(r => { const c2 = ragOf(r.score).c; return `<div class="ab"><span class="n">${esc(r.def.name)} <span class="muted">· ${esc(kpiFmt(r.def, r.v))} / hedef ${esc(kpiFmt(r.def, r.target))}</span></span><span class="t"><i style="width:${r.score}%;background:${c2}"></i></span><span class="v" style="color:${c2}">${r.score}</span></div>`; }).join('')}
-    ${rows[0] ? TIP(`En çok puan kaybettiren: <b>${esc(rows[0].def.name)}</b> (−${nf1.format(rows[0].lost)} puan). Bu KPI hedefe ulaşırsa skor <b>${Math.min(100, Math.round(M.health + rows[0].lost))}</b> olur. Hedef ve ağırlıkları ⚙ Ayarlar sekmesinden değiştirebilirsiniz.`) : ''}`,
-    follow:['Ne yapmalıyız?','Hareketsiz stoklar','Min altı kalemler']};
-}
 function ansActions(ctx){
   const I = insights(ctx);
   return {html:`${H('Önceliklendirilmiş aksiyon planı')}<ol>${I.act.map(x => `<li>${x}</li>`).join('')}</ol>${TIP(`${tm('Brüt optimizasyon potansiyeli','Brüt fazla stok')}: <b>${FMT(ctx.M.opp)}</b>.`)}`, follow:['Hareketsiz stoklar','Min altı kalemler','Pareto analizi']};
@@ -6105,7 +6092,6 @@ function route(q, ctx){
   if(has(/asiri kapsam|kapsami yuksek|180|fazla kapsam/)) return packAnswer(ctx, 'excess', ent, n);
   if(has(/max ust|maks|max seviye|asiri stok|asiri|fazla stok|sisik|fazlalik/)) return packAnswer(ctx, 'max', ent, n);
   if(has(/pareto|80 ?20|abc|yogunlas/)) return ansPareto(ctx);
-  if(has(/saglik|skor|puan/)) return ansHealth(ctx);
   if(has(/oneri|aksiyon|ne yapmali|ne yapalim|ne yapmaliyiz|tavsiye|oncelik|ne yapilmali|plan/)) return ansActions(ctx);
   if(has(/bekleyen|en uzun sure|en eski|yaslan|eskiyen|aging|bekliyor|uzun suredir/)) return ansAging(ctx, ent);
   if(has(/en cok artan|artan kalem|artan stok|en cok yukselen|artisa neden|artisi yapan|artis kaynag|neden artti|artisin sebeb/)) return ansMovers(ctx, true);
