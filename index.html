@@ -2925,6 +2925,10 @@ body:not([data-tab="overview"]) #headline{display:none}
 .dm-pv b{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
 .dm-pv small{font-size:11px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
 .dm-pv small i{font-style:normal;margin:0 6px;color:var(--line-2,#c9d3e2);font-weight:400}
+.dm-ph small{display:block;margin-top:3px;font-size:10px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--muted)}
+.dm-d1{white-space:nowrap;font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.dm-d1 i{font-style:normal;margin:0 7px;color:#c9d3e2;font-weight:400}
+.dm-g tbody td{padding-top:11px!important;padding-bottom:11px!important}
 </style>
 </head>
 <body class="auth-lock">
@@ -4695,14 +4699,14 @@ function renderDepotMatrix(ctx){
   const mx = Math.max(...groups.map(x => x.kal), 1), mxd = Math.max(...list.map(x => x.kal), 1);
   const dcell = (cur, prev, p) => { if(!p.m) return '<td class="num"><span class="muted">—</span></td>'; if(!prev) return '<td class="num"><span class="muted">yeni</span></td>';
     const dv = cur - prev, dp = (cur/prev - 1)*100, up = dv >= 0;
-    return `<td class="num" data-tip="${tipHTML(`${fmtMonth(p.m)} → ${fmtMonth(ctx.cur)}`, [['O ay', FMTF(prev)], ['Bu ay', FMTF(cur)], ['Fark', (up ? '+' : '−') + FMTF(Math.abs(dv))]])}"><span class="dm-pv"><b>${esc(FMTc(prev))}</b><small class="${up ? 'warnc' : 'pos'}">${up ? '▲' : '▼'} ${esc(FMTc(Math.abs(dv)))}<i>|</i>${up ? '+' : '−'}${PCT(Math.abs(dp))}</small></span></td>`; };
+    return `<td class="num" data-tip="${tipHTML(`${fmtMonth(p.m)} → ${fmtMonth(ctx.cur)}`, [['O ay', FMTF(prev)], ['Bu ay', FMTF(cur)], ['Fark', (up ? '+' : '−') + FMTF(Math.abs(dv))]])}"><span class="dm-d1 ${up ? 'warnc' : 'pos'}">${up ? '▲' : '▼'} ${esc(FMTc(Math.abs(dv)))}<i>|</i>${up ? '+' : '−'}${PCT(Math.abs(dp))}</span></td>`; };
   const kcell = (o, m) => `<td class="num"><b>${esc(FMTc(o.kal))}</b><div class="dm-s">${PCT(o.share)}</div></td>`;
-  const head = P.map(p => `<th class="num"${p.part ? ` title="Veri ${mi + 1} ay; kıyas ${fmtMonth(p.m)} ile"` : ''}>${p.n === 1 ? 'Önceki ay' : p.n + ' ay'}${p.part ? '<sup>*</sup>' : ''}</th>`).join('');
+  const head = P.map(p => `<th class="num dm-ph"${p.part ? ` title="Veri ${mi + 1} ay; kıyas ${fmtMonth(p.m)} ile"` : ''}>${p.n === 1 ? 'Önceki ay' : p.n + ' ay'}${p.part ? '<sup>*</sup>' : ''}${p.m ? `<small>${esc(fmtMonth(p.m, true))} → ${esc(fmtMonth(ctx.cur, true))}</small>` : ''}</th>`).join('');
   el.innerHTML = `<div class="table-wrap"><table class="dt dm dm-g"><thead><tr><th>Depo sınıfı / depo</th><th class="num">Kalan · pay</th>${head}</tr></thead><tbody>
     ${groups.map((g, gi) => `<tr class="dm-grp" data-g="${gi}" tabindex="0" aria-expanded="false"><td><span class="dm-chev">›</span><b>${esc(g.Ad)}</b><div class="dm-s">${nf0.format(g.deps.length)} depo · ${nf0.format(g.n)} kalem</div></td>${kcell(g, mx)}${P.map(p => dcell(g.kal, p.cls.get(g.Ad) || 0, p)).join('')}</tr>
       ${g.deps.map(o => `<tr class="dm-ch" data-g="${gi}" hidden><td${xfAttr([['Depo', o.Ad]])}><b>${esc(o.Ad)}</b><div class="dm-s">${nf0.format(o.n)} kalem</div></td>${kcell(o, mxd)}${P.map(p => dcell(o.kal, p.dep.get(o.Ad) || 0, p)).join('')}</tr>`).join('')}`).join('')}
     </tbody></table></div>
-    <div class="note mt10">Her sütunda üstte o dönemin kalan stoğu, altta bu aya göre fark tutarı | yüzdesi · artış turuncu, azalış yeşil${P.some(p => p.part) ? ` · * veri ${mi + 1} ay olduğu için en eski ayla (${fmtMonth(P.find(p => p.part).m)}) kıyaslanır` : ''}. Depo sınıfına tıklayınca bağlı depolar açılır.</div>`;
+    <div class="note mt10">Fark | yüzde: kalan stokta başlıktaki döneme göre değişim · artış turuncu, azalış yeşil · üzerine gelince dönem tutarları görünür${P.some(p => p.part) ? ` · * veri ${mi + 1} ay olduğu için en eski ayla (${fmtMonth(P.find(p => p.part).m)}) kıyaslanır` : ''}. Sınıfa tıklayınca depolar açılır.</div>`;
   const tb = el.querySelector('tbody');
   const tog = tr => { const on = tr.getAttribute('aria-expanded') !== 'true'; tr.setAttribute('aria-expanded', on); tr.classList.toggle('open', on);
     tb.querySelectorAll(`tr.dm-ch[data-g="${tr.dataset.g}"]`).forEach(x => x.hidden = !on); };
