@@ -3010,6 +3010,44 @@ body:not([data-tab="overview"]) #headline{display:none}
 .an-side p{margin:8px 0 0;font-size:11.5px;line-height:1.55;color:var(--muted)} .an-side p b{color:var(--ink-2)}
 @media(max-width:760px){.an-r{grid-template-columns:1fr;gap:8px}.an-e{flex-direction:row;align-items:center;justify-content:space-between;text-align:left}.an-e>small{display:none}.an-fb{margin-top:0}.an-hd p{font-size:13.5px}}
 :root[data-theme="dark"] .an-q button{background:var(--dk-glass,rgba(255,255,255,.06))}
+
+/* ===== Olağan dışı durumlar v2: kutusuz, anlatımlı ===== */
+.an-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:36px;align-items:end;padding:6px 0 22px;margin-bottom:6px;border-bottom:1px solid var(--line)}
+@media(max-width:900px){.an-hero{grid-template-columns:1fr;gap:16px}}
+.an-h1 small{display:block;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#2A62A8;margin-bottom:6px}
+.an-h1 p{margin:0;font-size:26px;line-height:1.2;font-weight:600;color:var(--navy);letter-spacing:-.015em}
+.an-h1 p b{font-weight:800} .an-h1 p b.neg{color:#E5484D}
+.an-h1 span{display:block;margin-top:8px;font-size:13px;color:var(--muted)} .an-h1 span b{color:var(--ink)}
+.an-bar{display:flex;gap:3px;height:12px;border-radius:99px;overflow:hidden;background:var(--surface-3)}
+.an-bar i{display:block;min-width:4px}
+.an-leg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:11.5px;color:var(--ink-2)}
+.an-leg span{display:inline-flex;align-items:center;gap:6px} .an-leg i{width:8px;height:8px;border-radius:50%} .an-leg b{color:var(--ink)}
+.an-q{display:flex!important;gap:4px;flex-wrap:wrap;grid-template-columns:none!important;margin:0 0 18px!important;border-bottom:1px solid var(--line)}
+.an-q button{all:unset;cursor:pointer;display:inline-flex!important;align-items:center;gap:8px;padding:12px 12px 13px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;transform:none!important;
+  font:650 12.5px var(--font);color:var(--muted);position:relative;grid-template-columns:none!important}
+.an-q button::after{content:"";position:absolute;left:10px;right:10px;bottom:-1px;height:2px;border-radius:2px;background:transparent}
+.an-q button:hover{color:var(--ink)}
+.an-q button.on{color:var(--ink)} .an-q button.on::after{background:var(--qc)}
+.an-q button.zero{opacity:.45}
+.an-q .an-qi{width:auto!important;height:auto!important;background:none!important;font-size:13px;color:var(--qc)}
+.an-q button b{min-width:20px;height:20px;padding:0 6px;box-sizing:border-box;border-radius:99px;display:grid;place-items:center;font-size:10.5px;font-weight:800;background:color-mix(in srgb,var(--qc) 12%,transparent);color:var(--qc)}
+@media(max-width:760px){.an-q{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.an-q::-webkit-scrollbar{display:none}.an-q button{white-space:nowrap;padding:10px 8px 11px!important;font-size:12px}.an-h1 p{font-size:21px}}
+.an-lh{border-bottom:0!important;padding-bottom:4px!important}
+.an-qd{display:block;font-size:11.5px;color:var(--muted);font-weight:500;margin-top:2px}
+.an-r{grid-template-columns:38px minmax(0,1fr) auto!important;gap:14px!important;padding:16px 0!important;border-bottom:1px solid var(--line)}
+.an-r::before{display:none!important}
+.an-r .an-ic{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:800;color:var(--qc);background:color-mix(in srgb,var(--qc) 10%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--qc) 18%,transparent)}
+.an-r.bad .an-ic{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--qc) 18%,transparent),0 0 0 3px rgba(229,72,77,.14)}
+.an-hl{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:750;color:var(--navy);letter-spacing:-.01em}
+.an-hl .an-sv{font-size:9px}
+.an-r .an-n{margin-top:3px} .an-r .an-n b{font-size:12.5px;font-weight:650;color:var(--ink-2)}
+.an-r .an-x{font-size:12px;color:var(--muted);margin-top:2px} .an-r .an-x b{color:var(--ink-2)}
+.an-r .an-e>b{font-size:17px}
+.an-fb{gap:4px!important}
+.an-fb button{width:30px;height:28px!important;padding:0!important;display:grid!important;place-items:center;font-size:13px!important;filter:grayscale(1);opacity:.55}
+.an-fb button:hover,.an-fb button.on{filter:none;opacity:1}
+@media(max-width:760px){.an-r{grid-template-columns:34px minmax(0,1fr)!important}.an-r .an-e{grid-column:2/3}.an-r .an-ic{width:34px;height:34px}.an-hl{font-size:14px;flex-wrap:wrap}}
+.an-side{border-left:0!important;padding-left:0!important;background:linear-gradient(180deg,rgba(42,98,168,.045),rgba(42,98,168,.015));border-radius:18px;padding:18px!important}
 </style>
 </head>
 <body class="auth-lock">
@@ -3273,8 +3311,8 @@ body:not([data-tab="overview"]) #headline{display:none}
     <div class="card an-card">
       <div class="card-h"><div><div class="eyebrow">İstisna yönetimi</div><div class="card-t">Olağan dışı durumlar</div><div class="card-s" id="anSub">—</div></div>
         <div class="chart-tools"><label class="lim">Kıyas <select class="sel" id="anWin"><option value="3">Son 3 ay</option><option value="6" selected>Son 6 ay</option><option value="12">Son 12 ay</option></select></label></div></div>
-      <div class="an-hd" id="anHd"></div>
-      <div class="an-q" id="anQ" role="tablist" aria-label="Hazır sorular"></div>
+      <div class="an-hero" id="anHd"></div>
+      <nav class="an-q" id="anQ" role="tablist" aria-label="Hazır sorular"></nav>
       <div class="an-grid">
         <div><div class="an-lh" id="anLh"></div><div id="anList"></div></div>
         <aside class="an-side">
@@ -5560,17 +5598,17 @@ function anomScan(ctx, curM, W){
   const nb = Math.max(1, base.length), item = o => ({k:o.k, name:o.r.StokAdi || '—', depo:o.r.Depo || '—', r:o.cur || o.r, m:curM});
   // 1) ilk kez alınan kalem
   for(const o of by.values()){ const r = o.cur; if(!r || !((r.Giren||0) > 0)) continue;
-    if(firstSeen.get(r.StokAdi || '—') === ci) out.push({...item(o), rule:'new', imp:r.Giren, sev:r.Giren > 20000 ? 3 : 2,
+    if(firstSeen.get(r.StokAdi || '—') === ci) out.push({...item(o), rule:'new', h:'İlk kez alındı', imp:r.Giren, sev:r.Giren > 20000 ? 3 : 2,
       txt:`Daha önce hiç alınmamış; bu ay ilk kez <b>${nf0.format(r.GirenM||0)} birim</b> (${esc(FMTc(r.Giren))}) girdi.`}); }
   // 2) birim maliyet artışı
   for(const o of by.values()){ const r = o.cur; if(!r) continue; const b = o.b;
     const u = anUnit(r.Giren, r.GirenM) ?? anUnit(r.Kalan, r.KalanM), ub = anUnit(b.gT, b.gQ) ?? anUnit(b.kT, b.kQ);
     if(!(u > 0) || !(ub > 0)) continue; const p = (u/ub - 1)*100, q = (r.GirenM||0) || (r.KalanM||0), imp = (u - ub)*q;
-    if(p >= 15 && imp >= 500) out.push({...item(o), rule:'price', imp, sev:p >= 50 ? 3 : p >= 25 ? 2 : 1, p,
+    if(p >= 15 && imp >= 500) out.push({...item(o), rule:'price', h:`Birim fiyatı %${nf0.format(p)} arttı`, imp, sev:p >= 50 ? 3 : p >= 25 ? 2 : 1, p,
       txt:`Birim fiyatı son ${base.length} ayın ortalamasına göre <b>%${nf0.format(p)} arttı</b> (${esc(MONEY(ub))} → ${esc(MONEY(u))}).`}); }
   // 3) tüketim sıçraması
   for(const o of by.values()){ const r = o.cur; if(!r) continue; const avg = o.b.cT / nb, cur = r.Cikan || 0;
-    if(avg > 0 && cur > avg*3 && cur - avg >= 5000) out.push({...item(o), rule:'spike', imp:cur - avg, sev:cur > avg*6 ? 3 : 2,
+    if(avg > 0 && cur > avg*3 && cur - avg >= 5000) out.push({...item(o), rule:'spike', h:`Normalin ${nf1.format(cur/avg)} katı tüketildi`, imp:cur - avg, sev:cur > avg*6 ? 3 : 2,
       txt:`Bu ay <b>normalin ${nf1.format(cur/avg)} katı</b> tüketildi: ${esc(FMTc(cur))} (normalde ayda ${esc(FMTc(avg))}).`}); }
   // 4) daha pahalı alternatife geçiş (aynı alt grup + depo)
   const grp = new Map(); for(const o of by.values()){ if(!o.cur) continue; const g = (o.r.AltGrup || o.r.UstGrup || '—') + '|' + (o.r.Depo || ''); if(!grp.has(g)) grp.set(g, []); grp.get(g).push(o); }
@@ -5578,12 +5616,12 @@ function anomScan(ctx, curM, W){
     const st = L.map(o => ({o, c:o.cur.CikanM||0, cb:o.b.cQ/nb, u:anUnit(o.cur.Cikan, o.cur.CikanM) ?? anUnit(o.cur.Kalan, o.cur.KalanM)}));
     const down = st.filter(x => x.cb > 0 && x.c <= x.cb*.5), up = st.filter(x => x.c > 0 && x.c >= Math.max(1, x.cb)*1.5);
     for(const d of down) for(const u of up){ if(!(u.u > 0) || !(d.u > 0) || u.u < d.u*1.15) continue; const imp = (u.u - d.u)*u.c; if(imp < 1000) continue;
-      out.push({...item(u.o), rule:'swap', imp, sev:u.u > d.u*1.5 ? 3 : 2, from:d.o.r.StokAdi,
+      out.push({...item(u.o), rule:'swap', h:`${nf1.format(u.u/d.u)} kat pahalı alternatife geçildi`, imp, sev:u.u > d.u*1.5 ? 3 : 2, from:d.o.r.StokAdi,
         txt:`Aynı gruptaki <b>${esc(d.o.r.StokAdi)}</b> yerine bu kalem kullanılmaya başlandı; birim fiyatı <b>${nf1.format(u.u/d.u)} kat</b> daha yüksek (${esc(MONEY(d.u))} → ${esc(MONEY(u.u))}).`}); } }
   // 5) uzun süredir yolda
   for(const o of by.values()){ const r = o.cur; if(!r || !isGIT(r) || !((r.Kalan||0) > 0)) continue; let n = 1;
     for(let i = ci - 1; i >= 0; i--){ const pr = (ctx.byMonth.get(A[i]) || []).find(x => rowKey(x) === o.k); if(pr && (pr.Kalan||0) > 0) n++; else break; }
-    if(n >= 3) out.push({...item(o), rule:'git', imp:r.Kalan, sev:n >= 5 ? 3 : 2, n, txt:`<b>${n} aydır yolda</b>; ${esc(FMTc(r.Kalan))} tutarında mal hâlâ teslim alınmadı.`}); }
+    if(n >= 3) out.push({...item(o), rule:'git', h:`${n} aydır yolda bekliyor`, imp:r.Kalan, sev:n >= 5 ? 3 : 2, n, txt:`<b>${esc(FMTc(r.Kalan))}</b> tutarında mal hâlâ teslim alınmadı.`}); }
   return out;
 }
 function anomAll(ctx, W){
@@ -5591,7 +5629,7 @@ function anomAll(ctx, W){
   // tekrar eden: son 3 ayın en az 2'sinde fiyat / tüketim bulgusu
   const hist = new Map(); [1, 2].forEach(d => { const m = A[ci - d]; if(!m) return; anomScan(ctx, m, W).filter(f => f.rule === 'price' || f.rule === 'spike').forEach(f => hist.set(f.rule + '|' + f.k, (hist.get(f.rule + '|' + f.k) || 0) + 1)); });
   cur.filter(f => f.rule === 'price' || f.rule === 'spike').forEach(f => { const h = hist.get(f.rule + '|' + f.k) || 0;
-    if(h >= 1) cur.push({...f, rule:'rep', base:f.rule, sev:3, txt:`Son 3 ayın <b>${h + 1}</b>'inde ${f.rule === 'price' ? 'fiyat artışı' : 'tüketim sıçraması'} görüldü; geçici değil, <b>tekrar eden bir sorun</b>.`}); });
+    if(h >= 1) cur.push({...f, rule:'rep', base:f.rule, sev:3, h:`${h + 1} aydır tekrar ediyor`, txt:`Son 3 ayın <b>${h + 1}</b>'inde ${f.rule === 'price' ? 'fiyat artışı' : 'tüketim sıçraması'} görüldü; geçici değil, <b>tekrar eden bir sorun</b>.`}); });
   // geri bildirimle öğrenen sıralama
   const fb = anFbLoad(), rs = {}; Object.entries(fb).forEach(([id, v]) => { const r = id.split('|')[0]; rs[r] = rs[r] || {u:0, d:0}; v > 0 ? rs[r].u++ : rs[r].d++; });
   const mx = Math.max(1, ...cur.map(f => f.imp || 0));
@@ -5606,21 +5644,27 @@ function renderAnom(ctx){
   const of = k => vis.filter(f => f.rule === k), urgent = uniq.filter(f => f.sev >= 3), totImp = sum(uniq, 'imp');
   $('#anSub').textContent = `${fmtMonth(ctx.cur)} · son ${W} ayın normaliyle kıyas · kalem ve depo bazında`;
   const bd = $('#anomBadge'); if(bd){ bd.hidden = !urgent.length; bd.textContent = urgent.length; }
-  $('#anHd').innerHTML = uniq.length ? `<p>${esc(monthLoc(ctx.cur))} <b>${nf0.format(uniq.length)} olağan dışı durum</b> tespit edildi${urgent.length ? `; <b class="neg">${nf0.format(urgent.length)}'i acil</b> bakılmalı` : ''}. Toplam etki <b>${esc(FMTc(totImp))}</b>.</p>` : `<p>${esc(monthLoc(ctx.cur))} olağan dışı bir durum görülmedi.</p>`;
+  const segs = Object.entries(AN_RULES).filter(([k]) => k !== 'all' && k !== 'rep').map(([k, r]) => ({k, r, v:sum(uniq.filter(f => f.rule === k), 'imp')})).filter(x => x.v > 0), sv = sum(segs, 'v') || 1;
+  $('#anHd').innerHTML = uniq.length ? `<div class="an-h1"><small>${esc(fmtMonth(ctx.cur))} · özet</small>
+      <p><b>${nf0.format(uniq.length)}</b> olağan dışı durum${urgent.length ? `, <b class="neg">${nf0.format(urgent.length)}'i acil</b>` : ''}</p>
+      <span>Toplam etki <b>${esc(FMTc(totImp))}</b> · en büyük pay <b>${esc(segs.slice().sort((a, b) => b.v - a.v)[0]?.r.t || '—')}</b></span></div>
+    <div class="an-h2"><div class="an-bar">${segs.map(x => `<i style="flex:${x.v};background:${x.r.c}" data-tip="${tipHTML(x.r.t, [['Etki', FMTF(x.v)], ['Pay', PCT(x.v/sv*100)]])}"></i>`).join('')}</div>
+      <div class="an-leg">${segs.map(x => `<span><i style="background:${x.r.c}"></i>${esc(x.r.t)} <b>${PCT(x.v/sv*100, 0)}</b></span>`).join('')}</div></div>`
+    : `<div class="an-h1"><p>${esc(monthLoc(ctx.cur))} olağan dışı bir durum görülmedi.</p></div>`;
   $('#anQ').innerHTML = Object.entries(AN_RULES).filter(([k]) => k !== 'all').map(([k, r]) => { const L = of(k);
-      return `<button type="button" role="tab" data-q="${k}" class="${AN_UI.q === k ? 'on' : ''}${L.length ? '' : ' zero'}" style="--qc:${r.c}">
-        <span class="an-qi">${r.ic}</span><span class="an-qt"><b>${esc(r.q)}</b><small>${esc(r.d)}</small></span>
-        <span class="an-qn"><b>${L.length}</b><small>${L.length ? esc(FMTc(sum(L, 'imp'))) : '—'}</small></span></button>`; }).join('');
+      return `<button type="button" role="tab" data-q="${k}" class="${AN_UI.q === k ? 'on' : ''}${L.length ? '' : ' zero'}" style="--qc:${r.c}" title="${esc(r.d)}"><span class="an-qi">${r.ic}</span>${esc(r.q)}<b>${L.length}</b></button>`; }).join('');
+  $('#anQ').insertAdjacentHTML('afterbegin', `<button type="button" role="tab" data-q="all" class="${AN_UI.q === 'all' ? 'on' : ''}" style="--qc:#16335f"><span class="an-qi">★</span>Önce bunlar<b>${Math.min(8, uniq.length)}</b></button>`);
   const per = {}, bySev = a => a.slice().sort((x, y) => (y.fb > 0) - (x.fb > 0) || y.sev - x.sev || y.imp - x.imp), L = bySev(AN_UI.q === 'all' ? uniq.filter(f => (per[f.rule] = (per[f.rule] || 0) + 1) <= 3) : of(AN_UI.q)), show = L.slice(0, AN_UI.q === 'all' ? 8 : 30);
-  $('#anLh').innerHTML = `<div><b>${esc(AN_UI.q === 'all' ? 'Önce bunlara bakın' : AN_RULES[AN_UI.q].q)}</b>${AN_UI.q !== 'all' ? ` <a href="#" data-all>← tümüne dön</a>` : ''}</div><span>${nf0.format(L.length)} bulgu${L.length > show.length ? ` · ilk ${show.length}` : ''}${hiddenN ? ` · <a href="#" data-hid>${AN_UI.showHidden ? 'önemsizleri gizle' : nf0.format(hiddenN) + ' önemsiz gizli'}</a>` : ''}</span>`;
+  $('#anLh').innerHTML = `<div><b>${esc(AN_UI.q === 'all' ? 'Önce bunlara bakın' : AN_RULES[AN_UI.q].q)}</b>${AN_UI.q !== 'all' ? `<small class="an-qd">${esc(AN_RULES[AN_UI.q].d)}</small>` : ''}${AN_UI.q !== 'all' ? ` <a href="#" data-all>← tümüne dön</a>` : ''}</div><span>${nf0.format(L.length)} bulgu${L.length > show.length ? ` · ilk ${show.length}` : ''}${hiddenN ? ` · <a href="#" data-hid>${AN_UI.showHidden ? 'önemsizleri gizle' : nf0.format(hiddenN) + ' önemsiz gizli'}</a>` : ''}</span>`;
   const SV = {3:['Acil','bad'], 2:['İncele','mid'], 1:['Bilgi','low']};
   $('#anList').innerHTML = show.length ? `<div class="an-l">${show.map(f => { const R0 = AN_RULES[f.rule], sv = SV[f.sev] || SV[2];
     return `<div class="an-r ${sv[1]}${f.fb < 0 ? ' neg' : ''}${f.fb > 0 ? ' pos' : ''}" data-id="${esc(f.id)}">
-      <div class="an-b"><div class="an-t"><span class="an-sv ${sv[1]}">${sv[0]}</span><span class="an-tag" style="--qc:${R0.c}">${R0.ic} ${esc(R0.t)}</span></div>
+      <span class="an-ic" style="--qc:${R0.c}">${R0.ic}</span>
+      <div class="an-b"><div class="an-hl">${esc(f.h || R0.t)}<span class="an-sv ${sv[1]}">${sv[0]}</span></div>
         <div class="an-n"${xfAttr([['Depo', f.depo], ['StokAdi', f.name]])}><b>${esc(f.name)}</b><small>${esc(f.depo)}</small></div>
         <div class="an-x">${f.txt}</div></div>
       <div class="an-e"><b>${esc(FMTc(f.imp))}</b><small>etki</small>
-        <div class="an-fb"><button type="button" data-v="1" class="${f.fb > 0 ? 'on' : ''}">👍 Doğru</button><button type="button" data-v="-1" class="${f.fb < 0 ? 'on' : ''}">👎 Önemsiz</button></div></div></div>`; }).join('')}</div>`
+        <div class="an-fb"><button type="button" data-v="1" class="${f.fb > 0 ? 'on' : ''}" title="Doğru, önemli bulgu">👍</button><button type="button" data-v="-1" class="${f.fb < 0 ? 'on' : ''}" title="Önemsiz, bir daha gösterme">👎</button></div></div></div>`; }).join('')}</div>`
     : `<div class="empty">Bu soru için ${fmtMonth(ctx.cur)} ayında bulgu yok.</div>`;
   const D = AN_UI.dim, agg = new Map(); L.forEach(f => { const v = (f.r && f.r[D]) || '—'; const o = agg.get(v) || {n:0, imp:0}; o.n++; o.imp += f.imp || 0; agg.set(v, o); });
   const ag = [...agg.entries()].sort((a, b) => b[1].imp - a[1].imp).slice(0, 5), am = Math.max(1, ...ag.map(x => x[1].imp));
