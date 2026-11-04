@@ -2733,6 +2733,37 @@ details.grp[open]>.grp-b{animation:vhFade .42s var(--vh-ease) both}
 :root[data-theme="light"] .kpi .delta.bad .dg{background:#E5484D!important}
 :root[data-theme="light"] .kpi .k-spark .sp-line{stroke-width:2}
 @media (prefers-reduced-motion: reduce){.k-spark .sp-line{stroke-dasharray:none!important;stroke-dashoffset:0!important;animation:none!important}}
+
+/* ===== sadeleştirme ===== */
+body:not([data-tab="overview"]) #kpis{display:none!important}
+.status-line:has(.dot.ok){display:none!important}
+.brief2:has(.brief-col.hl){grid-template-columns:1fr!important}
+.brief-col.hl ul{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.brief-col.hl li.bi{grid-template-columns:78px minmax(0,1fr)}
+@media(max-width:860px){.brief-col.hl ul{grid-template-columns:1fr}}
+.ag-fsn{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.ag-fsn-h{font-size:10px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.ag-fsn-b{display:flex;gap:2px;height:10px;border-radius:99px;overflow:hidden;background:var(--surface-3)}
+.ag-fsn-b i{display:block;min-width:3px}
+.ag-fsn-l{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px;font-size:12px;color:var(--ink-2)}
+.ag-fsn-l span{display:inline-flex;align-items:center;gap:6px} .ag-fsn-l i{width:8px;height:8px;border-radius:50%}
+.ag-fsn-l b{font-weight:750;color:var(--ink)}
+#distMode{flex:none}
+.rp-meth{margin-top:18px;border-top:1px solid var(--line);padding-top:10px}
+.rp-meth summary{cursor:pointer;font-weight:700;color:var(--muted);font-size:12.5px}
+@media print{.rp-meth{display:none}}
+/* filtreler: masaüstünde de tek düğme */
+@media(min-width:761px){
+  .f-toggle{display:inline-flex!important;align-items:center;gap:8px;width:auto;margin-top:18px;height:38px;padding:0 14px;border-radius:12px;border:1px solid var(--line);
+    background:#fff;color:#16335f;font:700 12.5px var(--font);cursor:pointer;box-shadow:0 1px 2px rgba(16,42,84,.06),0 10px 24px -18px rgba(16,42,84,.35)}
+  .f-toggle svg{width:16px;height:16px;color:#2A62A8}
+  .f-toggle em{font-style:normal;font-size:11px;font-weight:650;color:var(--muted);margin-left:4px}
+  .f-toggle i{font-style:normal;font-size:10px;color:var(--muted);transition:transform .2s}
+  .f-toggle.on i{transform:rotate(180deg)}
+  .filters:not(.m-open){display:none!important}
+  .filters.m-open{margin-top:10px!important}
+  body.on-cover .f-toggle{margin-top:0}
+}
 </style>
 </head>
 <body class="auth-lock">
@@ -2918,7 +2949,7 @@ details.grp[open]>.grp-b{animation:vhFade .42s var(--vh-ease) both}
       <div id="flowViz"></div>
     </div>
     <div class="card mt16">
-      <div class="card-h"><div><div class="eyebrow">Yönetici Özeti</div><div class="card-t">Ne oldu · Neden önemli</div></div><span class="chip gold" id="briefChip">—</span></div>
+      <div class="card-h"><div><div class="eyebrow">Yönetici Özeti</div><div class="card-t">Bu ay öne çıkanlar</div></div><span class="chip gold" id="briefChip">—</span></div>
       <div class="brief brief2" id="brief"></div>
     </div>
     <div class="grid g-73 mt16">
@@ -2944,24 +2975,14 @@ details.grp[open]>.grp-b{animation:vhFade .42s var(--vh-ease) both}
     </div>
     <div class="grid g2 mt16">
       <div class="card">
-        <div class="card-h"><div><div class="eyebrow">Yaşlandırma</div><div class="card-t">Stok yaşlandırma analizi</div><div class="card-s">Kalan stoğun son çıkıştan bu yana geçen süreye göre dağılımı</div></div></div>
+        <div class="card-h"><div><div class="eyebrow">Yaşlandırma</div><div class="card-t">Stok yaşlandırma ve hareket sınıfı</div><div class="card-s">Kalan stoğun son çıkıştan bu yana geçen süreye göre dağılımı</div></div></div>
         <div id="agingViz"></div>
       </div>
       <div class="card">
-        <div class="card-h"><div><div class="eyebrow">Hareket sınıfı</div><div class="card-t">FSN dağılımı</div><div class="card-s">Fast · Slow · Non-moving stok payı</div></div></div>
-        <div class="chart" id="chFsn"></div>
-      </div>
-    </div>
-    <div class="grid g2 mt16">
-      <div class="card">
-        <div class="card-h"><div><div class="eyebrow">Dağılım</div><div class="card-t">Depo sınıfı payı</div></div></div>
-        <div class="chart" id="chDonut"></div>
-        <div class="sub-h"><div><div class="eyebrow">Depolar</div><div class="card-s">Kalan stok · pay ve önceki aya göre değişim</div></div></div>
+        <div class="card-h"><div><div class="eyebrow">Dağılım</div><div class="card-t">Stok nerede?</div><div class="card-s">Kalan stok · pay ve önceki aya göre değişim</div></div>
+          <div class="seg" id="distMode"><button type="button" data-d="depo" class="active">Depo</button><button type="button" data-d="mtrl">Malzeme grubu</button></div></div>
         <div id="chDepo"></div>
-      </div>
-      <div class="card">
-        <div class="card-h"><div><div class="eyebrow">Konsantrasyon</div><div class="card-t">MTRL grupları</div><div class="card-s">Kalan stok · pay ve önceki aya göre değişim</div></div></div>
-        <div id="chMtrl"></div>
+        <div id="chMtrl" hidden></div>
       </div>
     </div>
     <div class="card mt16">
@@ -2972,9 +2993,9 @@ details.grp[open]>.grp-b{animation:vhFade .42s var(--vh-ease) both}
     <div class="card mt16">
       <div class="card-h"><div><div class="eyebrow">Hareket edenler</div><div class="card-t">Önceki aya göre en büyük değişimler ve bekleyen stoklar</div><div class="card-s" id="mvSub">Kalem bazında (Depo · Stok)</div></div></div>
       <div class="mv3">
-        <div><div class="mv-h warnc">▲ Artışa neden olan · Top 10</div><div id="mvUp"></div></div>
-        <div><div class="mv-h" style="color:var(--info)">▼ En çok azalan · Top 10</div><div id="mvDn"></div></div>
-        <div><div class="mv-h" style="color:var(--neg)">⏳ En uzun bekleyen · Top 10</div><div id="mvAge"></div></div>
+        <div><div class="mv-h warnc">▲ Artışa neden olan · İlk 5</div><div id="mvUp"></div></div>
+        <div><div class="mv-h" style="color:var(--info)">▼ En çok azalan · İlk 5</div><div id="mvDn"></div></div>
+        <div><div class="mv-h" style="color:var(--neg)">⏳ En uzun bekleyen · İlk 5</div><div id="mvAge"></div></div>
       </div>
     </div>
     <div class="card mt16">
@@ -4390,16 +4411,17 @@ function renderOverview(ctx){
   const I = insights(ctx), M = ctx.M, g = healthGrade(M.health);
   $('#briefChip').innerHTML = `Sağlık: <b style="color:${g.c}">${esc(g.t)} · ${M.health ?? '—'}</b>`;
   renderFlow(ctx); renderPlan(I); renderCapital(ctx, I); renderDepotMatrix(ctx); renderAging(ctx);
-  donut($('#chFsn'), groupAgg(ctx.monthRows, 'FSN', ctx.c).filter(x => x.kal > 0).map(x => ({label:x.Ad, value:x.kal})), {title:'FSN dağılımı', xf:'FSN'});
   const lvl = x => /stoksuz|Konsantrasyon|GIT\) payı yüksek/.test(x) ? 'neg' : /risk sinyali yok/.test(x) ? 'pos' : 'warn';
   const lvlT = {neg:'Yüksek risk', warn:'Dikkat', pos:'Normal'};
-  $('#brief').innerHTML = [['what','i','Ne oldu',I.what],['why','!','Neden önemli',I.why]]
-    .map(([cls,ic,t,arr]) => `<div class="brief-col ${cls}"><h4><i>${ic}</i>${t}<span class="bc-n">${arr.length}</span></h4><ul>${arr.map((x,i) => { const l = cls === 'why' ? lvl(x) : 'info';
-      return `<li class="bi bi-${l}"><span class="bi-k">${cls === 'why' ? esc(lvlT[l]) : String(i+1).padStart(2,'0')}</span><span class="bi-t">${x}</span></li>`; }).join('')}</ul></div>`).join('');
-  donut($('#chDonut'), groupAgg(ctx.monthRows, 'DepoSinifi', ctx.c).filter(x => x.kal > 0).map(x => ({label:x.Ad, value:x.kal})), {title:'Depo sınıfı payı', xf:'DepoSinifi'});
+  // KPI'larda, stok akışında ve aksiyon planında olan maddeler burada tekrar edilmez
+  const hl = [...I.what.filter(x => /En büyük depo|Artışın/.test(x)).map(x => ['info', x]),
+    ...I.why.filter(x => /En uzun bekleyen|Konsantrasyon|GIT\) payı|risk sinyali yok/.test(x)).map(x => [lvl(x), x])];
+  $('#brief').innerHTML = `<div class="brief-col hl"><ul>${hl.map(([l, x]) => `<li class="bi bi-${l}"><span class="bi-k">${l === 'info' ? 'Bilgi' : esc(lvlT[l])}</span><span class="bi-t">${x}</span></li>`).join('')}</ul></div>`;
   shareBars($('#chDepo'), ctx, 'Depo', I.depots);
   shareBars($('#chMtrl'), ctx, 'MTRL');
-  equalizeShare();
+  [$('#chDepo'), $('#chMtrl')].forEach(e => e && bxKeep(e, 8));
+  const dm = $('#distMode'); if(dm && !dm._w){ dm._w = 1; dm.onclick = e => { const b = e.target.closest('button'); if(!b) return;
+    dm.querySelectorAll('button').forEach(x => x.classList.toggle('active', x === b)); $('#chDepo').hidden = b.dataset.d !== 'depo'; $('#chMtrl').hidden = b.dataset.d !== 'mtrl'; }; }
   renderMinMax(ctx); renderTopLists(ctx); drawTrend(ctx);
 }
 const TREND_META = {
@@ -4483,6 +4505,9 @@ function renderAging(ctx){
     <div class="ag-kpi"><div class="ag-big" style="color:${risky ? 'var(--neg)' : 'var(--muted)'}">${PCT(risky/tot*100)}</div><div class="card-s">3 aydan uzun süredir çıkış yok (${esc(FMTc(risky))})</div></div></div>
     <div class="ag-bar">${bk.filter(x => x.v > 0).map(x => `<div style="width:${x.v/tot*100}%;background:${x.c}" data-tip="${tipHTML(x.t, [['Değer', FMT(x.v)], ['Pay', PCT(x.v/tot*100)], ['Kalem', nf0.format(x.n)]])}">${segPct(x.v/tot*100)}</div>`).join('')}</div>
     <div class="ag-rows">${bk.map(x => `<div class="ag-r"><i style="background:${x.c}"></i><span>${esc(x.t)}</span><b>${esc(FMTc(x.v))}</b><em>${PCT(x.v/tot*100)}</em><small>${nf0.format(x.n)} kalem</small></div>`).join('')}</div>
+    ${(() => { const F = groupAgg(ctx.monthRows, 'FSN', ctx.c).filter(x => x.kal > 0), ft = sum(F, 'kal'), fc = {'Fast Moving':'#14A38B', 'Slow Moving':'#2A62A8', 'Non Moving':'#E5484D'}, fl = {'Fast Moving':'Hızlı', 'Slow Moving':'Yavaş', 'Non Moving':'Hareketsiz'};
+      return ft ? `<div class="ag-fsn"><div class="ag-fsn-h">Hareket sınıfı</div><div class="ag-fsn-b">${F.map(x => `<i style="flex:${x.kal};background:${fc[x.Ad] || '#9cc3e6'}" data-tip="${tipHTML(fl[x.Ad] || x.Ad, [['Kalan', FMT(x.kal)], ['Pay', PCT(x.kal/ft*100)]])}"></i>`).join('')}</div>
+        <div class="ag-fsn-l">${F.map(x => `<span><i style="background:${fc[x.Ad] || '#9cc3e6'}"></i>${esc(fl[x.Ad] || x.Ad)} <b>${PCT(x.kal/ft*100)}</b></span>`).join('')}</div></div>` : ''; })()}
     ${span < 12 ? `<div class="note mt10">Veri ${span} ay olduğu için ${span}+ aydır çıkışı olmayanlar en uzun dilimde biriken kalemlerdir; yeni aylar ekledikçe dağılım netleşir. GIT hariç.</div>` : '<div class="note mt10">GIT hariç · son çıkış ayına göre.</div>'}`;
 }
 function renderPlan(I){
@@ -4620,10 +4645,7 @@ function columnChart(el, labels, values, o={}){
     sumEl.querySelector('.fr-m').textContent = full(i) + (i === n-1 ? ' · bugün' : '');
     sumEl.querySelector('.fr-d').innerHTML = isNum(d) ? `<b style="color:${col(d)}">${arw(d)} ${esc(fD(Math.abs(d)))} · ${esc(pc(C[i]))} ${word(d)}</b> <span>önceki aya göre</span>` : '<span>başlangıç ayı</span>'; };
   if(sumEl){
-    sumEl.innerHTML = `<div class="fr-l"><div class="fr-m"></div><div class="fr-v"></div><div class="fr-d"></div></div>
-      <p class="fr-s">Son ${ok.length} ayda <b style="color:${col(net)}">${sg(net)}${esc(fD(Math.abs(net)))} (${sg(net)}${esc(pc(np))})</b> net ${word(net)}<br>
-      <span><b>${ups}</b> ay artış · <b>${dns}</b> ay azalış</span><br>
-      <span>En sert artış <b>${esc(labels[mx.i])}</b> ${mx.d > 0 ? '+' + esc(fD(mx.d)) : '—'} · en sert düşüş <b>${esc(labels[mn.i])}</b> ${mn.d < 0 ? '−' + esc(fD(Math.abs(mn.d))) : '—'}</span></p>`;
+    sumEl.innerHTML = `<div class="fr-l"><div class="fr-m"></div><div class="fr-v"></div><div class="fr-d"></div></div>`;
     readout(n-1);
   }
 
@@ -4841,14 +4863,14 @@ function renderTopLists(ctx){
   const ch = itemChanges(ctx);
   if(!ch){ ['#mvUp','#mvDn'].forEach(s => $(s).innerHTML = '<div class="empty">Önceki ay verisi yok.</div>'); $('#mvSub').textContent = 'Kalem bazında (Depo · Stok)'; }
   else{
-    const up = ch.up.slice(0,10), dn = ch.dn.slice(0,10), mU = up[0]?.d || 1, mD = Math.abs(dn[0]?.d || 1);
-    $('#mvSub').innerHTML = `${esc(fmtMonth(ctx.prev))} → ${esc(fmtMonth(ctx.cur))} · brüt artış <b>${esc(FMTc(ch.grossUp))}</b> (ilk 10: ${PCT(ch.grossUp ? sum(up,'d')/ch.grossUp*100 : 0)}) · brüt azalış <b>${esc(FMTc(Math.abs(ch.grossDn)))}</b>`;
+    const up = ch.up.slice(0,5), dn = ch.dn.slice(0,5), mU = up[0]?.d || 1, mD = Math.abs(dn[0]?.d || 1);
+    $('#mvSub').innerHTML = `${esc(fmtMonth(ctx.prev))} → ${esc(fmtMonth(ctx.cur))} · brüt artış <b>${esc(FMTc(ch.grossUp))}</b> (ilk 5: ${PCT(ch.grossUp ? sum(up,'d')/ch.grossUp*100 : 0)}) · brüt azalış <b>${esc(FMTc(Math.abs(ch.grossDn)))}</b>`;
     miniList($('#mvUp'), up.map(x => ({xf:[['Depo', x.depo], ['StokAdi', x.name]], name:x.name, sub:esc(x.depo), val:'+' + esc(FMTc(x.d)), small:`katkı ${PCT(ch.grossUp ? x.d/ch.grossUp*100 : 0)}`, bar:x.d/mU,
       tip:tipHTML(x.name, [['Depo', x.depo], ['Önceki ay', FMT(x.prev)], ['Bu ay', FMT(x.cur)], ['Artış', '+' + FMT(x.d)], ['Bu ay giren', FMT(x.gir)], ['Bu ay çıkan', FMT(x.cik)]])})));
     miniList($('#mvDn'), dn.map(x => ({xf:[['Depo', x.depo], ['StokAdi', x.name]], name:x.name, sub:esc(x.depo), val:'−' + esc(FMTc(Math.abs(x.d))) + (x.prev ? ` <em class="pc neg">−${PCT(Math.abs(x.d)/Math.abs(x.prev)*100)}</em>` : ''), small:esc(FMTc(x.prev)) + ' → ' + esc(FMTc(x.cur)), bar:Math.abs(x.d)/mD, cls:'info',
       tip:tipHTML(x.name, [['Depo', x.depo], ['Önceki ay', FMT(x.prev)], ['Bu ay', FMT(x.cur)], ['Azalış', '−' + FMT(Math.abs(x.d))], ['Azalış oranı', x.prev ? '−' + PCT(Math.abs(x.d)/Math.abs(x.prev)*100) : '—']])})));
   }
-  const ag = agingList(ctx).slice(0,10), mM = ag[0]?.months || 1;
+  const ag = agingList(ctx).slice(0,5), mM = ag[0]?.months || 1;
   const totK = ctx.M.kal || 1;
   miniList($('#mvAge'), ag.map(x => ({xf:[['Depo', x.depo], ['StokAdi', x.name]], name:x.name, sub:esc(x.depo) + (x.git ? ' · yolda (GIT)' : ''), val:esc(FMTc(x.val)) + ` <em class="pc">${PCT(x.val/totK*100)}</em>`, small:esc(ageText(x)) + ' bekliyor', bar:x.months/mM, cls:x.months >= 6 ? 'neg' : '',
     tip:tipHTML(x.name, [['Depo', x.depo], ['Bekleme', ageText(x) + ' (~' + x.months*30 + (x.open ? '+' : '') + ' gün)'], ['Kalan', FMT(x.val)], ['Toplam stoktaki pay', PCT(x.val/totK*100)], ['Durum', ageSub(x)]])})));
@@ -5086,7 +5108,7 @@ function renderRiskList(key){
     const ig = [...inner.entries()].map(([k,a]) => ({k, a, v:sum(a,'Impact')})).sort((a,b) => b.v - a.v);
     return `<details class="grp" ><summary><div class="s-left"><span class="pill ${gr.key}"><span class="d"></span>${esc(gr.title)} düzey</span><span class="chip">${nf0.format(rows.length)} kalem</span></div>
       <div class="s-right"><span class="chip"><b>${FMT(sum(rows,'Impact'))}</b></span><span class="chev">⌄</span></div></summary><div class="grp-b">
-      ${rows.length ? ig.map((x, ii) => `<details class="grp" ><summary><div class="s-left"><span class="chip">${esc(lbl)}: <b>${esc(x.k)}</b></span><span class="chip">${x.a.length} kalem</span></div><div class="s-right"><span class="chip"><b>${FMT(x.v)}</b></span><span class="chev">⌄</span></div></summary>
+      ${rows.length && ig.length === 1 ? riskTable(ig[0].a, cfg.cols, ui.n) : rows.length ? ig.map((x, ii) => `<details class="grp" ><summary><div class="s-left"><span class="chip">${esc(lbl)}: <b>${esc(x.k)}</b></span><span class="chip">${x.a.length} kalem</span></div><div class="s-right"><span class="chip"><b>${FMT(x.v)}</b></span><span class="chev">⌄</span></div></summary>
         <div class="grp-b">${riskTable(x.a, cfg.cols, ui.n)}</div></details>`).join('') : '<div class="empty">Bu düzeyde kayıt yok.</div>'}</div></details>`;
   }).join('');
   el.innerHTML = html || `<div class="empty">“${esc(ui.q)}” için sonuç bulunamadı.</div>`;
@@ -5229,16 +5251,16 @@ function renderReport(ctx){
   const I = insights(ctx), M = ctx.M, g = healthGrade(M.health), s = readSession();
     $('#aiOut').innerHTML = `<div class="eyebrow">${esc(fmtMonth(ctx.cur))} · ${ANALYSIS_MODE === 'tutar' ? 'Tutarsal' : 'Miktarsal'} görünüm${s ? ' · hazırlayan: ' + esc(s.username) : ''}</div>
     <h2>Stok sağlığı: ${esc(g.t)} (${M.health ?? '—'}/100)</h2>
-    <p>Bu brifing, seçili filtreler altında <b>${nf0.format(M.items)}</b> kalem ve <b>${nf0.format(M.n)}</b> satır üzerinden otomatik hazırlanmıştır. Skor, 5 standart KPI'nın (ASCM/SCOR tanımları) şirket hedeflerine göre puanlanıp ağırlıklı ortalamasının alınmasıyla hesaplanır:</p>
-    <ul>${(M.card || []).map(r => `<li><b>${esc(r.def.name)}</b>: ${esc(kpiFmt(r.def, r.v))} (hedef ${esc(kpiFmt(r.def, r.target))}, kritik ${esc(kpiFmt(r.def, r.worst))}) → <b>${r.score ?? '—'}</b> puan × ağırlık %${r.w}</li>`).join('')}</ul>
+    <p><b>${nf0.format(M.items)}</b> kalem üzerinden otomatik hazırlanmıştır.</p><!-- Skor, 5 standart KPI'nın (ASCM/SCOR tanımları) şirket hedeflerine göre puanlanıp ağırlıklı ortalamasının alınmasıyla hesaplanır:</p>
+    <ul>${(M.card || []).map(r => `<li><b>${esc(r.def.name)}</b>: ${esc(kpiFmt(r.def, r.v))} (hedef ${esc(kpiFmt(r.def, r.target))}, kritik ${esc(kpiFmt(r.def, r.worst))}) → <b>${r.score ?? '—'}</b> puan × ağırlık %${r.w}</li>`).join('')}</ul>-->
     <h3>1 · Ne oldu</h3><ul>${I.what.map(x => `<li>${x}</li>`).join('')}</ul>
     <h3>2 · Neden önemli</h3><ul>${I.why.map(x => `<li>${x}</li>`).join('')}</ul>
     <h3>3 · Önerilen aksiyonlar (öncelik sırasıyla)</h3><ol style="padding-left:18px">${I.act.map(x => `<li>${x}</li>`).join('')}</ol>
     <h3>4 · ${tm('Finansal etki','Stok fazlası etkisi')}</h3><p>Brüt optimizasyon potansiyeli <b>${FMT(M.opp)}</b>: max üstü fazla ${FMTc(M.aboveGap)} + hareketsiz ${FMTc(M.deadV)} + ${SETTINGS.covMax}+ gün kapsam fazlası ${FMTc(M.covX)}. (Kategoriler kısmen örtüşebilir; net potansiyel daha düşük olabilir.)</p>
-    ${(() => { const ch = itemChanges(ctx), ag = agingList(ctx).slice(0,10);
-      return `<h3>5 · Önceki aydan artışa neden olan Top 10 stok</h3>${ch && ch.up.length ? `<ol style="padding-left:18px">${ch.up.slice(0,10).map(x => `<li><b>${esc(x.name)}</b> (${esc(x.depo)}): ${esc(FMTc(x.prev))} → ${esc(FMTc(x.cur))}, <b>+${esc(FMTc(x.d))}</b> · katkı ${PCT(x.d/ch.grossUp*100)}</li>`).join('')}</ol>` : '<p>Önceki ay verisi yok veya artış yok.</p>'}
-      <h3>6 · En uzun süredir bekleyen Top 10 stok</h3>${ag.length ? `<ol style="padding-left:18px">${ag.map(x => `<li><b>${esc(x.name)}</b> (${esc(x.depo)}): <b>${esc(ageText(x))}</b> · ${esc(FMTc(x.val))} · ${esc(ageSub(x))}</li>`).join('')}</ol>` : '<p>Bekleyen stok yok.</p>'}`; })()}
-    <h3>7 · Yöntem notları</h3><ul>${KPI_DEFS.map(d => `<li><b>${esc(d.name)}</b> = ${esc(d.formula)} <span class="muted">(${esc(d.std)})</span></li>`).join('')}<li>Ortalama tüketim penceresi: son ${SETTINGS.avgMonths} ay · Hareketsiz süresi: ${SETTINGS.deadMonths} ay · Kapsam hedefi ${SETTINGS.covTarget} gün, aşırı kapsam eşiği ${SETTINGS.covMax} gün.</li><li>Pareto ABC: A ≤ %80, B ≤ %95, C > %95 kümülatif çıkış.</li><li>Bekleme süresi: stoklu kalemin veri içindeki son çıkış ayından bu yana geçen ay sayısı.</li></ul>`;
+    ${(() => { const ch = itemChanges(ctx), ag = agingList(ctx).slice(0,5);
+      return `<h3>5 · Önceki aydan artışa en çok neden olan 5 stok</h3>${ch && ch.up.length ? `<ol style="padding-left:18px">${ch.up.slice(0,5).map(x => `<li><b>${esc(x.name)}</b> (${esc(x.depo)}): ${esc(FMTc(x.prev))} → ${esc(FMTc(x.cur))}, <b>+${esc(FMTc(x.d))}</b> · katkı ${PCT(x.d/ch.grossUp*100)}</li>`).join('')}</ol>` : '<p>Önceki ay verisi yok veya artış yok.</p>'}
+      <h3>6 · En uzun süredir bekleyen 5 stok</h3>${ag.length ? `<ol style="padding-left:18px">${ag.map(x => `<li><b>${esc(x.name)}</b> (${esc(x.depo)}): <b>${esc(ageText(x))}</b> · ${esc(FMTc(x.val))}</li>`).join('')}</ol>` : '<p>Bekleyen stok yok.</p>'}`; })()}
+    <details class="rp-meth"><summary>Yöntem notları ve skor hesabı</summary><ul>${(M.card || []).map(r => `<li><b>${esc(r.def.name)}</b>: ${esc(kpiFmt(r.def, r.v))} (hedef ${esc(kpiFmt(r.def, r.target))}, kritik ${esc(kpiFmt(r.def, r.worst))}) → <b>${r.score ?? '—'}</b> puan × ağırlık %${r.w}</li>`).join('')}</ul><ul>${KPI_DEFS.map(d => `<li><b>${esc(d.name)}</b> = ${esc(d.formula)} <span class="muted">(${esc(d.std)})</span></li>`).join('')}<li>Ortalama tüketim penceresi: son ${SETTINGS.avgMonths} ay · Hareketsiz süresi: ${SETTINGS.deadMonths} ay · Kapsam hedefi ${SETTINGS.covTarget} gün, aşırı kapsam eşiği ${SETTINGS.covMax} gün.</li><li>Pareto ABC: A ≤ %80, B ≤ %95, C > %95 kümülatif çıkış.</li><li>Bekleme süresi: stoklu kalemin veri içindeki son çıkış ayından bu yana geçen ay sayısı.</li></ul></details>`;
 }
 
 /* =====================================================================
@@ -5424,7 +5446,7 @@ function wireCrossFilter(){
    Sekmeler, olaylar, açılış
    ===================================================================== */
 function setTab(tab){
-  RISK_UI.tab = tab; saveState(); document.body.classList.toggle('on-cover', tab === 'cover');
+  RISK_UI.tab = tab; saveState(); document.body.classList.toggle('on-cover', tab === 'cover'); document.body.dataset.tab = tab;
   $$('.tab').forEach(t => { const on = t.dataset.tab === tab; t.classList.toggle('active', on); t.setAttribute('aria-selected', on ? 'true' : 'false'); });
   $$('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + tab));
   renderPanel(tab);
@@ -5569,7 +5591,7 @@ function wireQbar(){
 /* telefon: filtreler açılır panel */
 function syncFToggle(){
   const n = Object.keys(FILTERS).filter(k => k !== 'Donem' && k !== 'Ulke' && (FILTERS[k] || []).length).reduce((a, k) => a + FILTERS[k].length, 0), e = $('#fToggleN');
-  if(e) e.textContent = n ? `${n} aktif` : 'tümü';
+  if(e) e.textContent = (CTX && CTX.cur ? fmtMonth(CTX.cur) + ' · ' : '') + (n ? `${n} filtre` : 'tümü');
 }
 function wireFToggle(){ const b = $('#fToggle'), f = $('#filters'); if(!b || !f) return;
   b.onclick = () => { const o = !f.classList.contains('m-open'); f.classList.toggle('m-open', o); b.classList.toggle('on', o); b.setAttribute('aria-expanded', o); }; }
@@ -5640,7 +5662,7 @@ async function bootData(){
 }
 function onAppReady(){
   const t = RISK_UI.tab = 'cover';   // açılışta kapak sayfası
-  document.body.classList.add('on-cover');
+  document.body.classList.add('on-cover'); document.body.dataset.tab = t;
   $$('.tab').forEach(x => { const on = x.dataset.tab === t; x.classList.toggle('active', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
   $$('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + t));
   if(!DATA_BOOTED) bootData(); else if(CTX){ $$('.panel').forEach(p => DIRTY[p.id.replace('panel-','')] = true); renderPanel(t); }
