@@ -2020,67 +2020,6 @@ img,svg,canvas,video{max-width:100%}
 @media (prefers-reduced-motion: reduce){.fr2-dash{animation:none}}
 @media(max-width:760px){.fr2{height:52px}.fr2-n{font-size:9.5px;padding:2px 7px}}
 
-/* ===== Canlı Nehir — stok akışı ===== */
-:root{--sf-navy:#16335f;--sf-blue:#2A62A8;--sf-lb:#5A9BD8;--sf-sky:#3FA0E0;--sf-teal:#14A38B;--sf-steel:#3c8dbc;--sf-red:#E5484D;--sf-green:#12A37A;--sf-bg:#f3f6fb;--sf-ink:#16335f;--sf-mute:#6b7d96;--sf-line:#dfe6f0}
-/* ===== Stock flow (portable block: everything prefixed .sf) ===== */
-.sf{position:relative;background:#fff;border-radius:18px;padding:16px 22px 14px;box-shadow:0 1px 0 rgba(22,51,95,.04),0 12px 32px -18px rgba(22,51,95,.25);font-feature-settings:"tnum" 1,"cv11" 1}
-.sf::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;border-radius:18px 18px 0 0;background:linear-gradient(90deg,var(--sf-navy),var(--sf-blue) 40%,var(--sf-teal) 55%,var(--sf-red) 75%,var(--sf-blue));opacity:.85}
-.sf .sf-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.sf .sf-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;min-width:0}
-.sf .sf-title h3{margin:0;font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--sf-navy)}
-.sf .sf-title h3 span{color:var(--sf-mute);font-weight:500}
-.sf .sf-meta{font-size:12px;color:var(--sf-mute)}
-.sf .sf-meta b{color:var(--sf-navy);font-weight:600}
-.sf .sf-seg{display:inline-flex;background:var(--sf-bg);border-radius:999px;padding:3px;position:relative}
-.sf .sf-seg button{all:unset;cursor:pointer;font-size:12px;font-weight:600;color:var(--sf-mute);padding:5px 12px;border-radius:999px;position:relative;z-index:1;transition:color .25s}
-.sf .sf-seg button[aria-pressed="true"]{color:#fff}
-.sf .sf-seg button:focus-visible{outline:2px solid var(--sf-sky);outline-offset:1px}
-.sf .sf-seg i{position:absolute;top:3px;bottom:3px;border-radius:999px;background:var(--sf-navy);transition:left .35s cubic-bezier(.3,.7,.2,1),width .35s}
-.sf .sf-stage{position:relative;margin-top:22px}
-.sf .sf-svg{display:block;width:100%;overflow:visible}
-.sf .sf-svg path,.sf .sf-svg rect{transition:d .75s cubic-bezier(.3,.7,.2,1),opacity .25s}
-.sf .sf-seg-hit{cursor:pointer}
-.sf .sf-flow{stroke:#fff;stroke-linecap:round;fill:none;stroke-dasharray:7 27;animation:sfRun 1.6s linear infinite}
-.sf .sf-flow.in{stroke:#e9fffa}.sf .sf-flow.out{stroke:#fff0f0}
-@keyframes sfRun{to{stroke-dashoffset:-34}}
-.sf .sf-ghost{fill:none;stroke:var(--sf-navy);stroke-opacity:.38;stroke-width:1;stroke-dasharray:3 3}
-.sf .sf-lab{position:absolute;line-height:1.15;white-space:nowrap;transition:opacity .25s}
-.sf .sf-k{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sf-mute);display:flex;align-items:center;gap:6px}
-.sf .sf-k em{font-style:normal;letter-spacing:0;text-transform:none;font-size:11px;font-weight:600}
-.sf .sf-k::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c,var(--sf-navy))}
-.sf .sf-v{font-size:22px;font-weight:700;letter-spacing:-.02em;color:var(--sf-navy)}
-.sf .sf-v.sm{font-size:16px}
-.sf .sf-p{font-size:12px;font-weight:600;color:var(--c,var(--sf-navy))}
-.sf .sf-d{font-size:11.5px;color:var(--sf-mute)}
-.sf .sf-d b{font-weight:600}
-.sf .sf-up{color:var(--sf-green)}.sf .sf-nt{color:var(--sf-steel)}.sf .sf-dn{color:var(--sf-red)}
-.sf .sf-row{display:flex;align-items:baseline;gap:8px}
-.sf .sf-end{text-align:right}.sf .sf-end .sf-k{justify-content:flex-end}.sf .sf-end .sf-row{justify-content:flex-end}
-.sf.dim .sf-lab:not(.on){opacity:.35}
-.sf.dim .sf-part:not(.on){opacity:.28}
-.sf .sf-foot{display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap;margin-top:14px;padding-top:9px;border-top:1px solid var(--sf-line);font-size:12px;color:var(--sf-mute)}
-.sf .sf-foot b{color:var(--sf-navy);font-weight:600}
-.sf .sf-net{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--sf-green)}
-.sf .sf-net svg{width:12px;height:12px}
-.sf .sf-legend{margin-left:auto;display:inline-flex;align-items:center;gap:6px}
-.sf .sf-legend svg{width:22px;height:8px}
-.sf .sf-tip{position:absolute;pointer-events:none;z-index:5;min-width:190px;background:rgba(22,51,95,.96);color:#fff;border-radius:10px;padding:9px 11px;font-size:12px;line-height:1.45;box-shadow:0 10px 28px -10px rgba(10,25,50,.55);opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s;backdrop-filter:blur(6px)}
-.sf .sf-tip.show{opacity:1;transform:none}
-.sf .sf-tip h4{margin:0 0 3px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#a9c6ea}
-.sf .sf-tip .r{display:flex;justify-content:space-between;gap:14px}
-.sf .sf-tip .r span:last-child{font-weight:600}
-.sf .sf-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-.sf.m{padding:14px 14px 12px}
-.sf.m .sf-v{font-size:19px}
-.sf.m .sf-v.sm{font-size:15px}
-.sf.m .sf-legend{display:none}
-@media (prefers-reduced-motion:reduce){.sf-flow{animation:none;stroke-dasharray:none;opacity:0}.sf .sf-svg path,.sf .sf-seg i{transition:none}}
-/* ===== end portable block ===== */
-/* rapora uyum: kutusuz, başlık kartın kendisinde */
-#flowViz .sf{background:transparent!important;box-shadow:none!important;padding:0 14px 0 2px!important;border-radius:0!important;overflow:visible}
-#flowViz{overflow:visible}
-#flowViz .sf::before{display:none}
-#flowViz .sf-title h3{display:none}
 /* team:v_ust — üst çerçeve premium katmanı (başlık · KPI şeridi · filtre · sekmeler) */
 :root{--vu-ease:cubic-bezier(.22,1,.36,1);--vu-hair:rgba(255,255,255,.22);--vu-glow:rgba(255,255,255,.55)}
 /* ---- başlık: ışıklı cam ---- */
@@ -2750,6 +2689,22 @@ details.grp[open]>.grp-b{animation:vhFade .42s var(--vh-ease) both}
 .mk .v{white-space:normal!important;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;text-overflow:clip!important;line-height:1.2;overflow-wrap:anywhere}
 #paretoGroups table.dt th:first-child,#paretoGroups table.dt td:first-child{width:56px;min-width:56px;max-width:64px}
 #paretoGroups table.dt th:nth-child(2),#paretoGroups table.dt td:nth-child(2){width:32%}
+
+/* akış: sade bant */
+.fm{margin:2px 0 14px}
+.fm-st{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:10px}
+.fm-s{text-align:center;padding:0 4px;min-width:0;cursor:default}
+.fm-s small{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.fm-s small i{width:7px;height:7px;border-radius:50%;background:var(--fc)}
+.fm-s b{display:block;font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--navy);margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.fm-s b u{text-decoration:none;color:var(--fc);margin-right:1px;font-weight:700}
+.fm-s em{display:block;font-style:normal;font-size:11px;font-weight:700;margin-top:1px;font-variant-numeric:tabular-nums}
+.fm-s em.up,.fm-foot b.up{color:#12A37A} .fm-s em.dn,.fm-foot b.dn{color:#E5484D}
+.fm-band{display:block;width:100%;height:44px;border-radius:12px}
+.fm-foot{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:10px;font-size:11.5px;color:var(--muted)}
+.fm-foot b{color:var(--ink-2);font-weight:750}
+.fm-foot .fm-ref{margin-left:auto;font-size:10.5px}
+@media(max-width:760px){.fm-s b{font-size:15px}.fm-s small{font-size:8.5px;letter-spacing:.06em;gap:4px}.fm-s small i{width:5px;height:5px}.fm-s em{font-size:9.5px}.fm-band{height:32px}.fm-foot{font-size:10.5px;gap:4px 12px}.fm-foot .fm-ref{margin-left:0}}
 </style>
 </head>
 <body class="auth-lock">
@@ -4520,230 +4475,40 @@ function capitalOpp(ctx, I){
 }
 
 /* ---------- Stok akışı (devreden → kalan) ---------- */
-function renderStockFlow(el, D){
-  var NS='http://www.w3.org/2000/svg';
-  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var mode='cur', uid='sf'+Math.random().toString(36).slice(2,7);
-  function n1(x){return x.toFixed(1).replace('.',',');}
-  function money(v){var a=Math.abs(v),s=v<0?'−':'';return a>=1e6? s+'$'+n1(a/1e6)+' Mn' : s+'$'+n1(a/1e3)+' bin';}
-  function full(v){return '$'+Math.round(v).toLocaleString('tr-TR');}
-  function pct(x){return '%'+n1(Math.abs(x));}
-  function chg(a,b){return (a-b)/b*100;}
-  function dl(a,b,inv){var c=chg(a,b),up=c>=0;return '<b class="'+(up?'sf-up':'sf-dn')+'">'+(up?'▲':'▼')+' '+pct(c)+'</b> '+(up?'artış':'azalış');}
-  var C=D.cur,P=D.prev;
-
-  el.innerHTML=
-   '<div class="sf-head"><div class="sf-title"><h3>Stok akışı <span>· Devredenden kalana</span></h3>'+
-   '<span class="sf-meta"><b>'+D.label+'</b> · '+D.items+' kalem · USD</span></div>'+
-   '<div class="sf-seg" role="group" aria-label="Dönem"><i></i>'+
-   '<button type="button" data-m="cur" aria-pressed="true">'+D.label+'</button>'+
-   '<button type="button" data-m="prev" aria-pressed="false">'+D.prevLabel+'</button></div></div>'+
-   '<div class="sf-stage"><svg class="sf-svg" role="img" aria-hidden="true"></svg>'+
-   '<div class="sf-lab" data-k="dev"></div><div class="sf-lab" data-k="gir"></div>'+
-   '<div class="sf-lab" data-k="cik"></div><div class="sf-lab" data-k="kal"></div>'+
-   '<div class="sf-tip" role="tooltip"></div></div>'+
-   '<div class="sf-foot"></div>'+
-   '<p class="sf-sr"></p>';
-  var svg=el.querySelector('svg'),stage=el.querySelector('.sf-stage'),tip=el.querySelector('.sf-tip');
-  var labs={};el.querySelectorAll('.sf-lab').forEach(function(l){labs[l.dataset.k]=l;});
-  var seg=el.querySelector('.sf-seg'),pill=seg.querySelector('i');
-
-  function mk(tag,at,par){var e=document.createElementNS(NS,tag);for(var k in at)e.setAttribute(k,at[k]);(par||svg).appendChild(e);return e;}
-
-  var built=false,E={},W=0,m=false;
-  function geo(S,W,H,x0,x1){
-    var L=x1-x0,cy=H/2-4,k=44/Math.max(C.dev+C.gir,P.dev+P.gir);
-    var tD=S.dev*k,tG=S.gir*k,tC=S.cik*k,tK=S.kal*k;
-    var g={x0:x0,x1:x1,L:L,cy:cy,
-      xi0:x0+L*.30,xg1:x0+L*.33,xg2:x0+L*.46,xc1:x0+L*.52,xc2:x0+L*.64,xe:x0+L*.68,xr1:x0+L*.86};
-    g.xr0=g.xc2;
-    var yA=cy-tD/2,yBot=cy+tD/2,yB=yA-tG,yB2=yBot-tC,d=(cy-tK/2)-yB,iy=2,oy=H-2-tC;
-    var xm=(g.xr0+g.xr1)/2,xmg=(g.xg1+g.xg2)/2,xmc=(g.xc1+g.xc2)/2,F=90;
-    function f(v){return v.toFixed(2);}
-    g.body='M'+f(x0)+','+f(yA)+'H'+f(g.xg2)+'V'+f(yB)+'H'+f(g.xr0)+'C'+f(xm)+','+f(yB)+' '+f(xm)+','+f(yB+d)+' '+f(g.xr1)+','+f(yB+d)+'H'+f(x1)+
-      'V'+f(yB2+d)+'H'+f(g.xr1)+'C'+f(xm)+','+f(yB2+d)+' '+f(xm)+','+f(yB2)+' '+f(g.xr0)+','+f(yB2)+'H'+f(g.xc1)+'V'+f(yBot)+'H'+f(x0)+'Z';
-    var r=tG/2;
-    g.inf='M'+f(g.xi0)+','+f(iy)+'H'+f(g.xg1)+'C'+f(xmg)+','+f(iy)+' '+f(xmg)+','+f(yB)+' '+f(g.xg2)+','+f(yB)+'H'+f(g.xg2+F)+'V'+f(yA)+'H'+f(g.xg2)+
-      'C'+f(xmg)+','+f(yA)+' '+f(xmg)+','+f(iy+tG)+' '+f(g.xg1)+','+f(iy+tG)+'H'+f(g.xi0)+'A'+f(r)+','+f(r)+' 0 0 1 '+f(g.xi0)+','+f(iy)+'Z';
-    var r2=tC/2;
-    g.out='M'+f(g.xc1-F)+','+f(yB2)+'H'+f(g.xc1)+'C'+f(xmc)+','+f(yB2)+' '+f(xmc)+','+f(oy)+' '+f(g.xc2)+','+f(oy)+'H'+f(g.xe)+
-      'A'+f(r2)+','+f(r2)+' 0 0 1 '+f(g.xe)+','+f(oy+tC)+'H'+f(g.xc2)+'C'+f(xmc)+','+f(oy+tC)+' '+f(xmc)+','+f(yBot)+' '+f(g.xc1)+','+f(yBot)+'H'+f(g.xc1-F)+'Z';
-    // hit zones (opaque segments of body)
-    g.hDev='M'+f(x0)+','+f(yA)+'H'+f(g.xg2)+'V'+f(yBot)+'H'+f(x0)+'Z';
-    g.hKal='M'+f(g.xc2)+','+f(yB)+'C'+f(xm)+','+f(yB)+' '+f(xm)+','+f(yB+d)+' '+f(g.xr1)+','+f(yB+d)+'H'+f(x1)+'V'+f(yB2+d)+'H'+f(g.xr1)+'C'+f(xm)+','+f(yB2+d)+' '+f(xm)+','+f(yB2)+' '+f(g.xc2)+','+f(yB2)+'Z';
-    // streamlines
-    g.fl=[.22,.5,.78].map(function(t){var y=yA+t*(yB2-yA);return 'M'+f(x0+4)+','+f(y)+'H'+f(g.xr0)+'C'+f(xm)+','+f(y)+' '+f(xm)+','+f(y+d)+' '+f(g.xr1)+','+f(y+d)+'H'+f(x1-4);});
-    var ci=iy+tG/2,ce=(yA+yB)/2;
-    g.fi='M'+f(g.xi0)+','+f(ci)+'H'+f(g.xg1)+'C'+f(xmg)+','+f(ci)+' '+f(xmg)+','+f(ce)+' '+f(g.xg2)+','+f(ce)+'H'+f(g.xr0)+'C'+f(xm)+','+f(ce)+' '+f(xm)+','+f(ce+d)+' '+f(g.xr1)+','+f(ce+d)+'H'+f(x1-4);
-    var co=(yB2+yBot)/2,cz=oy+tC/2;
-    g.fo='M'+f(x0+4)+','+f(co)+'H'+f(g.xc1)+'C'+f(xmc)+','+f(co)+' '+f(xmc)+','+f(cz)+' '+f(g.xc2)+','+f(cz)+'H'+f(g.xe);
-    g.yA=yA;g.yBot=yBot;g.yB=yB;g.yB2=yB2;g.d=d;g.iy=iy;g.oy=oy;g.tG=tG;g.tC=tC;g.tD=tD;g.tK=tK;g.endTop=yB+d;g.endBot=yB2+d;
-    return g;
-  }
-
-  function labHTML(k,S,R,cls){
-    var map={dev:['Devreden','var(--sf-navy)'],gir:['Giren','var(--sf-teal)'],cik:['Çıkan','var(--sf-red)'],kal:['Kalan','var(--sf-blue)']};
-    var v=S[k],share,sm=(k==='gir'||k==='cik');
-    if(k==='gir')share=pct(S.gir/S.dev*100);
-    if(k==='cik')share=pct(S.cik/S.dev*100);
-    if(k==='kal'){var n=S.kal-S.dev;share=(n>=0?'+':'−')+pct(n/S.dev*100)+' net';}
-    var c=chg(S[k],R[k]),up=c>=0;
-    var h='<div class="sf-k" style="--c:'+map[k][1]+'">'+map[k][0]+'<em class="'+(sm?'sf-nt':(up?'sf-up':'sf-dn'))+'">'+(up?'▲':'▼')+' '+pct(c)+'</em></div>';
-    h+='<div class="sf-row"><span class="sf-v'+(sm?' sm':'')+'" data-v="'+v+'">'+money(v)+'</span>'+(share?'<span class="sf-p" style="--c:'+(k==='kal'?(S.kal>=S.dev?'var(--sf-green)':'var(--sf-red)'):map[k][1])+'">'+share+'</span>':'')+'</div>';
-    return h;
-  }
-
-  function draw(animate){
-    W=stage.clientWidth;m=W<640;el.classList.toggle('m',m);
-    var H=m?84:90,x0=m?0:150,x1=m?W:W-170;
-    var S=mode==='cur'?C:P,R=mode==='cur'?P:C;
-    var g=geo(S,W,H,x0,x1),gp=geo(R,W,H,x0,x1);
-    svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('height',H);
-    if(!built||E.W!==W){
-      svg.innerHTML='';
-      var defs=mk('defs',{});
-      function grad(id,x1_,x2_,stops){var lg=mk('linearGradient',{id:uid+id,gradientUnits:'userSpaceOnUse',x1:x1_,x2:x2_,y1:0,y2:0},defs);stops.forEach(function(s){mk('stop',{offset:s[0],'stop-color':s[1],'stop-opacity':s[2]==null?1:s[2]},lg);});}
-      grad('b',x0,x1,[[0,'#16335f'],[.45,'#2A62A8'],[.75,'#3c8dbc'],[1,'#2A62A8']]);
-      grad('i',g.xi0,g.xg2+90,[[0,'#14A38B',0],[.18,'#14A38B',.95],[.62,'#14A38B'],[.8,'#1d9a9a',.75],[1,'#2A62A8',0]]);
-      grad('o',g.xc1-36,g.xe,[[0,'#E5484D',0],[.2,'#E5484D',.92],[.8,'#E5484D'],[1,'#E5484D',0]]);
-      var cp=mk('clipPath',{id:uid+'c'},defs);E.clip=mk('rect',{x:0,y:-10,width:animate&&!reduce?0:W,height:H+20},cp);
-      var gl=mk('filter',{id:uid+'g',x:'-10%',y:'-50%',width:'120%',height:'200%'},defs);mk('feGaussianBlur',{stdDeviation:6},gl);
-      var root=mk('g',{'clip-path':'url(#'+uid+'c)'});
-      E.glow=mk('path',{fill:'#2A62A8',opacity:.18,filter:'url(#'+uid+'g)',transform:'translate(0,6)'},root);
-            E.body=mk('path',{fill:'url(#'+uid+'b)',class:'sf-part','data-k':'dev kal'},root);
-      E.inf=mk('path',{fill:'url(#'+uid+'i)',class:'sf-part','data-k':'gir'},root);
-      E.out=mk('path',{fill:'url(#'+uid+'o)',class:'sf-part','data-k':'cik'},root);
-      var fg=mk('g',{'stroke-width':1.6},root);
-      E.fl=[0,1,2].map(function(i){return mk('path',{class:'sf-flow',style:'animation-duration:'+(1.7+i*.3)+'s;opacity:'+(.42-i*.08)},fg);});
-      E.fi=mk('path',{class:'sf-flow in',style:'opacity:.75'},fg);
-      E.fo=mk('path',{class:'sf-flow out',style:'opacity:.75'},fg);
-      // gates
-      E.gL=mk('rect',{width:3,rx:1.5,fill:'#16335f'},root);E.gR=mk('rect',{width:3,rx:1.5,fill:'#2A62A8'},root);
-      // hit zones
-      E.hit={};
-      [['dev','hDev'],['kal','hKal'],['gir','inf'],['cik','out']].forEach(function(p){E.hit[p[0]]=mk('path',{fill:'transparent',class:'sf-seg-hit','data-k':p[0],tabindex:0,'aria-label':p[0]},root);});
-      built=true;E.W=W;bind();
-    }
-    E.body.setAttribute('d',g.body);E.glow.setAttribute('d',g.body);E.inf.setAttribute('d',g.inf);E.out.setAttribute('d',g.out);
-        g.fl.forEach(function(p,i){E.fl[i].setAttribute('d',p);});E.fi.setAttribute('d',g.fi);E.fo.setAttribute('d',g.fo);
-    E.hit.dev.setAttribute('d',g.hDev);E.hit.kal.setAttribute('d',g.hKal);E.hit.gir.setAttribute('d',g.inf);E.hit.cik.setAttribute('d',g.out);
-    E.gL.setAttribute('x',x0-1.5);E.gL.setAttribute('y',g.yA-3);E.gL.setAttribute('height',g.tD+6);
-    E.gR.setAttribute('x',x1-1.5);E.gR.setAttribute('y',g.endTop-3);E.gR.setAttribute('height',g.tK+6);
-    E.g=g;E.H=H;
-    // labels
-    ['dev','gir','cik','kal'].forEach(function(k){labs[k].innerHTML=labHTML(k,S,R);labs[k].className='sf-lab'+((k==='dev'&&!m)||k==='cik'&&m||k==='kal'&&m?' sf-end':'');});
-    var top=0; // svg top in stage
-    function pos(l,css){l.style.cssText='';for(var p in css)l.style[p]=css[p];}
-    if(!m){
-      stage.style.paddingTop='0';stage.style.paddingBottom='0';
-      pos(labs.dev,{left:'0',width:(x0-16)+'px',top:(g.cy-19)+'px'});
-      pos(labs.kal,{left:(x1+16)+'px',width:(W-x1-16)+'px',top:((g.endTop+g.endBot)/2-19)+'px'});
-      pos(labs.gir,{right:(W-g.xi0-4)+'px',top:'-18px'});
-      pos(labs.cik,{left:(g.xe+8)+'px',top:(H-20)+'px'});
-      // single-line chips for in/out: compact layout
-    }else{
-      stage.style.paddingTop='48px';stage.style.paddingBottom='46px';
-      pos(labs.dev,{left:'0',top:'0'});pos(labs.kal,{right:'0',top:'0'});
-      pos(labs.gir,{left:'0',bottom:'0'});pos(labs.cik,{right:'0',bottom:'0'});
-    }
-    // footer
-    var net=S.kal-S.dev,pn=R.kal-R.dev,turn=S.cik/((S.dev+S.kal)/2)*100,cov=S.kal/S.cik;
-    el.querySelector('.sf-foot').innerHTML=
-      '<span class="sf-net" style="color:'+(net>=0?'var(--sf-green)':'var(--sf-red)')+'"><svg viewBox="0 0 12 12"><path d="'+(net>=0?'M6 2l4 5H2z':'M6 10l4-5H2z')+'" fill="currentColor"/></svg>Net '+(net>=0?'+':'')+money(net)+'</span>'+
-      '<span>'+(mode==='cur'?D.prevLabel.split(' ')[0]:D.label.split(' ')[0])+' net: <b>'+(pn>=0?'+':'')+money(pn)+'</b></span>'+
-      '<span>Giriş / çıkış <b>'+(S.gir/S.cik).toFixed(2).replace('.',',')+'×</b></span>'+
-      '<span>Aylık devir <b>'+pct(turn)+'</b></span>'+
-      '<span>Karşılama <b>≈ '+n1(cov)+' ay</b></span>'+
-      '<span>Yolda (GIT) <b>'+money(D.git)+'</b></span>'+
-      '<span class="sf-legend">% devredene oran · ▲▼ '+(mode==='cur'?D.prevLabel:D.label).split(' ')[0]+'’e göre</span>';
-    el.querySelector('.sf-sr').textContent=D.label+': Devreden '+full(S.dev)+', giren '+full(S.gir)+', çıkan '+full(S.cik)+', kalan '+full(S.kal)+'.';
-    // pill
-    var b=seg.querySelector('[aria-pressed="true"]');pill.style.left=b.offsetLeft+'px';pill.style.width=b.offsetWidth+'px';
-    if(animate&&!reduce){reveal();count();}
-  }
-  function reveal(){var t0=performance.now(),d=1300;E.clip.setAttribute('width',0);
-    (function st(t){var p=Math.max(0,Math.min(1,(t-t0)/d)),e=1-Math.pow(1-p,3);E.clip.setAttribute('width',W*e);if(p<1)requestAnimationFrame(st);})(t0);}
-  function count(){var t0=performance.now(),d=1100;var vs=el.querySelectorAll('.sf-v');
-    (function st(t){var p=Math.max(0,Math.min(1,(t-t0)/d)),e=1-Math.pow(1-p,3);vs.forEach(function(v){v.textContent=money(+v.dataset.v*e);});if(p<1)requestAnimationFrame(st);})(t0);}
-
-  var TT={dev:'Devreden stok',gir:'Giren (alım + transfer)',cik:'Çıkan (tüketim + sevk)',kal:'Kalan stok'};
-  function tipHTML(k){var S=mode==='cur'?C:P,R=mode==='cur'?P:C,lc=mode==='cur'?D.label:D.prevLabel,lp=mode==='cur'?D.prevLabel:D.label;
-    var h='<h4>'+TT[k]+'</h4><div class="r"><span>'+lc+'</span><span>'+full(S[k])+'</span></div><div class="r"><span>'+lp+'</span><span>'+full(R[k])+'</span></div>';
-    var c=chg(S[k],R[k]);h+='<div class="r"><span>Fark</span><span style="color:'+(c>=0?'#7fe0c0':'#ffb3b5')+'">'+(c>=0?'+':'−')+full(Math.abs(S[k]-R[k])).slice(0)+' ('+pct(c)+')</span></div>';
-    if(k==='gir'||k==='cik')h+='<div class="r"><span>Devredene oranı</span><span>'+pct(S[k]/S.dev*100)+'</span></div>';
-    if(k==='kal')h+='<div class="r"><span>= Devreden + Giren − Çıkan</span><span></span></div>';
-    return h;}
-  function focus(k,ev){
-    if(!k){el.classList.remove('dim');tip.classList.remove('show');el.querySelectorAll('.on').forEach(function(x){x.classList.remove('on');});return;}
-    el.classList.add('dim');labs[k].classList.add('on');
-    el.querySelectorAll('.sf-part').forEach(function(p){p.classList.toggle('on',p.dataset.k.indexOf(k)>-1);});
-    for(var q in labs)if(q!==k)labs[q].classList.remove('on');
-    tip.innerHTML=tipHTML(k);tip.classList.add('show');
-    var r=stage.getBoundingClientRect(),x,y;
-    if(ev&&ev.clientX){x=ev.clientX-r.left;y=ev.clientY-r.top;}else{var bb=E.hit[k].getBoundingClientRect();x=bb.left-r.left+bb.width/2;y=bb.top-r.top+bb.height/2;}
-    var tw=tip.offsetWidth,th=tip.offsetHeight;x=Math.max(0,Math.min(r.width-tw,x+14));y=y-th-12;
-    tip.style.left=x+'px';tip.style.top=y+'px';}
-  function bind(){
-    for(var k in E.hit)(function(k){var h=E.hit[k];
-      h.addEventListener('pointermove',function(e){focus(k,e);});h.addEventListener('pointerleave',function(){focus(null);});
-      h.addEventListener('focus',function(){focus(k);});h.addEventListener('blur',function(){focus(null);});
-      labs[k].onpointerenter=function(){focus(k);};labs[k].onpointerleave=function(){focus(null);};})(k);
-  }
-  seg.addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.dataset.m===mode)return;mode=b.dataset.m;
-    seg.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b);});draw(false);});
-  el._sfRedraw=function(){built=false;draw(false);};if(!el._sfWired){el._sfWired=1;var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){if(el._sfRedraw&&el.isConnected)el._sfRedraw();},120);});}
-  draw(true);
-  return {redraw:function(){built=false;draw(false);}};
-}
-
 function renderFlow(ctx){
   const el = $('#flowViz'); if(!el) return;
-  const M = ctx.M, tutar = ANALYSIS_MODE === 'tutar';
-  const sub = $('#flowSub'); if(sub) sub.textContent = `${ctx.M.m ? fmtMonth(ctx.M.m) : ''} · ${tutar ? 'tutar' : 'miktar'} bazında · bir adıma gelince ayrıntı görünür`;
+  const M = ctx.M, P = ctx.P, tutar = ANALYSIS_MODE === 'tutar';
+  const sub = $('#flowSub'); if(sub) sub.textContent = `${M.m ? fmtMonth(M.m) : ''} · ${tutar ? 'tutar' : 'miktar'} bazında`;
   const dev = M.dev, gir = M.gir, cik = M.cik, kal = M.kal, top = dev + gir, calc = dev + gir - cik, adj = kal - calc;
   if(!(top > 0) && !(kal > 0)){ el.innerHTML = '<div class="empty">Akış için veri yok.</div>'; return; }
-  if(tutar && ctx.P){ const P = ctx.P;
-    el.innerHTML = '<section class="sf" aria-label="Stok akışı"></section>';
-    renderStockFlow(el.firstChild, {label:fmtMonth(ctx.cur), prevLabel:fmtMonth(ctx.prev), items:M.items, git:M.git,
-      cur:{dev:M.dev, gir:M.gir, cik:M.cik, kal:M.kal}, prev:{dev:P.dev, gir:P.gir, cik:P.cik, kal:P.kal}});
-    const split = [['Ana depo', M.mainV, '#1E4E8C'], ['Birim depo', M.unitV, '#3FA0E0'], ['Diğer', M.otherV, '#9cc3e6'], ['GIT', M.git, '#14A38B']].filter(x => x[1] > 0);
-    el.insertAdjacentHTML('beforeend', `<div class="fl-split">${split.map(x => `<i style="flex:${x[1]};background:${x[2]}" data-tip="${tipHTML(x[0], [['Kalan', FMT(x[1])], ['Pay', PCT(kal ? x[1]/kal*100 : 0)]])}">${segPct(kal ? x[1]/kal*100 : 0)}</i>`).join('')}</div>
-      <div class="fl-leg">${split.map(x => `<span><i style="background:${x[2]}"></i>${x[0]} <b>${esc(FMTc(x[1]))}</b> · ${PCT(kal ? x[1]/kal*100 : 0)}</span>`).join('')}</div>`);
-    return; }
-  const net = kal - dev, pct = (a, b) => b ? PCT(a/b*100) : '—';
+  const net = kal - dev, pct = (a, b) => b ? PCT(a/b*100) : '—', pv = P ? fmtMonth(ctx.prev) : '';
+  const ch = (v, p) => (P && isNum(p) && p > 0) ? (v/p - 1)*100 : null;
   const st = [
-    {k:'Devreden', v:dev, s:`dönem başı · ${nf0.format(M.items)} kalem`, c:'#1E4E8C'},
-    {k:'Giren', v:gir, s:`devredenin ${pct(gir, dev)}'i kadar giriş`, c:'#3FA0E0', sign:'+'},
-    {k:'Çıkan', v:cik, s:`kullanılabilir stoğun ${pct(cik, top)}'i tüketildi`, c:'#d2544a', sign:'−'},
-    {k:'Kalan', v:kal, s:`net ${net >= 0 ? 'artış' : 'azalış'} ${FMTc(Math.abs(net))} · ${pct(Math.abs(net), dev)}`, c:'#14A38B'}];
-  const W = 1000, H = 64, mid = 32, mx = Math.max(top, dev, kal, 1), h = v => Math.max(3, v/mx*60)/2;
+    {k:'Devreden', v:dev, p:P && P.dev, c:'#1E4E8C', t:`dönem başı · ${nf0.format(M.items)} kalem`},
+    {k:'Giren', v:gir, p:P && P.gir, c:'#3FA0E0', sign:'+', t:`devredenin ${pct(gir, dev)}'i kadar giriş`},
+    {k:'Çıkan', v:cik, p:P && P.cik, c:'#E5484D', sign:'−', t:`kullanılabilir stoğun ${pct(cik, top)}'i tüketildi`, inv:1},
+    {k:'Kalan', v:kal, p:P && P.kal, c:'#14A38B', t:`net ${net >= 0 ? 'artış' : 'azalış'} ${FMTc(Math.abs(net))} · ${pct(Math.abs(net), dev)}`}];
+  const W = 1000, H = 44, mid = 22, mx = Math.max(top, dev, kal, 1), h = v => Math.max(3, v/mx*42)/2;
   const xs = [0, 125, 375, 625, 875, 1000], hs = [h(dev), h(dev), h(top), h(Math.max(calc,0)), h(kal), h(kal)];
-  let topP = `M0 ${mid-hs[0]}`, botP = '';
+  let topP = `M0 ${mid-hs[0]}`, botP = ` L1000 ${mid+hs[5]}`;
   for(let i = 1; i < 6; i++){ const a = xs[i-1], b = xs[i], m = (a+b)/2; topP += ` C${m} ${mid-hs[i-1]} ${m} ${mid-hs[i]} ${b} ${mid-hs[i]}`; }
-  botP = ` L1000 ${mid+hs[5]}`; for(let i = 5; i > 0; i--){ const a = xs[i-1], b = xs[i], m = (a+b)/2; botP += ` C${m} ${mid+hs[i]} ${m} ${mid+hs[i-1]} ${a} ${mid+hs[i-1]}`; }
-  // şeridin içindeki çizgi, şeridin genişleyip daralmasını aynı eğriyle izler
-  const hmin = Math.min(...hs), my = i => mid - (hs[i] - hmin)*.85;
-  let midP = `M0 ${my(0)}`; for(let i = 1; i < 6; i++){ const a = xs[i-1], b = xs[i], m = (a+b)/2; midP += ` C${m} ${my(i-1)} ${m} ${my(i)} ${b} ${my(i)}`; }
-  const id = 'fg' + (++GID);
-  const tip = (t, rows) => `data-tip="${tipHTML(t, rows)}"`;
-  el.innerHTML = `<div class="fl-st">${st.map((x, i) => `<div class="fl-s" style="--fc:${x.c}" ${tip(x.k, [['Değer', FMT(x.v)], ['Açıklama', x.s]])}><small><i></i>${x.k}${x.sign ? ` <em>${x.sign}</em>` : ''}</small><b>${esc(FMTc(x.v))}</b><span>${esc(x.s)}</span></div>`).join('')}</div>
-  ${(() => { const CH = [['', null], ['+', gir], ['−', cik], ['=', kal - dev]];
-    const pc = [null, dev ? gir/dev*100 : null, top ? cik/top*100 : null, dev ? (kal-dev)/dev*100 : null];
-    return `<div class="fr2">
-    <svg class="fr2-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><defs>
-      <linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="#1E4E8C"/><stop offset=".38" stop-color="#2A62A8"/><stop offset=".62" stop-color="#3FA0E0"/><stop offset="1" stop-color="#14A38B"/></linearGradient>
-      <linearGradient id="${id}h" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
-      <filter id="${id}b" x="-5%" y="-60%" width="110%" height="220%"><feGaussianBlur stdDeviation="9"/></filter></defs>
-      <path d="${topP}${botP} Z" fill="url(#${id})" opacity=".35" filter="url(#${id}b)" transform="translate(0 10)"/>
-      <path d="${topP}${botP} Z" fill="url(#${id})"/>
-      <path d="${topP}${botP} Z" fill="url(#${id}h)"/>
-      <path d="${midP}" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.4" stroke-dasharray="1 6" stroke-linecap="round" vector-effect="non-scaling-stroke" class="fr2-dash"/>
+  for(let i = 5; i > 0; i--){ const a = xs[i-1], b = xs[i], m = (a+b)/2; botP += ` C${m} ${mid+hs[i]} ${m} ${mid+hs[i-1]} ${a} ${mid+hs[i-1]}`; }
+  const id = 'fg' + (++GID), tip = (t, rows) => `data-tip="${tipHTML(t, rows)}"`;
+  const split = [['Ana depo', M.mainV, '#1E4E8C'], ['Birim depo', M.unitV, '#3FA0E0'], ['Diğer', M.otherV, '#9cc3e6'], ['GIT', M.git, '#14A38B']].filter(x => x[1] > 0);
+  el.innerHTML = `<div class="fm">
+    <div class="fm-st">${st.map(x => { const c = ch(x.v, x.p), good = c == null ? null : (x.inv ? c <= 0 : c >= 0);
+      const rows = [['Değer', FMT(x.v)], ['Açıklama', x.t]]; if(c != null) rows.push([pv, `${FMT(x.p)} · ${c >= 0 ? '▲' : '▼'} ${PCT(Math.abs(c))}`]);
+      return `<div class="fm-s" style="--fc:${x.c}" ${tip(x.k, rows)}><small><i></i>${x.k}</small><b>${x.sign ? `<u>${x.sign}</u>` : ''}${esc(FMTc(x.v))}</b>${c == null ? '' : `<em class="${good ? 'up' : 'dn'}">${c >= 0 ? '▲' : '▼'} ${esc(PCT(Math.abs(c)))}</em>`}</div>`; }).join('')}</div>
+    <svg class="fm-band" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><defs>
+      <linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="#1E4E8C"/><stop offset=".4" stop-color="#2A62A8"/><stop offset=".64" stop-color="#3FA0E0"/><stop offset="1" stop-color="#14A38B"/></linearGradient>
+      <linearGradient id="${id}h" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+      <path d="${topP}${botP} Z" fill="url(#${id})"/><path d="${topP}${botP} Z" fill="url(#${id}h)"/>
+      ${[125, 375, 625, 875].map(x => `<line x1="${x}" x2="${x}" y1="0" y2="${H}" stroke="#fff" stroke-opacity=".55" stroke-width="1.5" vector-effect="non-scaling-stroke"/>`).join('')}
     </svg>
-    ${[125, 375, 625, 875].map((x, i) => { const v = CH[i][1], p = pc[i]; return `<span class="fr2-n" style="left:${x/10}%">${i === 0 ? 'başlangıç' : i === 3 ? `net ${p == null ? '' : (p >= 0 ? '+' : '−') + esc(PCT(Math.abs(p), 0))}` : `<b>${CH[i][0]}</b>${p == null ? '' : esc(PCT(Math.abs(p), 0))}`}</span>`; }).join('')}
-    </div>`; })()}
-  <div class="fl-foot"><span>Kullanılabilir stok <b>${esc(FMTc(top))}</b></span><span>Tüketim oranı <b>${pct(cik, top)}</b></span><span>GIT (yolda) <b>${esc(FMTc(M.git))}</b> · ${pct(M.git, kal)}</span>${Math.abs(adj) > Math.max(1, kal*0.0005) ? `<span>Kayıt farkı <b>${esc(FMTc(adj))}</b></span>` : ''}</div>
-  <div class="fl-split">${[['Ana depo', M.mainV, '#1E4E8C'], ['Birim depo', M.unitV, '#3FA0E0'], ['Diğer', M.otherV, '#9cc3e6'], ['GIT', M.git, '#14A38B']].filter(x => x[1] > 0).map(x => `<i style="flex:${x[1]};background:${x[2]}" ${tip(x[0], [['Kalan', FMT(x[1])], ['Pay', pct(x[1], kal)]])}>${segPct(kal ? x[1]/kal*100 : 0)}</i>`).join('')}</div>
-  <div class="fl-leg">${[['Ana depo', M.mainV, '#1E4E8C'], ['Birim depo', M.unitV, '#3FA0E0'], ['Diğer', M.otherV, '#9cc3e6'], ['GIT', M.git, '#14A38B']].filter(x => x[1] > 0).map(x => `<span><i style="background:${x[2]}"></i>${x[0]} <b>${esc(FMTc(x[1]))}</b> · ${pct(x[1], kal)}</span>`).join('')}</div>`;
+    <div class="fm-foot"><span>Net <b class="${net >= 0 ? 'up' : 'dn'}">${net >= 0 ? '+' : '−'}${esc(FMTc(Math.abs(net)))}</b> · ${pct(Math.abs(net), dev)}</span><span>Tüketim <b>${pct(cik, top)}</b></span><span>Giriş / çıkış <b>${cik ? (gir/cik).toFixed(2).replace('.', ',') + '×' : '—'}</b></span><span>Yolda <b>${esc(FMTc(M.git))}</b></span>${Math.abs(adj) > Math.max(1, kal*0.0005) ? `<span>Kayıt farkı <b>${esc(FMTc(adj))}</b></span>` : ''}${P ? `<span class="fm-ref">▲▼ ${esc(pv)}'e göre</span>` : ''}</div>
+  </div>
+  <div class="fl-split">${split.map(x => `<i style="flex:${x[1]};background:${x[2]}" ${tip(x[0], [['Kalan', FMT(x[1])], ['Pay', pct(x[1], kal)]])}>${segPct(kal ? x[1]/kal*100 : 0)}</i>`).join('')}</div>
+  <div class="fl-leg">${split.map(x => `<span><i style="background:${x[2]}"></i>${x[0]} <b>${esc(FMTc(x[1]))}</b> · ${pct(x[1], kal)}</span>`).join('')}</div>`;
 }
 function renderCapital(ctx, I){
   const el = $('#capital'); if(!el) return;
