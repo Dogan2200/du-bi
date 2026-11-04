@@ -2929,6 +2929,21 @@ body:not([data-tab="overview"]) #headline{display:none}
 .dm-d1{white-space:nowrap;font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums}
 .dm-d1 i{font-style:normal;margin:0 7px;color:#c9d3e2;font-weight:400}
 .dm-g tbody td{padding-top:11px!important;padding-bottom:11px!important}
+
+/* depo matrisi: simetrik hizalama, küçük punto */
+.dm-g{table-layout:fixed;width:100%}
+.dm-g th:first-child{width:22%}.dm-g th:nth-child(2){width:10%}
+.dm-g th.dm-ph{text-align:center!important;font-size:9.5px!important}
+.dm-g th.dm-ph small{font-size:9.5px!important}
+.dm-g td.dm-pc{text-align:center!important;padding-left:4px!important;padding-right:4px!important}
+.dm-d1{display:inline-grid!important;grid-template-columns:88px 1px 52px;column-gap:8px;align-items:center;font-size:11.5px!important;font-weight:700}
+.dm-d1 b{text-align:right;font-weight:700;white-space:nowrap}
+.dm-d1 i{display:block;width:1px;height:14px;background:#d3dbe7;margin:0!important}
+.dm-d1 em{font-style:normal;text-align:left;white-space:nowrap;font-weight:650}
+.dm-g td b{font-size:12.5px}
+.dm-g td .dm-s{font-size:10.5px}
+.dm-g td.dm-pc .muted{font-size:11px}
+@media(max-width:760px){.dm-g{table-layout:auto;min-width:900px}}
 </style>
 </head>
 <body class="auth-lock">
@@ -4697,9 +4712,9 @@ function renderDepotMatrix(ctx){
   list.forEach(o => { const k = o.cls || 'Belirtilmemiş'; let g = G.get(k); if(!g){ g = {Ad:k, kal:0, n:0, deps:[]}; G.set(k, g); } g.kal += o.kal; g.n += o.n; g.deps.push(o); });
   const groups = [...G.values()].map(g => Object.assign(g, {share:M.kal ? g.kal/M.kal*100 : 0})).sort((a, b) => b.kal - a.kal);
   const mx = Math.max(...groups.map(x => x.kal), 1), mxd = Math.max(...list.map(x => x.kal), 1);
-  const dcell = (cur, prev, p) => { if(!p.m) return '<td class="num"><span class="muted">—</span></td>'; if(!prev) return '<td class="num"><span class="muted">yeni</span></td>';
+  const dcell = (cur, prev, p) => { if(!p.m) return '<td class="num dm-pc"><span class="muted">—</span></td>'; if(!prev) return '<td class="num dm-pc"><span class="muted">yeni</span></td>';
     const dv = cur - prev, dp = (cur/prev - 1)*100, up = dv >= 0;
-    return `<td class="num" data-tip="${tipHTML(`${fmtMonth(p.m)} → ${fmtMonth(ctx.cur)}`, [['O ay', FMTF(prev)], ['Bu ay', FMTF(cur)], ['Fark', (up ? '+' : '−') + FMTF(Math.abs(dv))]])}"><span class="dm-d1 ${up ? 'warnc' : 'pos'}">${up ? '▲' : '▼'} ${esc(FMTc(Math.abs(dv)))}<i>|</i>${up ? '+' : '−'}${PCT(Math.abs(dp))}</span></td>`; };
+    return `<td class="num dm-pc" data-tip="${tipHTML(`${fmtMonth(p.m)} → ${fmtMonth(ctx.cur)}`, [['O ay', FMTF(prev)], ['Bu ay', FMTF(cur)], ['Fark', (up ? '+' : '−') + FMTF(Math.abs(dv))]])}"><span class="dm-d1 ${up ? 'warnc' : 'pos'}"><b>${up ? '▲' : '▼'} ${esc(FMTc(Math.abs(dv)))}</b><i></i><em>${up ? '+' : '−'}${PCT(Math.abs(dp))}</em></span></td>`; };
   const kcell = (o, m) => `<td class="num"><b>${esc(FMTc(o.kal))}</b><div class="dm-s">${PCT(o.share)}</div></td>`;
   const head = P.map(p => `<th class="num dm-ph"${p.part ? ` title="Veri ${mi + 1} ay; kıyas ${fmtMonth(p.m)} ile"` : ''}>${p.n === 1 ? 'Önceki ay' : p.n + ' ay'}${p.part ? '<sup>*</sup>' : ''}${p.m ? `<small>${esc(fmtMonth(p.m, true))} → ${esc(fmtMonth(ctx.cur, true))}</small>` : ''}</th>`).join('');
   el.innerHTML = `<div class="table-wrap"><table class="dt dm dm-g"><thead><tr><th>Depo sınıfı / depo</th><th class="num">Kalan · pay</th>${head}</tr></thead><tbody>
