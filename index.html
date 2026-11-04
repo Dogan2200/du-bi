@@ -2853,6 +2853,11 @@ body:not([data-tab="overview"]) #headline{display:none}
 .pr-sh{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
 .pr-sh .pr-of{color:var(--muted);font-weight:600;letter-spacing:.04em}
 .pr-cls button{min-width:40px}
+.pr-age{display:flex;align-items:center;gap:5px;margin-top:2px;font-size:10.5px;font-weight:600;color:var(--muted)}
+.pr-age i{width:6px;height:6px;border-radius:50%;background:#9aa6b8;flex:none}
+.pr-age.a0{color:#12A37A}.pr-age.a0 i{background:#12A37A}
+.pr-age.a2{color:#c27a12}.pr-age.a2 i{background:#E89A2C}
+.pr-age.a3{color:#c3343a}.pr-age.a3 i{background:#E5484D}
 </style>
 </head>
 <body class="auth-lock">
@@ -5301,6 +5306,16 @@ function renderPareto(ctx){
     <div class="grp-b">${arr.length ? riskTable(arr, cols, ui.n) : '<div class="empty">Kayıt yok.</div>'}</div></details>`).join('');
   $$('#paretoGroups table.dt').forEach(enhanceTable);
 }
+function idleMap(ctx){
+  const c = ctx.c, idx = new Map(ctx.allMonths.map((m, i) => [m, i])), ci = idx.get(ctx.cur), last = new Map(), first = new Map();
+  for(const r of ctx.base){ const mi = idx.get(r.Donem); if(mi == null || mi > ci) continue; const k = rowKey(r);
+    if(!first.has(k) || mi < first.get(k)) first.set(k, mi);
+    if(((r[c.gir]||0) > 0 || (r[c.cik]||0) > 0) && !(last.get(k) >= mi)) last.set(k, mi); }
+  return k => { if(!first.has(k)) return null; const lm = last.has(k) ? last.get(k) : null, n = lm == null ? ci - first.get(k) + 1 : ci - lm;
+    const from = lm == null ? null : ctx.allMonths[lm + 1], [fy, fm] = String(from || '').split('-'), [cy] = String(ctx.cur).split('-');
+    return {n, open:lm == null, txt:n === 0 ? 'bu ay hareketli' : n === 1 && lm != null ? '1 ay · bu ay hareket görmedi' : lm == null ? `${n}+ ay · veri başlangıcından bu yana hareket yok`
+      : `${n} ay · ${MONTH_TR[parseInt(fm, 10)]}${fy !== cy ? ' ' + fy : ''} ayından bu yana hareket yok`}; };
+}
 function paretoXf(ad, dim){ if(dim === 'item'){ const [d, n] = String(ad).split(' • '); return [['Depo', d], ['StokAdi', n]]; } return [[dim, ad]]; }
 function paretoViz(el, list, o){
   const MK = o.MK || 'cik', LB = o.LB || PL_LABEL[MK];
@@ -5319,9 +5334,10 @@ function paretoViz(el, list, o){
     </div>
     <div class="sub-h pr-sh"><div><div class="eyebrow">${CL ? CL + ' sınıfı · ' : ''}${LB.top} ilk ${top.length} kalem${CL ? ` <span class="pr-of">/ ${nf0.format(pool.length)} kalem</span>` : ''}</div><div class="card-s">Pay = ${LB.pay} · Kümülatif = ilk sıradan bu satıra kadar toplam pay</div></div><div class="seg pr-cls" role="group" aria-label="Sınıf">${[['','Tümü'],['A','A'],['B','B'],['C','C']].map(([k,t]) => `<button type="button" data-cls="${k}" class="${CL === k ? 'active' : ''}">${t}</button>`).join('')}</div></div>
     <div class="pr-list"><div class="pr-row pr-h"><span>#</span><span>Kalem</span><span>${LB.col}</span><span class="num">Pay</span><span>Kümülatif</span><span>Sınıf</span></div>
-    ${top.map(x => { const [d, nm] = x.Ad.includes(' • ') ? x.Ad.split(' • ') : ['', x.Ad];
-      return `<div class="pr-row"${xfAttr(paretoXf(x.Ad, RISK_UI.pareto.dim))} data-tip="${tipHTML(x.Ad, [['Çıkan', FMTF(x.cik)], ['Kalan', FMTF(x.kal)], ['Pay', PCT(x.Pay)], ['Kümülatif', PCT(x.Kum)]])}"><span class="rk-n">${x.Sira}</span>
-        <div style="min-width:0"><div class="rk-name">${esc(nm)}</div>${d ? `<div class="rk-sub">${esc(d)}</div>` : ''}</div>
+    ${(() => { o.idle = MK === 'kal' && RISK_UI.pareto.dim === 'item' && CTX ? idleMap(CTX) : null; return ''; })()}
+    ${top.map(x => { const [d, nm] = x.Ad.includes(' • ') ? x.Ad.split(' • ') : ['', x.Ad], ia = o.idle ? o.idle(x.Ad) : null;
+      return `<div class="pr-row"${xfAttr(paretoXf(x.Ad, RISK_UI.pareto.dim))} data-tip="${tipHTML(x.Ad, [['Çıkan', FMTF(x.cik)], ['Kalan', FMTF(x.kal)], ['Pay', PCT(x.Pay)], ['Kümülatif', PCT(x.Kum)], ...(ia ? [['Hareket', ia.txt]] : [])])}"><span class="rk-n">${x.Sira}</span>
+        <div style="min-width:0"><div class="rk-name">${esc(nm)}</div>${d ? `<div class="rk-sub">${esc(d)}</div>` : ''}${ia ? `<div class="pr-age ${ia.n >= 6 ? 'a3' : ia.n >= 3 ? 'a2' : ia.n >= 1 ? 'a1' : 'a0'}"><i></i>${esc(ia.txt)}</div>` : ''}</div>
         <div class="pr-val"><span class="tr"><i style="width:${Math.max(3, x[MK]/mx*100)}%"></i></span><b>${esc(FMTc(x[MK]))}</b></div>
         <span class="num"><b>${PCT(x.Pay)}</b></span>
         <div class="pr-cum"><span class="tr"><i style="width:${Math.min(100, x.Kum)}%;${x.Kum > 80 ? 'background:#d6d3d1' : ''}"></i><em style="left:80%"></em></span><b>${PCT(x.Kum, 0)}</b></div>
