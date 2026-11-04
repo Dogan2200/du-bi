@@ -2847,6 +2847,9 @@ body:not([data-tab="overview"]) #headline{display:none}
 .cap-a b{display:block;font-size:13px;color:#fff;font-weight:700} .cap-a small{display:block;font-size:11px;color:rgba(255,255,255,.65);margin-top:1px}
 .cap-a strong{font-size:15px;color:#fff;font-weight:800;font-variant-numeric:tabular-nums}
 .cap-top{margin-top:10px}
+.pr-val b{white-space:nowrap}
+#paretoMk{flex:none}
+@media(max-width:760px){#panel-pareto .chart-tools{flex-wrap:wrap}}
 </style>
 </head>
 <body class="auth-lock">
@@ -3099,8 +3102,9 @@ body:not([data-tab="overview"]) #headline{display:none}
   <section class="panel" role="tabpanel" id="panel-pareto">
     <div class="card">
       <div class="card-h">
-        <div><div class="eyebrow">Pareto · ABC</div><div class="card-t">Çıkışı sürükleyen kalemler</div><div class="card-s" id="paretoSub">—</div></div>
+        <div><div class="eyebrow">Pareto · ABC</div><div class="card-t" id="paretoTitle">Stok değerini taşıyan kalemler</div><div class="card-s" id="paretoSub">—</div></div>
         <div class="chart-tools">
+          <div class="seg" id="paretoMk"><button type="button" data-mk="kal" class="active">Kalana göre</button><button type="button" data-mk="cik">Çıkışa göre</button></div>
           <select class="sel" id="paretoDim"><option value="item">Depo · Stok</option><option value="Departman">Departman</option><option value="Depo">Depo</option><option value="UstGrup">Üst Grup</option><option value="MTRL">MTRL Group</option></select>
           <label class="lim">Gösterim <select class="sel" id="paretoLimit"></select></label>
         </div>
@@ -4403,11 +4407,11 @@ function renderBadges(ctx){
 /* =====================================================================
    İÇGÖRÜ MOTORU (özet + brifing + asistan ortak kullanır)
    ===================================================================== */
-function paretoList(rows, c, keyFn){
-  const agg = groupAgg(rows, keyFn, c).filter(x => x.cik > 0).sort((a,b) => b.cik - a.cik);
-  const tot = sum(agg, 'cik') || 1; let run = 0;
-  return agg.map((x,i) => { const prevCum = run/tot*100; run += x.cik; const cum = run/tot*100;
-    return Object.assign(x, {Sira:i+1, Pay:x.cik/tot*100, Kum:cum, Sinif: prevCum < 80 ? 'A' : prevCum < 95 ? 'B' : 'C'}); });
+function paretoList(rows, c, keyFn, mk = 'cik'){
+  const agg = groupAgg(rows, keyFn, c).filter(x => x[mk] > 0).sort((a,b) => b[mk] - a[mk]);
+  const tot = sum(agg, mk) || 1; let run = 0;
+  return agg.map((x,i) => { const prevCum = run/tot*100; run += x[mk]; const cum = run/tot*100;
+    return Object.assign(x, {Sira:i+1, Pay:x[mk]/tot*100, Kum:cum, Sinif: prevCum < 80 ? 'A' : prevCum < 95 ? 'B' : 'C'}); });
 }
 function insights(ctx){
   const M = ctx.M, P = ctx.P, c = ctx.c, what = [], why = [], act = [];
@@ -5270,47 +5274,52 @@ function renderRiskList(key){
 /* =====================================================================
    PANEL: Pareto · ABC  (tek eksen: % — kalem payı + kümülatif)
    ===================================================================== */
+const PL_LABEL = {
+  kal:{title:'Stok değerini taşıyan kalemler', gen:'stok değerinin', Gen:'Stok değerinin', tot:'Toplam kalan', none:'stoksuz', empty:'stok', val:'Stok değeri', top:'Stok değerini taşıyan', pay:'toplam stoktaki payı', col:'Kalan'},
+  cik:{title:'Çıkışı sürükleyen kalemler', gen:'çıkışın', Gen:'Çıkışın', tot:'Toplam çıkış', none:'çıkışsız', empty:'çıkış', val:'Çıkış değeri', top:'Çıkışı sürükleyen', pay:'toplam çıkıştaki payı', col:'Çıkan'}};
 function renderPareto(ctx){
   const ui = RISK_UI.pareto; $('#paretoDim').value = ui.dim; $('#paretoLimit').innerHTML = limitOptions(ui.n);
   const keyFn = ui.dim === 'item' ? rowKey : (r => r[ui.dim] || 'Belirtilmemiş');
-  const list = paretoList(ctx.monthRows, ctx.c, keyFn);
-  const noOut = groupAgg(ctx.monthRows, keyFn, ctx.c).filter(x => !(x.cik > 0)).length;
+  const MK = ui.mk === 'cik' ? 'cik' : 'kal', LB = PL_LABEL[MK]; const list = paretoList(ctx.monthRows, ctx.c, keyFn, MK);
+  const card = $('#paretoTitle'); if(card) card.textContent = LB.title; $$('#paretoMk button').forEach(b => b.classList.toggle('active', b.dataset.mk === MK));
+  const noOut = groupAgg(ctx.monthRows, keyFn, ctx.c).filter(x => !(x[MK] > 0)).length;
   const cls = k => list.filter(x => x.Sinif === k), A = cls('A'), B = cls('B'), C = cls('C');
-  const tot = sum(list, 'cik');
-  $('#paretoSub').textContent = list.length ? `${fmtMonth(ctx.cur)} · kalemlerin ${PCT(A.length/list.length*100)}'i çıkışın ~%80'ini oluşturuyor` : fmtMonth(ctx.cur);
+  const tot = sum(list, MK);
+  $('#paretoSub').textContent = list.length ? `${fmtMonth(ctx.cur)} · kalemlerin ${PCT(A.length/list.length*100)}'i ${LB.gen} ~%80'ini oluşturuyor` : fmtMonth(ctx.cur);
   const mk = (t, arr, s) => `<div class="mk"><div class="c">${t}</div><div class="v">${nf0.format(arr.length)} <span style="font-size:12px;color:var(--muted)">kalem</span></div><div class="s">${s}</div></div>`;
-  $('#paretoKpis').innerHTML = `<div class="mk"><div class="c">Toplam çıkış</div><div class="v">${FMT(tot)}</div><div class="s">${nf0.format(list.length)} kalemde hareket · ${nf0.format(noOut)} kalem çıkışsız</div></div>`
-    + mk('A sınıfı · %0–80', A, `Çıkışın ${PCT(sum(A,'cik')/(tot||1)*100)}'i · kalemlerin ${PCT(A.length/(list.length||1)*100)}'i`)
-    + mk('B sınıfı · %80–95', B, `Çıkışın ${PCT(sum(B,'cik')/(tot||1)*100)}'i`)
-    + mk('C sınıfı · %95–100', C, `Çıkışın ${PCT(sum(C,'cik')/(tot||1)*100)}'i — sadeleştirme adayı`);
-  paretoViz($('#paretoViz'), list, {A, B, C, tot});
+  $('#paretoKpis').innerHTML = `<div class="mk"><div class="c">${LB.tot}</div><div class="v">${FMT(tot)}</div><div class="s">${nf0.format(list.length)} kalem · ${nf0.format(noOut)} kalem ${LB.none}</div></div>`
+    + mk('A sınıfı · %0–80', A, `${LB.Gen} ${PCT(sum(A,MK)/(tot||1)*100)}'i · kalemlerin ${PCT(A.length/(list.length||1)*100)}'i`)
+    + mk('B sınıfı · %80–95', B, `${LB.Gen} ${PCT(sum(B,MK)/(tot||1)*100)}'i`)
+    + mk('C sınıfı · %95–100', C, `${LB.Gen} ${PCT(sum(C,MK)/(tot||1)*100)}'i — sadeleştirme adayı`);
+  paretoViz($('#paretoViz'), list, {A, B, C, tot, MK, LB});
   const cols = [{t:'#',num:1,f:x=>x.Sira,v:x=>x.Sira},{t:ui.dim === 'item' ? 'Stok · Depo' : 'Ad',k:'Ad',xf:x => paretoXf(x.Ad, ui.dim),h:ui.dim === 'item' ? (x => { const p = String(x.Ad).split(' • '); return `<b class="t-nm">${esc(p[1] || p[0])}</b><small class="t-sub">${esc([p[0], p[2]].filter(Boolean).join(' · '))}</small>`; }) : null},{t:'Sınıf',f:x=>x.Sinif},{t:'Çıkan',num:1,f:x=>FMT(x.cik),v:x=>x.cik},{t:'Kalan',num:1,f:x=>FMT(x.kal),v:x=>x.kal},{t:'Pay',num:1,f:x=>PCT(x.Pay),v:x=>x.Pay},{t:'Kümülatif',num:1,f:x=>PCT(x.Kum),v:x=>x.Kum}];
   $('#paretoGroups').innerHTML = [['A','A sınıfı — yakın takip','crit',A],['B','B sınıfı — periyodik takip','mid',B],['C','C sınıfı — sadeleştirme / konsolidasyon','low',C]].map(([k,t,p,arr],i) =>
-    `<details class="grp" ><summary><div class="s-left"><span class="pill ${p}"><span class="d"></span>${t}</span><span class="chip">${nf0.format(arr.length)} kalem</span></div><div class="s-right"><span class="chip"><b>${FMT(sum(arr,'cik'))}</b></span><span class="chev">⌄</span></div></summary>
+    `<details class="grp" ><summary><div class="s-left"><span class="pill ${p}"><span class="d"></span>${t}</span><span class="chip">${nf0.format(arr.length)} kalem</span></div><div class="s-right"><span class="chip"><b>${FMT(sum(arr,MK))}</b></span><span class="chev">⌄</span></div></summary>
     <div class="grp-b">${arr.length ? riskTable(arr, cols, ui.n) : '<div class="empty">Kayıt yok.</div>'}</div></details>`).join('');
   $$('#paretoGroups table.dt').forEach(enhanceTable);
 }
 function paretoXf(ad, dim){ if(dim === 'item'){ const [d, n] = String(ad).split(' • '); return [['Depo', d], ['StokAdi', n]]; } return [[dim, ad]]; }
 function paretoViz(el, list, o){
-  if(!list.length){ el.innerHTML = '<div class="empty">Bu ay çıkış kaydı yok.</div>'; return; }
+  const MK = o.MK || 'cik', LB = o.LB || PL_LABEL[MK];
+  if(!list.length){ el.innerHTML = `<div class="empty">Bu ay ${LB.empty} kaydı yok.</div>`; return; }
   const n = list.length, tot = o.tot || 1;
   const seg = [['A', o.A, '#2A62A8', '#ffffff'], ['B', o.B, '#C9DDF3', '#1C447E'], ['C', o.C, '#E7E5E4', '#44403c']];
   const stack = (title, valFn, fmt) => `<div class="abc-row"><div class="abc-lab">${title}</div><div class="abc-bar">${seg.map(([k, arr, bg, fg]) => { const v = valFn(arr), pct = v/(valFn(list)||1)*100;
       return pct > 0 ? `<div style="width:${pct}%;background:${bg};color:${fg}" data-tip="${tipHTML(k + ' sınıfı', [[title, fmt(v)], ['Pay', PCT(pct)]])}">${pct >= 7 ? `<b>${k}</b> ${PCT(pct, 0)}` : ''}</div>` : ''; }).join('')}</div></div>`;
-  const pA = o.A.length/n*100, vA = sum(o.A,'cik')/tot*100;
-  const top = list.slice(0, 15), mx = top[0].cik || 1;
+  const pA = o.A.length/n*100, vA = sum(o.A,MK)/tot*100;
+  const top = list.slice(0, 10), mx = top[0][MK] || 1;
   el.innerHTML = `<div class="abc-wrap">
-      <div class="abc-head"><div class="abc-big">%${nf0.format(Math.round(pA))}</div><div><b>Kalemlerin %${nf1.format(pA)}'i (${nf0.format(o.A.length)} kalem), çıkışın %${nf1.format(vA)}'ini oluşturuyor.</b><div class="card-s">A: ilk %80 · B: %80–95 · C: son %5 — yönetim odağı A sınıfında olmalı.</div></div></div>
+      <div class="abc-head"><div class="abc-big">%${nf0.format(Math.round(pA))}</div><div><b>Kalemlerin %${nf1.format(pA)}'i (${nf0.format(o.A.length)} kalem), ${LB.gen} %${nf1.format(vA)}'ini oluşturuyor.</b><div class="card-s">A: ilk %80 · B: %80–95 · C: son %5 — yönetim odağı A sınıfında olmalı.</div></div></div>
       ${stack('Kalem sayısı', a => a.length, v => nf0.format(v) + ' kalem')}
-      ${stack('Çıkış değeri', a => sum(a,'cik'), v => FMT(v))}
+      ${stack(LB.val, a => sum(a,MK), v => FMT(v))}
       <div class="abc-legend"><span><i style="background:#2A62A8"></i>A · yakın takip</span><span><i style="background:#C9DDF3"></i>B · periyodik takip</span><span><i style="background:#E7E5E4"></i>C · sadeleştirme adayı</span></div>
     </div>
-    <div class="sub-h"><div class="eyebrow">Çıkışı sürükleyen ilk ${top.length} kalem</div><div class="card-s">Pay = toplam çıkıştaki payı · Kümülatif = ilk sıradan bu satıra kadar toplam pay</div></div>
-    <div class="pr-list"><div class="pr-row pr-h"><span>#</span><span>Kalem</span><span>Çıkan</span><span class="num">Pay</span><span>Kümülatif</span><span>Sınıf</span></div>
+    <div class="sub-h"><div class="eyebrow">${LB.top} ilk ${top.length} kalem</div><div class="card-s">Pay = ${LB.pay} · Kümülatif = ilk sıradan bu satıra kadar toplam pay</div></div>
+    <div class="pr-list"><div class="pr-row pr-h"><span>#</span><span>Kalem</span><span>${LB.col}</span><span class="num">Pay</span><span>Kümülatif</span><span>Sınıf</span></div>
     ${top.map(x => { const [d, nm] = x.Ad.includes(' • ') ? x.Ad.split(' • ') : ['', x.Ad];
       return `<div class="pr-row"${xfAttr(paretoXf(x.Ad, RISK_UI.pareto.dim))} data-tip="${tipHTML(x.Ad, [['Çıkan', FMTF(x.cik)], ['Kalan', FMTF(x.kal)], ['Pay', PCT(x.Pay)], ['Kümülatif', PCT(x.Kum)]])}"><span class="rk-n">${x.Sira}</span>
         <div style="min-width:0"><div class="rk-name">${esc(nm)}</div>${d ? `<div class="rk-sub">${esc(d)}</div>` : ''}</div>
-        <div class="pr-val"><span class="tr"><i style="width:${Math.max(3, x.cik/mx*100)}%"></i></span><b>${esc(FMTc(x.cik))}</b></div>
+        <div class="pr-val"><span class="tr"><i style="width:${Math.max(3, x[MK]/mx*100)}%"></i></span><b>${esc(FMTc(x[MK]))}</b></div>
         <span class="num"><b>${PCT(x.Pay)}</b></span>
         <div class="pr-cum"><span class="tr"><i style="width:${Math.min(100, x.Kum)}%;${x.Kum > 80 ? 'background:#d6d3d1' : ''}"></i><em style="left:80%"></em></span><b>${PCT(x.Kum, 0)}</b></div>
         <span><span class="cls cls-${x.Sinif}">${x.Sinif}</span></span></div>`; }).join('')}</div>`;
@@ -5593,6 +5602,7 @@ function wireUI(){
     finally{ e.target.value = ''; }
   });
   $('#trendMetric').onchange = e => { RISK_UI.trend = e.target.value; saveState(); if(CTX) drawTrend(CTX); };
+  $('#paretoMk').onclick = e => { const b = e.target.closest('button'); if(!b) return; RISK_UI.pareto.mk = b.dataset.mk; saveState(); DIRTY.pareto = true; renderPanel('pareto'); };
   $('#paretoDim').onchange = e => { RISK_UI.pareto.dim = e.target.value; saveState(); DIRTY.pareto = true; renderPanel('pareto'); };
   $('#paretoLimit').onchange = e => { RISK_UI.pareto.n = +e.target.value; saveState(); DIRTY.pareto = true; renderPanel('pareto'); };
   $('#btnExecPdf2').onclick = printExec;
