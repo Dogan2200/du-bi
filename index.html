@@ -2858,6 +2858,15 @@ body:not([data-tab="overview"]) #headline{display:none}
 .pr-age.a0{color:#12A37A}.pr-age.a0 i{background:#12A37A}
 .pr-age.a2{color:#c27a12}.pr-age.a2 i{background:#E89A2C}
 .pr-age.a3{color:#c3343a}.pr-age.a3 i{background:#E5484D}
+
+/* karşılaştırmalar: sıkı düzen */
+#panel-compare .card + .card{margin-top:28px!important}
+#panel-compare .card{position:relative}
+#panel-compare .card-h{margin-bottom:8px!important;padding-right:420px}
+#panel-compare .tbl-bar{position:absolute;top:2px;right:0;margin:0!important;gap:12px}
+#panel-compare .tbl-bar .btn,#panel-compare .tbl-bar .sel{height:34px}
+@media(max-width:900px){#panel-compare .card-h{padding-right:0}#panel-compare .tbl-bar{position:static;margin:0 0 8px!important}#panel-compare .card + .card{margin-top:22px!important}}
+#panel-compare table.dt td:first-child,#panel-compare table.dt th:first-child{white-space:nowrap;min-width:150px}
 </style>
 </head>
 <body class="auth-lock">
