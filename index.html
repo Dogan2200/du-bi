@@ -4789,8 +4789,8 @@ function headlineData(ctx, I){
 function renderHeadline(ctx, I){
   const el = $('#headline'); if(!el) return; const h = headlineData(ctx, I);
   el.innerHTML = `<div class="hdl-t"><small>${esc(fmtMonth(ctx.cur))} · ay manşeti</small><p>${h.txt}</p></div>
-    <div class="hdl-r"><button type="button" class="btn hdl-pdf" id="btnExecPdf"><svg viewBox="0 0 24 24" fill="none"><path d="M7 3h7l5 5v13H7z M14 3v5h5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 14h6M10 17h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Tek sayfa PDF</button></div>`;
-  $('#btnExecPdf').onclick = printExec;
+    <div class="hdl-r"></div>`;
+
 }
 function followRows(ctx){
   const M = ctx.M, P = ctx.P; if(!P || !ctx.prev) return [];
