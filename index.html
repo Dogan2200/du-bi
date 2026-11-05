@@ -3075,10 +3075,13 @@ body:not([data-tab="overview"]) #headline{display:none}
   .tabs .tab .ti{width:14px!important;height:14px!important;flex:none}
   .tabs .tab .badge{min-width:18px;height:18px;padding:0 5px;font-size:9.5px;line-height:18px;border-radius:99px;margin-left:2px}
 }
-@media(min-width:761px) and (max-width:1560px){.tabs .tab .ti{display:none}.tabs .tab{padding:0 8px!important}}
+@media(min-width:761px){.tabs .tab .ti{display:none!important}.tabs .tab{padding:0 8px!important}}
 @media(min-width:761px) and (max-width:1180px){.tabs .tab{font-size:11.5px!important;padding:0 6px!important}}
 .tab .badge[hidden]{display:none!important}
 .tab .badge.an-bdg{background:linear-gradient(160deg,#ef6b70,#E5484D)!important;color:#fff!important}
+.mv-sum{margin-left:6px;padding:2px 8px;border-radius:99px;font-size:11px;letter-spacing:0;text-transform:none;font-weight:800;background:color-mix(in srgb,currentColor 12%,transparent)}
+#mvN button{height:28px;padding:0 10px;font-size:11.5px}
+@media(min-width:761px) and (max-width:1000px){.tabs .tab{font-size:10.5px!important;padding:0 4px!important;gap:3px!important}.tabs .tab .badge{min-width:15px;height:15px;line-height:15px;font-size:8.5px;padding:0 4px}}
 </style>
 </head>
 <body class="auth-lock">
@@ -3295,17 +3298,17 @@ body:not([data-tab="overview"]) #headline{display:none}
       </div>
     </div>
     <div class="card mt16">
+      <div class="card-h"><div><div class="eyebrow">Hareket edenler</div><div class="card-t">Önceki aya göre en büyük değişimler ve bekleyen stoklar</div><div class="card-s" id="mvSub">Kalem bazında (Depo · Stok)</div></div><div class="seg" id="mvN"><button type="button" data-n="5" class="active">İlk 5</button><button type="button" data-n="10">İlk 10</button><button type="button" data-n="15">İlk 15</button><button type="button" data-n="20">İlk 20</button></div></div>
+      <div class="mv3">
+        <div><div class="mv-h warnc" id="mvHU">▲ Artışa neden olan</div><div id="mvUp"></div></div>
+        <div><div class="mv-h" style="color:var(--info)" id="mvHD">▼ En çok azalan</div><div id="mvDn"></div></div>
+        <div><div class="mv-h" style="color:var(--neg)" id="mvHA">⏳ En uzun bekleyen</div><div id="mvAge"></div></div>
+      </div>
+    </div>
+    <div class="card mt16">
       <div class="card-h"><div><div class="eyebrow">Planlama kalitesi</div><div class="card-t">Min-Max uyum haritası ve parametre eksikliği</div><div class="card-s">Kalemlerin stok seviyesi tanımlı min-max bandına göre nerede · hangi kalemlerde min / max atanmamış</div></div>
         <div class="seg" id="mmMode"><button type="button" data-mm="n">Kalem</button><button type="button" data-mm="v" class="active">Tutar</button></div></div>
       <div class="mm-grid"><div id="mmViz"></div><div id="pgViz"></div></div>
-    </div>
-    <div class="card mt16">
-      <div class="card-h"><div><div class="eyebrow">Hareket edenler</div><div class="card-t">Önceki aya göre en büyük değişimler ve bekleyen stoklar</div><div class="card-s" id="mvSub">Kalem bazında (Depo · Stok)</div></div></div>
-      <div class="mv3">
-        <div><div class="mv-h warnc">▲ Artışa neden olan · İlk 5</div><div id="mvUp"></div></div>
-        <div><div class="mv-h" style="color:var(--info)">▼ En çok azalan · İlk 5</div><div id="mvDn"></div></div>
-        <div><div class="mv-h" style="color:var(--neg)">⏳ En uzun bekleyen · İlk 5</div><div id="mvAge"></div></div>
-      </div>
     </div>
   </section>
 
@@ -5263,18 +5266,23 @@ function miniList(el, items){
   el.innerHTML = `<div class="ml">${items.map(x => `<div class="mr" ${x.tip ? `data-tip="${x.tip}"` : ''}${xfAttr(x.xf)}><div style="min-width:0"><div class="nm">${esc(x.name)}</div><div class="sb">${x.sub}</div></div>
     <span class="tr"><i class="${x.cls||''}" style="width:${Math.max(4, (x.bar||0)*100)}%"></i></span><span class="vl">${x.val}${x.small ? `<small>${x.small}</small>` : ''}</span></div>`).join('')}</div>`;
 }
+let MV_N = 5;
 function renderTopLists(ctx){
-  const ch = itemChanges(ctx);
+  const ch = itemChanges(ctx), N = MV_N, hd = (id, t, v) => { const e = $(id); if(e) e.innerHTML = `${t} · İlk ${N}${v != null ? ` <b class="mv-sum">${v}</b>` : ''}`; };
+  if(ch){ hd('#mvHU', '▲ Artışa neden olan', '+' + esc(FMTc(sum(ch.up.slice(0,N),'d')))); hd('#mvHD', '▼ En çok azalan', '−' + esc(FMTc(Math.abs(sum(ch.dn.slice(0,N),'d'))))); }
+  else { hd('#mvHU', '▲ Artışa neden olan'); hd('#mvHD', '▼ En çok azalan'); }
+  hd('#mvHA', '⏳ En uzun bekleyen', esc(FMTc(sum(agingList(ctx).slice(0,N),'val'))));
+  const mn = $('#mvN'); if(mn && !mn._w){ mn._w = 1; mn.onclick = e => { const b = e.target.closest('button[data-n]'); if(!b) return; MV_N = +b.dataset.n; mn.querySelectorAll('button').forEach(x => x.classList.toggle('active', x === b)); if(CTX) renderTopLists(CTX); }; }
   if(!ch){ ['#mvUp','#mvDn'].forEach(s => $(s).innerHTML = '<div class="empty">Önceki ay verisi yok.</div>'); $('#mvSub').textContent = 'Kalem bazında (Depo · Stok)'; }
   else{
-    const up = ch.up.slice(0,5), dn = ch.dn.slice(0,5), mU = up[0]?.d || 1, mD = Math.abs(dn[0]?.d || 1);
-    $('#mvSub').innerHTML = `${esc(fmtMonth(ctx.prev))} → ${esc(fmtMonth(ctx.cur))} · brüt artış <b>${esc(FMTc(ch.grossUp))}</b> (ilk 5: ${PCT(ch.grossUp ? sum(up,'d')/ch.grossUp*100 : 0)}) · brüt azalış <b>${esc(FMTc(Math.abs(ch.grossDn)))}</b>`;
+    const up = ch.up.slice(0,N), dn = ch.dn.slice(0,N), mU = up[0]?.d || 1, mD = Math.abs(dn[0]?.d || 1);
+    $('#mvSub').innerHTML = `${esc(fmtMonth(ctx.prev))} → ${esc(fmtMonth(ctx.cur))} · brüt artış <b>${esc(FMTc(ch.grossUp))}</b> (ilk ${N}: ${PCT(ch.grossUp ? sum(up,'d')/ch.grossUp*100 : 0)}) · brüt azalış <b>${esc(FMTc(Math.abs(ch.grossDn)))}</b>`;
     miniList($('#mvUp'), up.map(x => ({xf:[['Depo', x.depo], ['StokAdi', x.name]], name:x.name, sub:esc(x.depo), val:'+' + esc(FMTc(x.d)), small:`katkı ${PCT(ch.grossUp ? x.d/ch.grossUp*100 : 0)}`, bar:x.d/mU,
       tip:tipHTML(x.name, [['Depo', x.depo], ['Önceki ay', FMTF(x.prev)], ['Bu ay', FMTF(x.cur)], ['Artış', '+' + FMTF(x.d)], ['Bu ay giren', FMTF(x.gir)], ['Bu ay çıkan', FMTF(x.cik)]])})));
     miniList($('#mvDn'), dn.map(x => ({xf:[['Depo', x.depo], ['StokAdi', x.name]], name:x.name, sub:esc(x.depo), val:'−' + esc(FMTc(Math.abs(x.d))) + (x.prev ? ` <em class="pc neg">−${PCT(Math.abs(x.d)/Math.abs(x.prev)*100)}</em>` : ''), small:esc(FMTc(x.prev)) + ' → ' + esc(FMTc(x.cur)), bar:Math.abs(x.d)/mD, cls:'info',
       tip:tipHTML(x.name, [['Depo', x.depo], ['Önceki ay', FMTF(x.prev)], ['Bu ay', FMTF(x.cur)], ['Azalış', '−' + FMTF(Math.abs(x.d))], ['Azalış oranı', x.prev ? '−' + PCT(Math.abs(x.d)/Math.abs(x.prev)*100) : '—']])})));
   }
-  const ag = agingList(ctx).slice(0,5), mM = ag[0]?.months || 1;
+  const ag = agingList(ctx).slice(0,N), mM = ag[0]?.months || 1;
   const totK = ctx.M.kal || 1;
   miniList($('#mvAge'), ag.map(x => ({xf:[['Depo', x.depo], ['StokAdi', x.name]], name:x.name, sub:esc(x.depo) + (x.git ? ' · yolda (GIT)' : ''), val:esc(FMTc(x.val)) + ` <em class="pc">${PCT(x.val/totK*100)}</em>`, small:esc(ageText(x)) + ' bekliyor', bar:x.months/mM, cls:x.months >= 6 ? 'neg' : '',
     tip:tipHTML(x.name, [['Depo', x.depo], ['Bekleme', ageText(x) + ' (~' + x.months*30 + (x.open ? '+' : '') + ' gün)'], ['Kalan', FMTF(x.val)], ['Toplam stoktaki pay', PCT(x.val/totK*100)], ['Durum', ageSub(x)]])})));
