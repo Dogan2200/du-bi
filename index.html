@@ -3066,6 +3066,19 @@ body:not([data-tab="overview"]) #headline{display:none}
 .kpi .k-foot{font-size:10.5px!important;margin-top:2px!important;padding:2px 0 2px!important}
 .hdl{margin-bottom:2px!important}
 @media(max-width:760px){.kpi .k-val,.kpi:first-child .k-val{font-size:17px!important}.kpi .k-spark-w{display:none}}
+
+/* sekme çubuğu: tek satır, düzenli, premium */
+@media(min-width:761px){
+  .tabs{flex-wrap:nowrap!important;gap:2px!important;padding:5px!important;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs .tab{flex:1 1 0!important;min-width:max-content;justify-content:center;white-space:nowrap!important;height:36px!important;padding:0 10px!important;gap:6px!important;font-size:12px!important;font-weight:650;border-radius:12px!important;line-height:1}
+  .tabs .tab .ti{width:14px!important;height:14px!important;flex:none}
+  .tabs .tab .badge{min-width:18px;height:18px;padding:0 5px;font-size:9.5px;line-height:18px;border-radius:99px;margin-left:2px}
+}
+@media(min-width:761px) and (max-width:1560px){.tabs .tab .ti{display:none}.tabs .tab{padding:0 8px!important}}
+@media(min-width:761px) and (max-width:1180px){.tabs .tab{font-size:11.5px!important;padding:0 6px!important}}
+.tab .badge[hidden]{display:none!important}
+.tab .badge.an-bdg{background:linear-gradient(160deg,#ef6b70,#E5484D)!important;color:#fff!important}
 </style>
 </head>
 <body class="auth-lock">
@@ -3239,7 +3252,7 @@ body:not([data-tab="overview"]) #headline{display:none}
     <button class="tab" role="tab" aria-selected="false" data-tab="max"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V7m0 0-5 5m5-5 5 5"/></svg>Max Üstü <span class="badge" id="bdg-max" hidden></span></button>
     <button class="tab" role="tab" aria-selected="false" data-tab="excess"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>Aşırı Kapsam <span class="badge" id="bdg-excess" hidden></span></button>
     <button class="tab" role="tab" aria-selected="false" data-tab="pareto"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-6M22 20H2"/></svg>Pareto · ABC</button>
-    <button class="tab" role="tab" aria-selected="false" data-tab="anom"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>Aykırı Durumlar<span class="num" id="anomBadge" hidden></span></button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="anom"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>Aykırı Durumlar <span class="badge an-bdg" id="anomBadge" hidden></span></button>
     <button class="tab" role="tab" aria-selected="false" data-tab="ai"><svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M9 11h7M9 15h7"/></svg>Yönetici Brifingi</button>
   </nav>
 
@@ -4608,6 +4621,7 @@ function deltaBadge(cur, prev, goodWhen, unit='pct'){
   return `<span class="delta ${good == null ? 'flat' : good ? 'good' : 'bad'}">${diff > 0 ? '▲' : '▼'} ${esc(txt)}</span>`;
 }
 function renderKPIs(ctx){
+  try{ const bd = $('#anomBadge'); if(bd){ const L = anomAll(ctx, 6).list.filter(f => f.fb >= 0), rk = new Set(L.filter(f => f.rule === 'rep').map(f => f.base + '|' + f.k)), n = L.filter(f => !rk.has(f.rule + '|' + f.k) && f.sev >= 3).length; bd.hidden = !n; bd.textContent = n; } }catch(e){}
   const M = ctx.M, P = ctx.P || {}, ser = k => ctx.trendMonths.map(m => ctx.mm[m][k]);
   const card = id => (M.card || []).find(r => r.id === id);
   const tgt = (id, txt) => { const r = card(id); if(!r) return null; const g = ragOf(r.score), d = r.def, v = r.v, t = r.target; let dv = g.t;
