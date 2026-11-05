@@ -3082,6 +3082,46 @@ body:not([data-tab="overview"]) #headline{display:none}
 .mv-sum{margin-left:6px;padding:2px 8px;border-radius:99px;font-size:11px;letter-spacing:0;text-transform:none;font-weight:800;background:color-mix(in srgb,currentColor 12%,transparent)}
 #mvN button{height:28px;padding:0 10px;font-size:11.5px}
 @media(min-width:761px) and (max-width:1000px){.tabs .tab{font-size:10.5px!important;padding:0 4px!important;gap:3px!important}.tabs .tab .badge{min-width:15px;height:15px;line-height:15px;font-size:8.5px;padding:0 4px}}
+
+/* risk satırları tıklanabilir */
+.cap-a[data-rk]{cursor:pointer;grid-template-columns:10px minmax(0,1fr) auto 14px!important;border-radius:12px;margin:0 -8px;padding-left:8px!important;padding-right:8px!important;transition:background .15s}
+.cap-a[data-rk]:hover{background:rgba(255,255,255,.08)}
+.cap-v{text-align:right} .cap-v strong{display:block} .cap-v small{display:block;font-size:10.5px;color:rgba(255,255,255,.6);font-weight:600;margin-top:1px}
+.cap-go{color:rgba(255,255,255,.45);font-size:18px;font-weight:300;transition:transform .15s,color .15s} .cap-a[data-rk]:hover .cap-go{color:#fff;transform:translateX(2px)}
+/* sağ detay paneli */
+.dw{position:fixed;inset:0;z-index:200;pointer-events:none}
+.dw-bg{position:absolute;inset:0;background:rgba(10,25,50,.28);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .25s}
+.dw-p{position:absolute;top:0;right:0;bottom:0;width:min(560px,100%);background:#f7f9fc;box-shadow:-24px 0 60px -20px rgba(10,30,60,.45);transform:translateX(102%);transition:transform .32s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
+.dw.on{pointer-events:auto} .dw.on .dw-bg{opacity:1} .dw.on .dw-p{transform:none}
+body.dw-open{overflow:hidden}
+.dw-top{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;background:linear-gradient(90deg,#3c8dbc,#2A62A8);color:#fff}
+.dw-top b{font-size:16px;font-weight:750}
+.dw-top button{all:unset;cursor:pointer;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:20px;background:rgba(255,255,255,.18)}
+.dw-top button:hover{background:rgba(255,255,255,.3)}
+.dw-body{flex:1;overflow-y:auto;padding:20px 22px 30px}
+.dw-hero{padding:18px 20px;border-radius:18px;background:linear-gradient(135deg,#fff,#eef4fb);box-shadow:0 1px 2px rgba(16,42,84,.06);margin-bottom:22px}
+.dw-hero small{display:block;font-size:10.5px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.dw-hero>b{display:block;font-size:28px;font-weight:800;color:var(--navy);margin:6px 0 2px;letter-spacing:-.02em}
+.dw-hero span{font-size:12.5px;color:var(--ink-2)} .dw-hero span b{color:var(--navy)}
+.dw-sec{margin-bottom:22px}
+.dw-h{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#14A38B;margin-bottom:10px;display:flex;justify-content:space-between}
+.dw-h span{letter-spacing:0;text-transform:none;color:var(--muted);font-weight:600}
+.dw-r{display:flex;justify-content:space-between;padding:7px 0;font-size:13px;color:var(--ink-2);border-bottom:1px dashed #e3e9f2} .dw-r b{color:var(--navy)}
+.dw-b{display:grid;grid-template-columns:150px minmax(0,1fr) 78px 26px;gap:10px;align-items:center;padding:6px 6px;margin:0 -6px;border-radius:8px;font-size:12.5px;cursor:pointer}
+.dw-b:hover{background:rgba(42,98,168,.06)}
+.dw-b span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.dw-b i{height:7px;border-radius:9px;background:#e8edf5;overflow:hidden} .dw-b u{display:block;height:100%;border-radius:9px}
+.dw-b b{text-align:right;color:var(--navy);font-variant-numeric:tabular-nums} .dw-b em{font-style:normal;text-align:right;color:var(--muted);font-size:11px}
+.dw-more{font-size:11px;color:var(--muted);padding:4px 0}
+.dw-th,.dw-tr{display:grid;grid-template-columns:minmax(0,1fr) 80px 84px;gap:10px;align-items:center}
+.dw-th{font-size:10.5px;font-weight:700;color:var(--muted);padding:0 0 6px;border-bottom:1px solid #e3e9f2} .dw-th span:not(:first-child){text-align:right}
+.dw-tr{padding:9px 0;border-bottom:1px solid #eef2f7;font-size:12.5px}
+.dw-tr b{color:var(--navy)} .dw-tr>div b{display:block;font-size:12.5px} .dw-tr small{font-size:11px;color:var(--muted)}
+.dw-tr>span,.dw-tr>b{text-align:right;font-variant-numeric:tabular-nums} .dw-tr>span{color:var(--ink-2)}
+.dw-act{display:flex;gap:10px;margin-top:8px} .dw-act .btn{height:42px;padding:0 22px;border-radius:999px}
+.dw-hint{font-size:11px;color:var(--muted);margin-top:10px}
+@media(max-width:560px){.dw-b{grid-template-columns:110px minmax(0,1fr) 70px 22px}.dw-body{padding:16px}}
+:root[data-theme="dark"] .dw-p{background:#0f1f38} :root[data-theme="dark"] .dw-hero{background:rgba(255,255,255,.06)}
 </style>
 </head>
 <body class="auth-lock">
@@ -4963,6 +5003,48 @@ function renderFlow(ctx){
     <div class="fm-foot"><span>Net <b class="${net >= 0 ? 'up' : 'dn'}">${net >= 0 ? '+' : '−'}${esc(FMTc(Math.abs(net)))}</b> · ${pct(Math.abs(net), dev)}</span><span>Tüketim <b>${pct(cik, top)}</b></span><span>Giriş / çıkış <b>${cik ? (gir/cik).toFixed(2).replace('.', ',') + '×' : '—'}</b></span><span>Yolda <b>${esc(FMTc(M.git))}</b></span>${Math.abs(adj) > Math.max(1, kal*0.0005) ? `<span>Kayıt farkı <b>${esc(FMTc(adj))}</b></span>` : ''}${P ? `<span class="fm-ref">▲▼ ${esc(pv)}'e göre</span>` : ''}</div>
   </div>`;
 }
+const RK_META = {
+  min:{t:'Min altı açık', pack:'mn', tab:'min', v:'Açık', s:'Min seviyenin altında kalan kalemler · eksik tutar = min − kalan', c:'#E5484D'},
+  dead:{t:'Hareketsiz stok', pack:'nm', tab:'nomove', v:'Kalan', s:'Son dönemde giriş ve çıkışı olmayan kalemler', c:'#E89A2C'},
+  cov:{t:'Aşırı kapsam', pack:'ex', tab:'excess', v:'Fazla', s:'Tüketime göre çok uzun süre yetecek stok', c:'#E89A2C'},
+  max:{t:'Max üstü fazla', pack:'mxp', tab:'max', v:'Fazla', s:'Max seviyenin üstündeki fazla stok', c:'#E89A2C'}};
+function openRiskDrawer(k){
+  const ctx = CTX, mt = RK_META[k]; if(!ctx || !mt) return;
+  const I = insights(ctx), all = (I.packs[mt.pack] || {}).all || [], tot = sum(all, 'Impact'), M = ctx.M;
+  const cls = new Map(); ctx.monthRows.forEach(r => { if(r.Depo && !cls.has(r.Depo)) cls.set(r.Depo, r.DepoSinifi || '—'); });
+  all.forEach(x => x.DepoSinifi = cls.get(x.Depo) || '—');
+  const brk = (key, lab) => { const m = new Map(); all.forEach(x => { const v = x[key] || '—', o = m.get(v) || {n:0, v:0}; o.n++; o.v += x.Impact || 0; m.set(v, o); });
+    const a = [...m.entries()].sort((p, q) => q[1].v - p[1].v), mx = Math.max(1, ...a.map(x => x[1].v));
+    return `<div class="dw-sec"><div class="dw-h">${lab} göre</div>${a.slice(0, 6).map(([nm, o]) => `<div class="dw-b" data-xk="${key}" data-xv="${esc(nm)}" title="Raporu buna göre süz"><span>${esc(nm)}</span><i><u style="width:${o.v/mx*100}%;background:${mt.c}"></u></i><b>${esc(FMTc(o.v))}</b><em>${o.n}</em></div>`).join('')}${a.length > 6 ? `<div class="dw-more">+${a.length - 6} daha</div>` : ''}</div>`; };
+  let el = $('#riskDw'); if(!el){ el = document.createElement('div'); el.id = 'riskDw'; el.className = 'dw'; document.body.appendChild(el); }
+  const top = all.slice().sort((a, b) => b.Impact - a.Impact).slice(0, 12);
+  el.innerHTML = `<div class="dw-bg" data-close></div><aside class="dw-p" role="dialog" aria-label="${esc(mt.t)}">
+    <header class="dw-top"><b>${esc(mt.t)}</b><button type="button" data-close aria-label="Kapat">×</button></header>
+    <div class="dw-body">
+      <div class="dw-hero"><small>${esc(fmtMonth(ctx.cur))} · ${esc(mt.s)}</small><b>${esc(FMTc(tot))}</b><span><b>${nf0.format(all.length)}</b> kalem · toplam stoğun %${nf1.format(M.kal ? tot/M.kal*100 : 0)}'i</span></div>
+      <div class="dw-sec"><div class="dw-h">Özet</div>
+        <div class="dw-r"><span>Kalem sayısı</span><b>${nf0.format(all.length)}</b></div>
+        <div class="dw-r"><span>Toplam ${mt.v.toLowerCase()}</span><b>${esc(FMTc(tot))}</b></div>
+        <div class="dw-r"><span>Ortalama / kalem</span><b>${esc(FMTc(all.length ? tot/all.length : 0))}</b></div>
+        <div class="dw-r"><span>En büyük kalem</span><b>${esc(top[0] ? FMTc(top[0].Impact) : '—')}</b></div>
+        <div class="dw-r"><span>Depo sayısı</span><b>${new Set(all.map(x => x.Depo)).size}</b></div></div>
+      ${brk('DepoSinifi', 'Depo sınıfına')}${brk('Depo', 'Depoya')}${brk('Departman', 'Departmana')}${brk('UstGrup', 'Üst gruba')}
+      <div class="dw-sec"><div class="dw-h">Kalemler <span>en büyük ${top.length}</span></div>
+        <div class="dw-t"><div class="dw-th"><span>Stok / depo</span><span>Kalan</span><span>${esc(mt.v)}</span></div>
+        ${top.map(x => `<div class="dw-tr"><div><b>${esc(x.StokAdi)}</b><small>${esc(x.Depo)}</small></div><span>${esc(FMTc(x.Bal))}</span><b>${esc(FMTc(x.Impact))}</b></div>`).join('')}</div></div>
+      <div class="dw-act"><button type="button" class="btn gold" data-go="${mt.tab}">Detay liste</button><button type="button" class="btn" data-close>Kapat</button></div>
+      <div class="dw-hint">Bir dağılım satırına tıklayınca rapor o değere göre süzülür.</div>
+    </div></aside>`;
+  requestAnimationFrame(() => el.classList.add('on')); document.body.classList.add('dw-open');
+  const close = () => { el.classList.remove('on'); document.body.classList.remove('dw-open'); };
+  el.onclick = e => {
+    if(e.target.closest('[data-close]')) return close();
+    const g = e.target.closest('[data-go]'); if(g){ close(); setTab(g.dataset.go); window.scrollTo({top:0, behavior:'smooth'}); return; }
+    const b = e.target.closest('.dw-b'); if(b){ close(); crossFilter([[b.dataset.xk, b.dataset.xv]]); } };
+  if(!window._dwEsc){ window._dwEsc = 1; document.addEventListener('keydown', e => { if(e.key === 'Escape'){ const d = $('#riskDw'); if(d){ d.classList.remove('on'); document.body.classList.remove('dw-open'); } } }); }
+}
+document.addEventListener('click', e => { const r = e.target.closest('.cap-a[data-rk]'); if(r) openRiskDrawer(r.dataset.rk); });
+document.addEventListener('keydown', e => { const r = e.target.closest && e.target.closest('.cap-a[data-rk]'); if(r && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); openRiskDrawer(r.dataset.rk); } });
 function renderCapital(ctx, I){
   const el = $('#capital'); if(!el) return;
   const C = capitalOpp(ctx, I), M = ctx.M;
@@ -4979,12 +5061,12 @@ function renderCapital(ctx, I){
     <div class="cap-sub">toplam stoğun <b>${PCT(M.kal ? C.net/M.kal*100 : 0)}</b>'i atıl veya fazla stokta</div>
     ${(() => { const rag = id => { const r = (M.card || []).find(x => x.id === id); const sc = r ? r.score : null; return sc == null ? 'mid' : sc >= 80 ? 'ok' : sc >= 50 ? 'mid' : 'bad'; };
       const L = [
-        {t:'Min altı açık', v:M.belowGap, n:M.belowN, s:'stoksuz kalma riski', r:rag('stockout'), a:'Acil tedarik / transfer · Satın alma · bu hafta'},
-        {t:'Hareketsiz stok', v:M.deadV, n:M.deadN, s:`${SETTINGS.deadMonths}+ ay hareket yok`, r:rag('dead'), a:'Tasfiye / transfer kararı · Depo · 30 gün'},
-        {t:'Aşırı kapsam', v:M.covX, n:M.covN, s:`${SETTINGS.covMax}+ gün yetecek stok`, r:M.covX > 0 ? 'mid' : 'ok', a:'Yeni alımları dondur · Satın alma · bu ay'},
-        {t:'Max üstü fazla', v:M.aboveGap, n:M.aboveN, s:'planlanan üst sınırın üstünde', r:rag('excess'), a:'Min-max revizyonu · Planlama · 30 gün'}].filter(x => x.v > 0)
+        {k:'min', t:'Min altı açık', v:M.belowGap, n:M.belowN, s:'stoksuz kalma riski', r:rag('stockout'), a:'Acil tedarik / transfer · Satın alma · bu hafta'},
+        {k:'dead', t:'Hareketsiz stok', v:M.deadV, n:M.deadN, s:`${SETTINGS.deadMonths}+ ay hareket yok`, r:rag('dead'), a:'Tasfiye / transfer kararı · Depo · 30 gün'},
+        {k:'cov', t:'Aşırı kapsam', v:M.covX, n:M.covN, s:`${SETTINGS.covMax}+ gün yetecek stok`, r:M.covX > 0 ? 'mid' : 'ok', a:'Yeni alımları dondur · Satın alma · bu ay'},
+        {k:'max', t:'Max üstü fazla', v:M.aboveGap, n:M.aboveN, s:'planlanan üst sınırın üstünde', r:rag('excess'), a:'Min-max revizyonu · Planlama · 30 gün'}].filter(x => x.v > 0)
         .sort((a, b) => ({bad:0, mid:1, ok:2})[a.r] - ({bad:0, mid:1, ok:2})[b.r] || b.v - a.v);
-      return `<div class="cap-th">Dikkat gerektirenler</div><div class="cap-al">${L.map(x => `<div class="cap-a ${x.r}" data-tip="${tipHTML(x.t, [['Tutar', FMTF(x.v)], ['Kalem', nf0.format(x.n || 0)]])}"><i></i><div><b>${esc(x.t)}</b><small>${nf0.format(x.n || 0)} kalem · ${esc(x.s)}</small>${x.a ? `<em class="cap-ac">→ ${esc(x.a)}</em>` : ''}</div><strong>${esc(FMTc(x.v))}</strong></div>`).join('')}</div>`; })()}
+      return `<div class="cap-th">Dikkat gerektirenler</div><div class="cap-al">${L.map(x => `<div class="cap-a ${x.r}" data-rk="${x.k}" role="button" tabindex="0" title="Detayı aç"><i></i><div><b>${esc(x.t)}</b><small>${esc(x.s)}</small>${x.a ? `<em class="cap-ac">→ ${esc(x.a)}</em>` : ''}</div><span class="cap-v"><strong>${esc(FMTc(x.v))}</strong><small>${nf0.format(x.n || 0)} kalem</small></span><span class="cap-go">›</span></div>`).join('')}</div>`; })()}
     <div class="cap-top"><div class="cap-th">En yüksek riskli 3 kalem</div>${top3.map((x, k) => `<div class="cap-ti"${xfAttr([['StokAdi', x.r.StokAdi]])}><em>${k+1}</em><div><b>${esc(x.r.StokAdi)}</b><small>${esc(x.r.Depo)} · ${ACT[x.cat]}</small></div><strong>${esc(FMTc(x.net))}</strong></div>`).join('')}</div>`;
 }
 function shareBars(el, ctx, key, cur){
