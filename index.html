@@ -3131,6 +3131,10 @@ body.dw-open{overflow:hidden}
 .dw-tl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:4px} .dw-tl b{color:var(--navy)}
 .dw-lk{display:inline-block;width:10px;height:3px;border-radius:2px;margin:0 4px 0 10px;vertical-align:middle}
 .dw-ok{color:#12A37A!important} .dw-r .neg{color:#E5484D;font-weight:700}
+
+#agingViz [data-age]{cursor:pointer} #agingViz .ag-r[data-age]{border-radius:8px;transition:background .15s} #agingViz .ag-r[data-age]:hover{background:rgba(42,98,168,.06)}
+#chDepo .bar-row,#chMtrl .bar-row,#paretoViz .pr-row{cursor:pointer}
+#panel-cover .cv-c{cursor:pointer}
 </style>
 </head>
 <body class="auth-lock">
@@ -4953,8 +4957,8 @@ function renderAging(ctx){
   const span = ctx.allMonths.indexOf(ctx.cur) + 1, idle = bk.slice(1).reduce((s,x) => s + x.v, 0), risky = bk.slice(2).reduce((s,x) => s + x.v, 0);
   el.innerHTML = `<div class="ag-head"><div class="ag-kpi"><div class="ag-big">${PCT(idle/tot*100)}</div><div class="card-s">${tm('stok değeri','stok miktarı')} bu ay çıkış görmedi (${esc(FMTc(idle))})</div></div>
     <div class="ag-kpi"><div class="ag-big" style="color:${risky ? 'var(--neg)' : 'var(--muted)'}">${PCT(risky/tot*100)}</div><div class="card-s">3 aydan uzun süredir çıkış yok (${esc(FMTc(risky))})</div></div></div>
-    <div class="ag-bar">${bk.filter(x => x.v > 0).map(x => `<div style="width:${x.v/tot*100}%;background:${x.c}" data-tip="${tipHTML(x.t, [['Değer', FMTF(x.v)], ['Pay', PCT(x.v/tot*100)], ['Kalem', nf0.format(x.n)]])}">${segPct(x.v/tot*100)}</div>`).join('')}</div>
-    <div class="ag-rows">${bk.map(x => `<div class="ag-r"><i style="background:${x.c}"></i><span>${esc(x.t)}</span><b>${esc(FMTc(x.v))}</b><em>${PCT(x.v/tot*100)}</em><small>${nf0.format(x.n)} kalem</small></div>`).join('')}</div>
+    <div class="ag-bar">${bk.filter(x => x.v > 0).map(x => `<div data-age="${bk.indexOf(x)}" style="width:${x.v/tot*100}%;background:${x.c}" data-tip="${tipHTML(x.t, [['Değer', FMTF(x.v)], ['Pay', PCT(x.v/tot*100)], ['Kalem', nf0.format(x.n)]])}">${segPct(x.v/tot*100)}</div>`).join('')}</div>
+    <div class="ag-rows">${bk.map((x, bi) => `<div class="ag-r" data-age="${bi}" role="button" tabindex="0"><i style="background:${x.c}"></i><span>${esc(x.t)}</span><b>${esc(FMTc(x.v))}</b><em>${PCT(x.v/tot*100)}</em><small>${nf0.format(x.n)} kalem</small></div>`).join('')}</div>
     ${(() => { const F = groupAgg(ctx.monthRows, 'FSN', ctx.c).filter(x => x.kal > 0), ft = sum(F, 'kal'), fc = {'Fast Moving':'#14A38B', 'Slow Moving':'#2A62A8', 'Non Moving':'#E5484D'}, fl = {'Fast Moving':'Hızlı', 'Slow Moving':'Yavaş', 'Non Moving':'Hareketsiz'};
       return ft ? `<div class="ag-fsn"><div class="ag-fsn-h">Hareket sınıfı</div><div class="ag-fsn-b">${F.map(x => `<i style="flex:${x.kal};background:${fc[x.Ad] || '#9cc3e6'}" data-tip="${tipHTML(fl[x.Ad] || x.Ad, [['Kalan', FMTF(x.kal)], ['Pay', PCT(x.kal/ft*100)]])}"></i>`).join('')}</div>
         <div class="ag-fsn-l">${F.map(x => `<span><i style="background:${fc[x.Ad] || '#9cc3e6'}"></i>${esc(fl[x.Ad] || x.Ad)} <b>${PCT(x.kal/ft*100)}</b></span>`).join('')}</div></div>` : ''; })()}
@@ -5115,6 +5119,46 @@ window.addEventListener('click', e => {
   const d = e.target.closest('#depoMatrix tr.dm-ch'); if(d){ const n = d.querySelector('td b'); if(n){ e.stopPropagation(); openDepotDrawer(n.textContent.trim()); } return; }
   const it = e.target.closest('#mvUp [data-xf], #mvDn [data-xf], #mvAge [data-xf], .an-n[data-xf], .cap-ti[data-xf], #riskDw [data-xf]');
   if(it){ try{ const p = JSON.parse(it.getAttribute('data-xf')), g = k => (p.find(x => x[0] === k) || [])[1]; const nm = g('StokAdi'); if(nm){ e.stopPropagation(); openItemDrawer(g('Depo') || (it.querySelector('small')?.textContent.trim().split(' · ')[0] || ''), nm); } }catch(err){} }
+}, true);
+
+const XF_TXT = {Ulke:'Ülke', DepoSinifi:'Depo sınıfı', Depo:'Depo', MTRL:'Malzeme grubu', UstGrup:'Üst grup', AltGrup:'Alt grup', Departman:'Departman', FSN:'Hareket sınıfı'};
+/* Boyut (ülke, malzeme grubu, departman …) → detay */
+function openDimDrawer(key, val){
+  const ctx = CTX; if(!ctx) return; const c = ctx.c, M = ctx.M, f = r => (r[key] || '—') === val, rows = ctx.monthRows.filter(f), prev = ctx.prevRows.filter(f);
+  if(!rows.length) return; const kal = sum(rows, r => bal(r, c)), pk = sum(prev, r => bal(r, c)), cik = sum(rows, r => r[c.cik] || 0), gir = sum(rows, r => r[c.gir] || 0);
+  const I = insights(ctx), keys = new Set(rows.map(rowKey)), pkk = k => (I.packs[k].all || []).filter(x => keys.has(x.Depo + ' • ' + x.StokAdi) || rows.some(r => r.Depo === x.Depo && r.StokAdi === x.StokAdi));
+  const rk = (t, a) => `<div class="dw-r"><span>${t}</span><b${a.length ? '' : ' class="dw-ok"'}>${a.length ? `${a.length} kalem · ${esc(FMTc(sum(a, 'Impact')))}` : 'yok'}</b></div>`;
+  const B = ['DepoSinifi', 'Depo', 'Departman', 'UstGrup', 'MTRL'].filter(k => k !== key), L = {DepoSinifi:'Depo sınıfına', Depo:'Depoya', Departman:'Departmana', UstGrup:'Üst gruba', MTRL:'Malzeme grubuna'};
+  dwShow(val, dwHero(`${esc(XF_TXT[key] || key)} · ${esc(fmtMonth(ctx.cur))}`, esc(FMTc(kal)), `toplam stoğun %${nf1.format(M.kal ? kal/M.kal*100 : 0)}'i · ${nf0.format(new Set(rows.map(r => r.StokAdi)).size)} kalem`)
+    + dwSum([['Önceki aya göre', pk ? `${kal >= pk ? '▲' : '▼'} ${esc(FMTc(Math.abs(kal - pk)))} · ${esc(PCT(Math.abs((kal/pk - 1)*100)))}` : '—'], ['Giren / çıkan', `${esc(FMTc(gir))} / ${esc(FMTc(cik))}`], ['Depo sayısı', nf0.format(new Set(rows.map(r => r.Depo)).size)]])
+    + `<div class="dw-sec"><div class="dw-h">Riskler</div>${rk('Min altı', pkk('mn'))}${rk('Max üstü', pkk('mxp'))}${rk('Hareketsiz', pkk('nm'))}${rk('Aşırı kapsam', pkk('ex'))}</div>`
+    + dwTrend(ctx, f) + B.slice(0, 3).map(k => dwBrk(rows, k, L[k], r => bal(r, c), k === 'Depo' || k === 'DepoSinifi' ? '#2A62A8' : '#14A38B')).join('')
+    + dwItems(rows, ctx, r => bal(r, c), 'Kalan')
+    + `<div class="dw-act"><button type="button" class="btn gold" data-fx="${esc(JSON.stringify([[key, val]]))}">Filtre olarak uygula</button><button type="button" class="btn" data-close>Kapat</button></div>`);
+}
+/* Yaşlandırma dilimi → detay */
+function openAgeDrawer(bi){
+  const ctx = CTX; if(!ctx) return; const c = ctx.c;
+  const B = [['Bu ay hareketli', x => x.months === 0, '#0f8a5f'], ['1–2 ay hareketsiz', x => x.months >= 1 && x.months <= 2, '#84cc16'], ['3–5 ay hareketsiz', x => x.months >= 3 && x.months <= 5, '#2A62A8'], ['6–11 ay hareketsiz', x => x.months >= 6 && x.months <= 11, '#ea7a08'], ['12+ ay hareketsiz', x => x.months >= 12, '#c8323f']][bi]; if(!B) return;
+  const all = agingList(ctx, true).filter(x => !x.git), L = all.filter(B[1]), tot = sum(all, 'val'), v = sum(L, 'val'), ks = new Set(L.map(x => x.k)), rows = ctx.monthRows.filter(r => ks.has(rowKey(r)));
+  const top = L.slice().sort((a, b) => b.val - a.val).slice(0, 12);
+  dwShow(B[0], dwHero(`Stok yaşlandırma · ${esc(fmtMonth(ctx.cur))}`, esc(FMTc(v)), `${nf0.format(L.length)} kalem · yaşlandırılan stoğun %${nf1.format(tot ? v/tot*100 : 0)}'i`)
+    + dwSum([['Kalem sayısı', nf0.format(L.length)], ['Ortalama / kalem', esc(FMTc(L.length ? v/L.length : 0))], ['Depo sayısı', nf0.format(new Set(L.map(x => x.depo)).size)]])
+    + dwBrk(rows, 'DepoSinifi', 'Depo sınıfına', r => bal(r, c), B[2]) + dwBrk(rows, 'Depo', 'Depoya', r => bal(r, c), B[2]) + dwBrk(rows, 'Departman', 'Departmana', r => bal(r, c), B[2]) + dwBrk(rows, 'UstGrup', 'Üst gruba', r => bal(r, c), B[2])
+    + (top.length ? `<div class="dw-sec"><div class="dw-h">Kalemler <span>en büyük ${top.length} · tıklayınca kalem detayı</span></div><div class="dw-t"><div class="dw-th"><span>Stok / depo</span><span>Bekleme</span><span>Kalan</span></div>
+      ${top.map(x => `<div class="dw-tr dw-clk" data-item="${esc(JSON.stringify([x.depo, x.name]))}"><div><b>${esc(x.name)}</b><small>${esc(x.depo)}</small></div><span>${x.months ? esc(ageText(x)) : 'bu ay'}</span><b>${esc(FMTc(x.val))}</b></div>`).join('')}</div></div>` : '')
+    + `<div class="dw-act"><button type="button" class="btn gold" data-go="nomove">Hareketsiz listesi</button><button type="button" class="btn" data-close>Kapat</button></div>`);
+}
+/* yaşlandırma, stok nerede, pareto, kapak → detay */
+window.addEventListener('click', e => {
+  if(e.target.closest('#riskDw')) return;
+  const ag = e.target.closest('#agingViz [data-age]'); if(ag){ e.stopPropagation(); openAgeDrawer(+ag.dataset.age); return; }
+  const el = e.target.closest('#chDepo [data-xf], #chMtrl [data-xf], #paretoViz [data-xf], #paretoGroups [data-xf], #panel-cover .cv-c-d[data-xf], #panel-cover .cv-c[data-xf], #panel-cover .cv-dep [data-xf], #panel-cover .cv-dep[data-xf]');
+  if(!el) return; let p; try{ p = JSON.parse(el.getAttribute('data-xf')); }catch(err){ return; }
+  const g = k => (p.find(x => x[0] === k) || [])[1]; e.stopPropagation();
+  if(g('StokAdi')) return openItemDrawer(g('Depo') || '', g('StokAdi'));
+  if(g('Depo')) return openDepotDrawer(g('Depo'));
+  const q = p.find(x => x[0] !== 'Ulke') || p[0]; if(q) openDimDrawer(q[0], q[1]);
 }, true);
 function openRiskDrawer(k){
   const ctx = CTX, mt = RK_META[k]; if(!ctx || !mt) return;
