@@ -3122,6 +3122,15 @@ body.dw-open{overflow:hidden}
 .dw-hint{font-size:11px;color:var(--muted);margin-top:10px}
 @media(max-width:560px){.dw-b{grid-template-columns:110px minmax(0,1fr) 70px 22px}.dw-body{padding:16px}}
 :root[data-theme="dark"] .dw-p{background:#0f1f38} :root[data-theme="dark"] .dw-hero{background:rgba(255,255,255,.06)}
+
+.kpi{cursor:pointer} .kpi:hover .k-lab{color:#2A62A8!important}
+#depoMatrix tr.dm-ch{cursor:pointer} #depoMatrix tr.dm-ch:hover td{background:rgba(42,98,168,.05)}
+.dw-clk{cursor:pointer;border-radius:8px} .dw-clk:hover{background:rgba(42,98,168,.06)}
+.dw-r.dw-clk{padding-left:6px;padding-right:6px;margin:0 -6px}
+.dw-sv{display:block;width:100%;height:120px} .dw-sv text{font:600 9.5px var(--font);fill:#8a97ab}
+.dw-tl{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-top:4px} .dw-tl b{color:var(--navy)}
+.dw-lk{display:inline-block;width:10px;height:3px;border-radius:2px;margin:0 4px 0 10px;vertical-align:middle}
+.dw-ok{color:#12A37A!important} .dw-r .neg{color:#E5484D;font-weight:700}
 </style>
 </head>
 <body class="auth-lock">
@@ -5008,6 +5017,105 @@ const RK_META = {
   dead:{t:'Hareketsiz stok', pack:'nm', tab:'nomove', v:'Kalan', s:'Son dönemde giriş ve çıkışı olmayan kalemler', c:'#E89A2C'},
   cov:{t:'Aşırı kapsam', pack:'ex', tab:'excess', v:'Fazla', s:'Tüketime göre çok uzun süre yetecek stok', c:'#E89A2C'},
   max:{t:'Max üstü fazla', pack:'mxp', tab:'max', v:'Fazla', s:'Max seviyenin üstündeki fazla stok', c:'#E89A2C'}};
+/* ---------- ortak sağ detay paneli ---------- */
+function dwShow(title, body){
+  let el = $('#riskDw'); if(!el){ el = document.createElement('div'); el.id = 'riskDw'; el.className = 'dw'; document.body.appendChild(el); }
+  el.innerHTML = `<div class="dw-bg" data-close></div><aside class="dw-p" role="dialog" aria-label="${esc(title)}">
+    <header class="dw-top"><b>${esc(title)}</b><button type="button" data-close aria-label="Kapat">×</button></header><div class="dw-body">${body}</div></aside>`;
+  el.querySelector('.dw-body').scrollTop = 0;
+  requestAnimationFrame(() => el.classList.add('on')); document.body.classList.add('dw-open');
+  const close = () => { el.classList.remove('on'); document.body.classList.remove('dw-open'); };
+  el.onclick = e => {
+    if(e.target.closest('[data-close]')) return close();
+    const g = e.target.closest('[data-go]'); if(g){ close(); setTab(g.dataset.go); window.scrollTo({top:0, behavior:'smooth'}); return; }
+    const f = e.target.closest('[data-fx]'); if(f){ close(); try{ crossFilter(JSON.parse(f.dataset.fx)); }catch(err){} return; }
+    const it = e.target.closest('[data-item]'); if(it){ try{ const [d, n] = JSON.parse(it.dataset.item); openItemDrawer(d, n); }catch(err){} return; }
+    const dp = e.target.closest('[data-depo]'); if(dp){ openDepotDrawer(dp.dataset.depo); return; }
+    const b = e.target.closest('.dw-b'); if(b){ close(); crossFilter([[b.dataset.xk, b.dataset.xv]]); } };
+  if(!window._dwEsc){ window._dwEsc = 1; document.addEventListener('keydown', e => { if(e.key === 'Escape'){ const d = $('#riskDw'); if(d){ d.classList.remove('on'); document.body.classList.remove('dw-open'); } } }); }
+}
+const dwHero = (small, big, sub) => `<div class="dw-hero"><small>${small}</small><b>${big}</b><span>${sub}</span></div>`;
+const dwSum = rows => `<div class="dw-sec"><div class="dw-h">Özet</div>${rows.filter(Boolean).map(([k, v]) => `<div class="dw-r"><span>${k}</span><b>${v}</b></div>`).join('')}</div>`;
+function dwBrk(rows, key, lab, valFn, color, fmt){
+  const m = new Map(); rows.forEach(r => { const k = r[key] || '—', o = m.get(k) || {v:0, n:new Set()}; o.v += valFn(r); o.n.add(r.StokAdi); m.set(k, o); });
+  const a = [...m.entries()].filter(x => x[1].v).sort((p, q) => Math.abs(q[1].v) - Math.abs(p[1].v)), mx = Math.max(1, ...a.map(x => Math.abs(x[1].v)));
+  if(!a.length) return '';
+  return `<div class="dw-sec"><div class="dw-h">${lab} göre</div>${a.slice(0, 6).map(([nm, o]) => `<div class="dw-b" ${key === 'Depo' ? `data-depo="${esc(nm)}" title="Depo detayını aç"` : `data-xk="${key}" data-xv="${esc(nm)}" title="Raporu buna göre süz"`}><span>${esc(nm)}</span><i><u style="width:${Math.abs(o.v)/mx*100}%;background:${color}"></u></i><b>${esc((fmt || FMTc)(o.v))}</b><em>${o.n.size}</em></div>`).join('')}${a.length > 6 ? `<div class="dw-more">+${a.length - 6} daha</div>` : ''}</div>`;
+}
+function dwTrend(ctx, filt, lab){
+  const c = ctx.c, ms = ctx.trendMonths, kv = ms.map(m => sum((ctx.byMonth.get(m) || []).filter(filt), r => bal(r, c))), cv = ms.map(m => sum((ctx.byMonth.get(m) || []).filter(filt), r => r[c.cik] || 0));
+  const W = 500, H = 120, P = 8, mx = Math.max(1, ...kv, ...cv), X = i => P + i*(W - 2*P)/Math.max(1, ms.length - 1), Y = v => H - 22 - v/mx*(H - 34);
+  const line = a => a.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(' ');
+  return `<div class="dw-sec"><div class="dw-h">${lab || 'Son 12 ay'} <span><i class="dw-lk" style="background:#2A62A8"></i>kalan <i class="dw-lk" style="background:#E89A2C"></i>çıkan</span></div>
+    <svg class="dw-sv" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><path d="${line(kv)} L${X(ms.length-1)} ${H-22} L${X(0)} ${H-22} Z" fill="rgba(42,98,168,.08)"/><path d="${line(kv)}" fill="none" stroke="#2A62A8" stroke-width="2.2" vector-effect="non-scaling-stroke"/><path d="${line(cv)}" fill="none" stroke="#E89A2C" stroke-width="1.8" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/>
+    ${ms.map((m, i) => i % 2 === (ms.length - 1) % 2 ? `<text x="${X(i)}" y="${H - 6}" text-anchor="${i === 0 ? 'start' : i === ms.length - 1 ? 'end' : 'middle'}">${esc(fmtMonth(m, true))}</text>` : '').join('')}</svg>
+    <div class="dw-tl"><span>${esc(fmtMonth(ms[0], true))}: <b>${esc(FMTc(kv[0]))}</b></span><span>${esc(fmtMonth(ms[ms.length-1], true))}: <b>${esc(FMTc(kv[kv.length-1]))}</b></span></div></div>`;
+}
+function dwItems(rows, ctx, valFn, valLab, n){
+  const c = ctx.c, m = new Map(); rows.forEach(r => { const k = (r.Depo || '—') + '\u0001' + (r.StokAdi || '—'), o = m.get(k) || {d:r.Depo || '—', s:r.StokAdi || '—', k:0, v:0}; o.k += bal(r, c); o.v += valFn(r); m.set(k, o); });
+  const a = [...m.values()].filter(x => x.v).sort((p, q) => Math.abs(q.v) - Math.abs(p.v)).slice(0, n || 12);
+  return a.length ? `<div class="dw-sec"><div class="dw-h">Kalemler <span>en büyük ${a.length} · tıklayınca kalem detayı</span></div><div class="dw-t"><div class="dw-th"><span>Stok / depo</span><span>Kalan</span><span>${esc(valLab)}</span></div>
+    ${a.map(x => `<div class="dw-tr dw-clk" data-item="${esc(JSON.stringify([x.d, x.s]))}"><div><b>${esc(x.s)}</b><small>${esc(x.d)}</small></div><span>${esc(FMTc(x.k))}</span><b>${esc(FMTc(x.v))}</b></div>`).join('')}</div></div>` : '';
+}
+/* KPI kartı → detay */
+function openKpiDrawer(i){
+  const ctx = CTX; if(!ctx) return; const R = {5:'min', 6:'max', 7:'dead'}; if(R[i]) return openRiskDrawer(R[i]);
+  const c = ctx.c, M = ctx.M, P = ctx.P || {}, rows = ctx.monthRows;
+  const cls = new Map(); rows.forEach(r => { if(r.Depo && !cls.has(r.Depo)) cls.set(r.Depo, r.DepoSinifi); });
+  if(i === 3 || i === 4){ const L = depotMatrix(ctx).filter(o => !o.git), isT = i === 3, f = isT ? (o => o.turn) : (o => o.doh), fm = v => v == null ? '—' : isT ? nf1.format(v) + '×' : nf0.format(Math.round(v)) + ' gün';
+    const tg = isT ? SETTINGS.kpi.turn.target : SETTINGS.kpi.doh.target, srt = L.slice().sort((a, b) => isT ? (f(a) ?? 99) - (f(b) ?? 99) : (f(b) ?? -1) - (f(a) ?? -1)), mx = Math.max(1, ...L.map(o => f(o) || 0));
+    return dwShow(isT ? 'Stok devir hızı' : 'Stok gün kapsamı', dwHero(`${esc(fmtMonth(ctx.cur))} · hedef ${isT ? '≥ ' + tg + '×' : '≤ ' + tg + ' gün'}`, esc(fm(isT ? M.turn : M.doh)), `önceki ay ${esc(fm(isT ? P.turn : P.doh))}`)
+      + dwSum([['Hedefte olan depo', `${L.filter(o => f(o) != null && (isT ? f(o) >= tg : f(o) <= tg)).length} / ${L.length}`], ['En iyi depo', esc(srt[srt.length - 1]?.Ad || '—')], ['En zayıf depo', esc(srt[0]?.Ad || '—')]])
+      + `<div class="dw-sec"><div class="dw-h">Depolara göre <span>${isT ? 'en düşük devir üstte' : 'en uzun kapsam üstte'}</span></div>${srt.map(o => { const v = f(o), ok = v != null && (isT ? v >= tg : v <= tg);
+          return `<div class="dw-b" data-depo="${esc(o.Ad)}" title="Depo detayını aç"><span>${esc(o.Ad)}</span><i><u style="width:${(v || 0)/mx*100}%;background:${ok ? '#12A37A' : '#E89A2C'}"></u></i><b>${esc(fm(v))}</b><em>${esc(FMTc(o.kal))}</em></div>`; }).join('')}</div>`
+      + dwTrend(ctx, () => true));
+  }
+  const K = [['kal', 'Toplam kalan', r => bal(r, c), 'Kalan'], ['cik', 'Çıkan · tüketim', r => r[c.cik] || 0, 'Çıkan'], ['gir', 'Giren', r => r[c.gir] || 0, 'Giren']][i]; if(!K) return;
+  const R2 = rows.map(r => Object.assign({}, r, {DepoSinifi:r.DepoSinifi || cls.get(r.Depo) || '—'})), tot = sum(R2, K[2]), pv = P[K[0]];
+  dwShow(K[1], dwHero(`${esc(fmtMonth(ctx.cur))}`, esc(FMTc(tot)), `${pv ? `önceki ay ${esc(FMTc(pv))} · ${tot >= pv ? '▲' : '▼'} ${esc(PCT(Math.abs((tot/pv - 1)*100)))}` : ''}`)
+    + dwSum([['Kalem sayısı', nf0.format(new Set(R2.filter(r => K[2](r)).map(r => r.StokAdi)).size)], ['Depo sayısı', nf0.format(new Set(R2.filter(r => K[2](r)).map(r => r.Depo)).size)], K[0] === 'kal' ? ['Yolda (GIT)', esc(FMTc(M.git))] : null])
+    + dwBrk(R2, 'DepoSinifi', 'Depo sınıfına', K[2], '#2A62A8') + dwBrk(R2, 'Depo', 'Depoya', K[2], '#2A62A8') + dwBrk(R2, 'Departman', 'Departmana', K[2], '#14A38B') + dwBrk(R2, 'UstGrup', 'Üst gruba', K[2], '#14A38B')
+    + dwItems(R2, ctx, K[2], K[3]) + dwTrend(ctx, () => true));
+}
+/* Depo → detay */
+function openDepotDrawer(depo){
+  const ctx = CTX; if(!ctx) return; const c = ctx.c, rows = ctx.monthRows.filter(r => r.Depo === depo), M = ctx.M;
+  const o = depotMatrix(ctx).find(x => x.Ad === depo); if(!o) return;
+  const I = insights(ctx), pk = k => (I.packs[k].all || []).filter(x => x.Depo === depo), mn = pk('mn'), mx = pk('mxp'), nm = pk('nm'), ex = pk('ex');
+  const rk = (k, t, a) => a.length ? `<div class="dw-r"><span>${t}</span><b>${a.length} kalem · ${esc(FMTc(sum(a, 'Impact')))}</b></div>` : `<div class="dw-r"><span>${t}</span><b class="dw-ok">yok</b></div>`;
+  dwShow(depo, dwHero(`${esc(o.cls || '')} · ${esc(fmtMonth(ctx.cur))}`, esc(FMTc(o.kal)), `toplam stoğun %${nf1.format(o.share)}'i · ${nf0.format(o.n)} kalem`)
+    + dwSum([['Önceki aya göre', o.d == null ? '—' : `${o.d >= 0 ? '▲' : '▼'} ${esc(PCT(Math.abs(o.d)))}`], ['Giren / çıkan', `${esc(FMTc(o.gir))} / ${esc(FMTc(o.cik))}`], ['Gün kapsamı', o.doh == null ? '—' : nf0.format(Math.round(o.doh)) + ' gün'], ['Devir hızı', o.turn == null ? '—' : nf1.format(o.turn) + '×']])
+    + `<div class="dw-sec"><div class="dw-h">Riskler</div>${rk('min', 'Min altı', mn)}${rk('max', 'Max üstü', mx)}${rk('dead', 'Hareketsiz', nm)}${rk('cov', 'Aşırı kapsam', ex)}</div>`
+    + dwTrend(ctx, r => r.Depo === depo)
+    + dwBrk(rows, 'Departman', 'Departmana', r => bal(r, c), '#14A38B') + dwBrk(rows, 'UstGrup', 'Üst gruba', r => bal(r, c), '#14A38B')
+    + dwItems(rows, ctx, r => bal(r, c), 'Kalan')
+    + `<div class="dw-act"><button type="button" class="btn gold" data-fx="${esc(JSON.stringify([['Depo', depo]]))}">Filtre olarak uygula</button><button type="button" class="btn" data-close>Kapat</button></div>`);
+}
+/* Kalem → detay */
+function openItemDrawer(depo, name){
+  const ctx = CTX; if(!ctx) return; const c = ctx.c, A = ctx.allMonths, ms = ctx.trendMonths;
+  const here = r => r.StokAdi === name && (!depo || r.Depo === depo), cur = ctx.monthRows.filter(here), r0 = cur[0] || ctx.base.find(here); if(!r0) return;
+  const kal = sum(cur, r => bal(r, c)), cik = sum(cur, r => r[c.cik] || 0), gir = sum(cur, r => r[c.gir] || 0), t = thr(r0, c);
+  const ser = ms.map(m => (ctx.byMonth.get(m) || []).filter(here)), up = ser.map(a => { const q = sum(a, r => r.GirenM || 0) || sum(a, r => r.KalanM || 0), v = sum(a, r => r.GirenM ? r.Giren : 0) || sum(a, r => r.Kalan || 0); return q > 0 ? v/q : null; });
+  const ag = agingList(ctx, true).find(x => x.name === name && x.depo === depo);
+  const others = ctx.monthRows.filter(r => r.StokAdi === name && r.Depo !== depo && bal(r, c) > 0).sort((a, b) => bal(b, c) - bal(a, c));
+  const upOk = up.filter(v => v != null), u0 = upOk[0], u1 = upOk[upOk.length - 1];
+  dwShow(name, dwHero(`${esc(depo || '')} · ${esc(fmtMonth(ctx.cur))}`, esc(FMTc(kal)), `kalan · ${esc(r0.UstGrup || '')}${r0.FSN ? ' · ' + esc(r0.FSN) : ''}`)
+    + dwSum([['Bu ay giren / çıkan', `${esc(FMTc(gir))} / ${esc(FMTc(cik))}`], ['Min / max', `${t.min ? esc(FMTc(t.min)) : '—'} / ${t.max ? esc(FMTc(t.max)) : '—'}`],
+        ['Son hareket', ag ? (ag.months === 0 ? 'bu ay' : esc(ageText(ag)) + ' önce') : '—'], u0 && u1 ? ['Birim fiyat (12 ay)', `${esc(MONEY(u0))} → <b>${esc(MONEY(u1))}</b> ${u1 > u0*1.05 ? `<span class="neg">▲ ${esc(PCT((u1/u0 - 1)*100))}</span>` : ''}`] : null,
+        ['Departman', esc(r0.Departman || '—')], ['Depo sınıfı', esc(r0.DepoSinifi || '—')]])
+    + dwTrend(ctx, here, 'Son 12 ay · bu depoda')
+    + (others.length ? `<div class="dw-sec"><div class="dw-h">Diğer depolarda <span>${others.length} depo</span></div>${others.slice(0, 8).map(r => `<div class="dw-r dw-clk" data-item="${esc(JSON.stringify([r.Depo, name]))}"><span>${esc(r.Depo)}</span><b>${esc(FMTc(bal(r, c)))}</b></div>`).join('')}</div>` : '')
+    + `<div class="dw-act"><button type="button" class="btn gold" data-fx="${esc(JSON.stringify([['Depo', depo], ['StokAdi', name]]))}">Filtre olarak uygula</button><button type="button" class="btn" data-close>Kapat</button></div>`);
+}
+/* tıklamaları yakala (çapraz filtreden önce) */
+window.addEventListener('click', e => {
+  if(e.target.closest('#riskDw')) return;
+  const k = e.target.closest('#kpis .kpi'); if(k){ e.stopPropagation(); openKpiDrawer([...k.parentElement.children].indexOf(k)); return; }
+  const d = e.target.closest('#depoMatrix tr.dm-ch'); if(d){ const n = d.querySelector('td b'); if(n){ e.stopPropagation(); openDepotDrawer(n.textContent.trim()); } return; }
+  const it = e.target.closest('#mvUp [data-xf], #mvDn [data-xf], #mvAge [data-xf], .an-n[data-xf], .cap-ti[data-xf], #riskDw [data-xf]');
+  if(it){ try{ const p = JSON.parse(it.getAttribute('data-xf')), g = k => (p.find(x => x[0] === k) || [])[1]; const nm = g('StokAdi'); if(nm){ e.stopPropagation(); openItemDrawer(g('Depo') || (it.querySelector('small')?.textContent.trim().split(' · ')[0] || ''), nm); } }catch(err){} }
+}, true);
 function openRiskDrawer(k){
   const ctx = CTX, mt = RK_META[k]; if(!ctx || !mt) return;
   const I = insights(ctx), all = (I.packs[mt.pack] || {}).all || [], tot = sum(all, 'Impact'), M = ctx.M;
@@ -5016,11 +5124,8 @@ function openRiskDrawer(k){
   const brk = (key, lab) => { const m = new Map(); all.forEach(x => { const v = x[key] || '—', o = m.get(v) || {n:0, v:0}; o.n++; o.v += x.Impact || 0; m.set(v, o); });
     const a = [...m.entries()].sort((p, q) => q[1].v - p[1].v), mx = Math.max(1, ...a.map(x => x[1].v));
     return `<div class="dw-sec"><div class="dw-h">${lab} göre</div>${a.slice(0, 6).map(([nm, o]) => `<div class="dw-b" data-xk="${key}" data-xv="${esc(nm)}" title="Raporu buna göre süz"><span>${esc(nm)}</span><i><u style="width:${o.v/mx*100}%;background:${mt.c}"></u></i><b>${esc(FMTc(o.v))}</b><em>${o.n}</em></div>`).join('')}${a.length > 6 ? `<div class="dw-more">+${a.length - 6} daha</div>` : ''}</div>`; };
-  let el = $('#riskDw'); if(!el){ el = document.createElement('div'); el.id = 'riskDw'; el.className = 'dw'; document.body.appendChild(el); }
   const top = all.slice().sort((a, b) => b.Impact - a.Impact).slice(0, 12);
-  el.innerHTML = `<div class="dw-bg" data-close></div><aside class="dw-p" role="dialog" aria-label="${esc(mt.t)}">
-    <header class="dw-top"><b>${esc(mt.t)}</b><button type="button" data-close aria-label="Kapat">×</button></header>
-    <div class="dw-body">
+  dwShow(mt.t, `
       <div class="dw-hero"><small>${esc(fmtMonth(ctx.cur))} · ${esc(mt.s)}</small><b>${esc(FMTc(tot))}</b><span><b>${nf0.format(all.length)}</b> kalem · toplam stoğun %${nf1.format(M.kal ? tot/M.kal*100 : 0)}'i</span></div>
       <div class="dw-sec"><div class="dw-h">Özet</div>
         <div class="dw-r"><span>Kalem sayısı</span><b>${nf0.format(all.length)}</b></div>
@@ -5028,20 +5133,12 @@ function openRiskDrawer(k){
         <div class="dw-r"><span>Ortalama / kalem</span><b>${esc(FMTc(all.length ? tot/all.length : 0))}</b></div>
         <div class="dw-r"><span>En büyük kalem</span><b>${esc(top[0] ? FMTc(top[0].Impact) : '—')}</b></div>
         <div class="dw-r"><span>Depo sayısı</span><b>${new Set(all.map(x => x.Depo)).size}</b></div></div>
-      ${brk('DepoSinifi', 'Depo sınıfına')}${brk('Depo', 'Depoya')}${brk('Departman', 'Departmana')}${brk('UstGrup', 'Üst gruba')}
+      ${brk('DepoSinifi', 'Depo sınıfına')}${brk('Depo', 'Depoya').replace(/data-xk="Depo" data-xv="([^"]*)"/g, 'data-depo="$1"')}${brk('Departman', 'Departmana')}${brk('UstGrup', 'Üst gruba')}
       <div class="dw-sec"><div class="dw-h">Kalemler <span>en büyük ${top.length}</span></div>
         <div class="dw-t"><div class="dw-th"><span>Stok / depo</span><span>Kalan</span><span>${esc(mt.v)}</span></div>
-        ${top.map(x => `<div class="dw-tr"><div><b>${esc(x.StokAdi)}</b><small>${esc(x.Depo)}</small></div><span>${esc(FMTc(x.Bal))}</span><b>${esc(FMTc(x.Impact))}</b></div>`).join('')}</div></div>
+        ${top.map(x => `<div class="dw-tr dw-clk" data-item="${esc(JSON.stringify([x.Depo, x.StokAdi]))}"><div><b>${esc(x.StokAdi)}</b><small>${esc(x.Depo)}</small></div><span>${esc(FMTc(x.Bal))}</span><b>${esc(FMTc(x.Impact))}</b></div>`).join('')}</div></div>
       <div class="dw-act"><button type="button" class="btn gold" data-go="${mt.tab}">Detay liste</button><button type="button" class="btn" data-close>Kapat</button></div>
-      <div class="dw-hint">Bir dağılım satırına tıklayınca rapor o değere göre süzülür.</div>
-    </div></aside>`;
-  requestAnimationFrame(() => el.classList.add('on')); document.body.classList.add('dw-open');
-  const close = () => { el.classList.remove('on'); document.body.classList.remove('dw-open'); };
-  el.onclick = e => {
-    if(e.target.closest('[data-close]')) return close();
-    const g = e.target.closest('[data-go]'); if(g){ close(); setTab(g.dataset.go); window.scrollTo({top:0, behavior:'smooth'}); return; }
-    const b = e.target.closest('.dw-b'); if(b){ close(); crossFilter([[b.dataset.xk, b.dataset.xv]]); } };
-  if(!window._dwEsc){ window._dwEsc = 1; document.addEventListener('keydown', e => { if(e.key === 'Escape'){ const d = $('#riskDw'); if(d){ d.classList.remove('on'); document.body.classList.remove('dw-open'); } } }); }
+      <div class="dw-hint">Bir dağılım satırına tıklayınca rapor o değere göre süzülür.</div>`);
 }
 document.addEventListener('click', e => { const r = e.target.closest('.cap-a[data-rk]'); if(r) openRiskDrawer(r.dataset.rk); });
 document.addEventListener('keydown', e => { const r = e.target.closest && e.target.closest('.cap-a[data-rk]'); if(r && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); openRiskDrawer(r.dataset.rk); } });
