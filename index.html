@@ -3252,6 +3252,30 @@ body.dw-open{overflow:hidden}
 @media(max-width:760px){.nm4-r{grid-template-columns:20px minmax(0,1fr) auto;row-gap:4px}.nm4-a{grid-column:2/3;grid-row:2}.nm4-bar,.nm4-p{display:none}}
 .nm4-h{align-items:center}
 #riskNoMove .nm4-h.mt16{margin-top:30px}.nm4-h em{font-style:normal;letter-spacing:0;text-transform:none;font-weight:600}.nm4-h .seg button{height:26px;padding:0 10px;font-size:11px;letter-spacing:0;text-transform:none}
+
+/* ===== Hareketsiz premium ===== */
+.nmx-hero{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:36px;align-items:center;margin:14px 0 30px;padding:22px 26px;border-radius:22px;
+  background:linear-gradient(120deg,#fff 0%,#f3f7fc 60%,#fdf1f1 100%);box-shadow:0 1px 2px rgba(16,42,84,.05),0 22px 44px -30px rgba(16,42,84,.35)}
+.nmx-big small,.nmx-mini small{display:block;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.nmx-big b{display:block;font-size:44px;font-weight:800;letter-spacing:-.035em;color:var(--navy);line-height:1.05;margin:4px 0 2px}
+.nmx-big span{font-size:12.5px;color:var(--ink-2)}
+.nmx-say{margin:0;font-size:15px;line-height:1.6;color:var(--ink-2);max-width:620px} .nmx-say b{color:var(--navy)} .nmx-say .neg,.nmx-c .neg{color:#E5484D}
+.nmx-mini{display:grid;gap:12px;padding-left:26px;border-left:1px solid var(--line)}
+.nmx-mini b{display:block;font-size:19px;font-weight:800;color:var(--navy);margin-top:2px} .nmx-mini em{font-style:normal;font-size:11px;color:var(--muted)}
+.nmx-mini div:first-child b{color:#E5484D}
+@media(max-width:1000px){.nmx-hero{grid-template-columns:1fr;gap:14px;padding:18px}.nmx-mini{grid-template-columns:1fr 1fr;padding-left:0;border-left:0;border-top:1px solid var(--line);padding-top:12px}}
+.nmx-h{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:750;color:var(--navy);letter-spacing:-.01em;margin-bottom:4px}
+.nmx-h>span{font-size:10px;font-weight:800;letter-spacing:.1em;color:#2A62A8;padding:3px 7px;border-radius:7px;background:rgba(42,98,168,.09)}
+.nmx-h em{font-style:normal;font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0;text-transform:none;margin-left:4px}
+.nmx-c{margin:0 0 14px;font-size:12.5px;line-height:1.55;color:var(--muted);min-height:38px} .nmx-c b{color:var(--ink)}
+.nm3{gap:44px!important;margin-top:4px!important}
+.nm3-b u{background:linear-gradient(90deg,#f2b453,#E5484D)!important}
+.nm3-bar{height:26px!important;border-radius:10px!important}
+.nm3-bar i{display:flex!important;align-items:center;justify-content:center;color:#fff;font-style:normal} .nm3-bar i b{font-size:11px;font-weight:800}
+.nm4-h{text-transform:none!important;letter-spacing:0!important}
+.nm4-n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:rgba(22,51,95,.06);color:var(--navy)!important;font-size:11px!important}
+.nm4-r:nth-child(-n+3) .nm4-n{background:linear-gradient(160deg,#2A62A8,#16335f);color:#fff!important}
+.nm4-bar{height:6px!important}
 </style>
 </head>
 <body class="auth-lock">
@@ -5863,17 +5887,23 @@ function renderNoMove2(ctx){
              ['watch', 'Yedek mi, kontrol et', 'Kritik yedek parça olabilir']].filter(([k]) => G(k).length);
   const head = `<div class="card-h"><div><div class="eyebrow">Hareketsiz stoklar · ${esc(fmtMonth(ctx.cur))}</div><div class="card-t">Hareketsiz stok</div>
       <div class="card-s">Son ${SETTINGS.deadMonths} ay giriş ve çıkışı olmayan kalemler · GIT hariç</div></div></div>
-    <div class="nm2-h"><b>${esc(FMTc(tot))}</b><p><b>${nf0.format(L.length)} kalem</b> · stoğun ${PCT(M.kal ? tot/M.kal*100 : 0)}'i bekliyor.<br>
-      Bunun <b class="neg">${esc(FMTc(sum(L.filter(x => x.mo >= 12), 'v')))}</b>'i 12 aydan uzun süredir hiç hareket görmedi.</p></div>
-    <div class="nm3">
-      <div><div class="nm-sec">Depolara göre</div>${(() => { const m = new Map(); L.forEach(x => m.set(x.d, (m.get(x.d) || 0) + x.v)); const a = [...m.entries()].sort((p, q) => q[1] - p[1]), mx = Math.max(1, ...a.map(x => x[1]));
-          return a.slice(0, 6).map(([d, v]) => `<div class="nm3-b" data-depo="${esc(d)}"><span>${esc(d)}</span><i><u style="width:${v/mx*100}%"></u></i><b>${esc(FMTc(v))}</b></div>`).join('') + (a.length > 6 ? `<div class="nm3-more">+${a.length - 6} depo · ${esc(FMTc(sum(a.slice(6), x => x[1])))}</div>` : ''); })()}</div>
-      <div><div class="nm-sec">Bekleme süresi</div>${(() => { const B = [['6–8 ay', x => x.mo < 9, '#E8B04A'], ['9–11 ay', x => x.mo >= 9 && x.mo < 12, '#E89A2C'], ['12+ ay', x => x.mo >= 12, '#E5484D']].map(([t, f, c]) => { const a = L.filter(f); return {t, c, v:sum(a, 'v'), n:a.length}; }).filter(x => x.n);
-          return `<div class="nm3-bar">${B.map(x => `<i style="flex:${x.v};background:${x.c}"></i>`).join('')}</div>` + B.map(x => `<div class="nm3-r"><span><i style="background:${x.c}"></i>${x.t}</span><em>${x.n} kalem</em><b>${esc(FMTc(x.v))}</b><small>${PCT(tot ? x.v/tot*100 : 0, 0)}</small></div>`).join(''); })()}</div>
-      <div><div class="nm-sec">Son 12 ay <em>${chg != null && chg > 5 ? `<span class="neg">▲ ${esc(fmtMonth(ctx.trendMonths[loI], true))} → bugün +${PCT(chg, 0)}</span>` : ''}</em></div>${(() => { const W = 300, H = 110, mx = Math.max(1, ...tr), X = i => 4 + i*(W - 8)/Math.max(1, tr.length - 1), Y = v => H - 18 - v/mx*(H - 30), d = tr.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(' ');
-          return `<svg class="nm3-sv" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><path d="${d} L${X(tr.length - 1)} ${H - 18} L${X(0)} ${H - 18} Z" fill="rgba(229,72,77,.08)"/><path d="${d}" fill="none" stroke="#E5484D" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><div class="nm3-tl"><span>${esc(fmtMonth(ctx.trendMonths[0], true))} · <b>${esc(FMTc(tr[0]))}</b></span><span>${esc(fmtMonth(ctx.cur, true))} · <b>${esc(FMTc(tr[tr.length - 1]))}</b></span></div>`; })()}</div>
+    <div class="nmx-hero">
+      <div class="nmx-big"><small>Hareketsiz stok</small><b>${esc(FMTc(tot))}</b><span>${nf0.format(L.length)} kalem · stoğun ${PCT(M.kal ? tot/M.kal*100 : 0)}'i</span></div>
+      <p class="nmx-say">Depolarda <b>${esc(FMTc(tot))}</b> değerinde stok son ${SETTINGS.deadMonths} aydır hiç kullanılmadı. Bunun <b class="neg">${esc(FMTc(sum(L.filter(x => x.mo >= 12), 'v')))}</b> kadarı bir yıldan uzun süredir yerinden kıpırdamıyor${chg != null && chg > 5 ? ` ve tutar ${esc(fmtMonth(ctx.trendMonths[loI]))} ayından bu yana <b class="neg">%${nf0.format(chg)} büyüdü</b>` : ''}.</p>
+      <div class="nmx-mini">
+        <div><small>Yıllık taşıma maliyeti</small><b>${esc(FMTc(tot*NM_CARRY))}</b><em>%${NM_CARRY*100} varsayım</em></div>
+        <div><small>Odak</small><b>${foc} kalem</b><em>değerin %80'i</em></div>
+      </div>
     </div>
-    <div class="nm-sec nm4-h mt16"><span>En büyük ${NM_N} hareketsiz kalem <em>· toplamdaki payı ${PCT(tot ? sum(L.slice(0, NM_N), 'v')/tot*100 : 0, 0)}</em></span><span class="seg" id="nmN">${[5, 10, 15].map(n => `<button type="button" data-nmn="${n}" class="${n === NM_N ? 'active' : ''}">İlk ${n}</button>`).join('')}</span></div>
+    <div class="nm3">
+      <div class="nmx-p"><div class="nmx-h"><span>01</span>Nerede birikmiş?</div>${(() => { const m = new Map(); L.forEach(x => m.set(x.d, (m.get(x.d) || 0) + x.v)); const a = [...m.entries()].sort((p, q) => q[1] - p[1]), mx = Math.max(1, ...a.map(x => x[1])), t3 = sum(a.slice(0, 3), x => x[1]);
+          return `<p class="nmx-c">En çok birikim <b>${esc(a[0][0])}</b> deposunda. İlk 3 depo, toplamın <b>%${nf0.format(tot ? t3/tot*100 : 0)}</b> kadarını tutuyor.</p>` + a.slice(0, 6).map(([d, v]) => `<div class="nm3-b" data-depo="${esc(d)}"><span>${esc(d)}</span><i><u style="width:${v/mx*100}%"></u></i><b>${esc(FMTc(v))}</b></div>`).join('') + (a.length > 6 ? `<div class="nm3-more">+${a.length - 6} depo · ${esc(FMTc(sum(a.slice(6), x => x[1])))}</div>` : ''); })()}</div>
+      <div class="nmx-p"><div class="nmx-h"><span>02</span>Ne kadar süredir?</div>${(() => { const B = [['6–8 ay', x => x.mo < 9, '#E8B04A'], ['9–11 ay', x => x.mo >= 9 && x.mo < 12, '#E89A2C'], ['12+ ay', x => x.mo >= 12, '#E5484D']].map(([t, f, c]) => { const a = L.filter(f); return {t, c, v:sum(a, 'v'), n:a.length}; }).filter(x => x.n);
+          const o = B.find(x => x.t === '12+ ay'); return `<p class="nmx-c">${o ? `Hareketsiz stoğun <b>%${nf0.format(tot ? o.v/tot*100 : 0)}</b> kadarı <b>bir yıldan eski</b>; bunlar tasfiye için ilk adaylar.` : 'Bekleyen stokların tamamı bir yıldan yeni.'}</p><div class="nm3-bar">${B.map(x => `<i style="flex:${x.v};background:${x.c}"><b>${PCT(tot ? x.v/tot*100 : 0, 0)}</b></i>`).join('')}</div>` + B.map(x => `<div class="nm3-r"><span><i style="background:${x.c}"></i>${x.t}</span><em>${x.n} kalem</em><b>${esc(FMTc(x.v))}</b><small>${PCT(tot ? x.v/tot*100 : 0, 0)}</small></div>`).join(''); })()}</div>
+      <div class="nmx-p"><div class="nmx-h"><span>03</span>Artıyor mu?</div><p class="nmx-c">${chg != null && chg > 5 ? `<b class="neg">Evet.</b> En düşük olduğu ${esc(fmtMonth(ctx.trendMonths[loI]))} ayından bu yana <b>%${nf0.format(chg)}</b> arttı.` : 'Son 12 ayda belirgin bir artış yok.'}</p>${(() => { const W = 300, H = 110, mx = Math.max(1, ...tr), X = i => 4 + i*(W - 8)/Math.max(1, tr.length - 1), Y = v => H - 18 - v/mx*(H - 30), d = tr.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(' ');
+          return `<svg class="nm3-sv" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><path d="${d} L${X(tr.length - 1)} ${H - 18} L${X(0)} ${H - 18} Z" fill="rgba(229,72,77,.08)"/><path d="${d}" fill="none" stroke="#E5484D" stroke-width="2.2" vector-effect="non-scaling-stroke"/></svg><div class="nm3-tl"><span>${esc(fmtMonth(ctx.trendMonths[0], true))} · <b>${esc(FMTc(tr[0]))}</b></span><span>${esc(fmtMonth(ctx.cur, true))} · <b>${esc(FMTc(tr[tr.length - 1]))}</b></span></div>`; })()}</div>
+    </div>
+    <div class="nm-sec nm4-h mt16"><span class="nmx-h" style="margin:0"><span>04</span>Hangi kalemler? <em>en büyük ${NM_N} kalem · toplamdaki payı %${nf0.format(tot ? sum(L.slice(0, NM_N), 'v')/tot*100 : 0)}</em></span><span class="seg" id="nmN">${[5, 10, 15].map(n => `<button type="button" data-nmn="${n}" class="${n === NM_N ? 'active' : ''}">İlk ${n}</button>`).join('')}</span></div>
     <div class="nm4">${(() => { const mx = Math.max(1, L[0]?.v || 1); return L.slice(0, NM_N).map((x, i) => `<div class="nm4-r" data-item="${esc(JSON.stringify([x.d, x.n]))}"><span class="nm4-n">${i + 1}</span>
       <div class="nm4-t"><b>${esc(x.n)}</b><small>${esc(x.d)}</small></div>
       <span class="nm4-a ${x.mo >= 12 ? 'hot' : ''}">${x.mo >= 12 ? '12+ ay' : x.mo + ' ay'} bekliyor</span>
