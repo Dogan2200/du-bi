@@ -3239,6 +3239,18 @@ body.dw-open{overflow:hidden}
 .nm3-r b{text-align:right;color:var(--navy)} .nm3-r small{text-align:right;color:var(--muted)}
 .nm3-sv{display:block;width:100%;height:110px} .nm3-tl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)} .nm3-tl b{color:var(--navy)}
 .nm-sec em .neg{color:#E5484D;font-weight:700}
+
+.nm2-h .neg{color:#E5484D}
+.nm4{border-top:1px solid var(--line)}
+.nm4-r{display:grid;grid-template-columns:24px minmax(0,1.6fr) 110px minmax(0,1fr) 84px 48px;gap:14px;align-items:center;padding:11px 4px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:8px}
+.nm4-r:hover{background:rgba(42,98,168,.05)}
+.nm4-n{font-size:12px;font-weight:800;color:var(--muted);text-align:center}
+.nm4-t b{display:block;font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .nm4-t small{font-size:11.5px;color:var(--muted)}
+.nm4-a{font-size:11.5px;font-weight:700;color:#b06a0c} .nm4-a.hot{color:#E5484D}
+.nm4-bar{height:8px;border-radius:9px;background:#e8edf5;overflow:hidden} .nm4-bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,#E89A2C,#E5484D)}
+.nm4-v{text-align:right;font-size:14px;color:var(--navy)} .nm4-p{text-align:right;font-size:11.5px;color:var(--muted)}
+@media(max-width:760px){.nm4-r{grid-template-columns:20px minmax(0,1fr) auto;row-gap:4px}.nm4-a{grid-column:2/3;grid-row:2}.nm4-bar,.nm4-p{display:none}}
+.nm4-h{align-items:center}.nm4-h em{font-style:normal;letter-spacing:0;text-transform:none;font-weight:600}.nm4-h .seg button{height:26px;padding:0 10px;font-size:11px;letter-spacing:0;text-transform:none}
 </style>
 </head>
 <body class="auth-lock">
@@ -5834,6 +5846,7 @@ function nmDecDrawer(k){
     + `<div class="dw-sec"><div class="dw-h">Kalemler <span>tıklayınca kalem detayı</span></div><div class="dw-t"><div class="dw-th"><span>Stok / depo</span><span>${k === 'transfer' ? 'Nereye' : 'Bekleme'}</span><span>Tutar</span></div>
     ${L.map(x => `<div class="dw-tr dw-clk" data-item="${esc(JSON.stringify([x.d, x.n]))}"><div><b>${esc(x.n)}</b><small>${esc(x.d)}</small></div><span>${k === 'transfer' ? esc(x.to) : (x.mo >= 12 ? '12+ ay' : x.mo + ' ay')}</span><b>${esc(FMTc(x.v))}</b></div>`).join('')}</div></div>`);
 }
+let NM_N = 10;
 function renderNoMove2(ctx){
   renderRisk('nomove');
   const el = $('#riskNoMove'); if(!el || !ctx) return;
@@ -5850,8 +5863,13 @@ function renderNoMove2(ctx){
   const head = `<div class="card-h"><div><div class="eyebrow">Hareketsiz stoklar · ${esc(fmtMonth(ctx.cur))}</div><div class="card-t">Hareketsiz stok</div>
       <div class="card-s">Son ${SETTINGS.deadMonths} ay giriş ve çıkışı olmayan kalemler · GIT hariç</div></div></div>
     <div class="nm2-h"><b>${esc(FMTc(tot))}</b><p><b>${nf0.format(L.length)} kalem</b> · stoğun ${PCT(M.kal ? tot/M.kal*100 : 0)}'i bekliyor.<br>
-      Önerilen kararlar uygulanırsa <b class="pos">${esc(FMTc(freed))}</b> serbest kalır.</p></div>
-    <div class="nm2-d">${D.map(([k, t, sub]) => `<div class="nm2-r" data-dec="${k}" style="--c:${NM_DEC[k][1]}"><i></i><div><b>${t}</b><small>${sub}</small></div><span>${G(k).length} kalem</span><strong>${esc(FMTc(gv(k)))}</strong><em>›</em></div>`).join('')}</div>
+      Bunun <b class="neg">${esc(FMTc(sum(L.filter(x => x.mo >= 12), 'v')))}</b>'i 12 aydan uzun süredir hiç hareket görmedi.</p></div>
+    <div class="nm-sec nm4-h"><span>En büyük ${NM_N} hareketsiz kalem <em>· toplamdaki payı ${PCT(tot ? sum(L.slice(0, NM_N), 'v')/tot*100 : 0, 0)}</em></span><span class="seg" id="nmN">${[5, 10, 15].map(n => `<button type="button" data-nmn="${n}" class="${n === NM_N ? 'active' : ''}">İlk ${n}</button>`).join('')}</span></div>
+    <div class="nm4">${(() => { const mx = Math.max(1, L[0]?.v || 1); return L.slice(0, NM_N).map((x, i) => `<div class="nm4-r" data-item="${esc(JSON.stringify([x.d, x.n]))}"><span class="nm4-n">${i + 1}</span>
+      <div class="nm4-t"><b>${esc(x.n)}</b><small>${esc(x.d)}</small></div>
+      <span class="nm4-a ${x.mo >= 12 ? 'hot' : ''}">${x.mo >= 12 ? '12+ ay' : x.mo + ' ay'} bekliyor</span>
+      <span class="nm4-bar"><i style="width:${x.v/mx*100}%"></i></span>
+      <b class="nm4-v">${esc(FMTc(x.v))}</b><small class="nm4-p">${PCT(tot ? x.v/tot*100 : 0)}</small></div>`).join(''); })()}</div>
     <div class="nm3">
       <div><div class="nm-sec">Depolara göre</div>${(() => { const m = new Map(); L.forEach(x => m.set(x.d, (m.get(x.d) || 0) + x.v)); const a = [...m.entries()].sort((p, q) => q[1] - p[1]), mx = Math.max(1, ...a.map(x => x[1]));
           return a.slice(0, 6).map(([d, v]) => `<div class="nm3-b" data-depo="${esc(d)}"><span>${esc(d)}</span><i><u style="width:${v/mx*100}%"></u></i><b>${esc(FMTc(v))}</b></div>`).join('') + (a.length > 6 ? `<div class="nm3-more">+${a.length - 6} depo · ${esc(FMTc(sum(a.slice(6), x => x[1])))}</div>` : ''); })()}</div>
@@ -5864,6 +5882,7 @@ function renderNoMove2(ctx){
   el.innerHTML = head; keep.forEach(k => el.appendChild(k));
   if(!el._nmw){ el._nmw = 1; el.addEventListener('click', e => {
     const it = e.target.closest('[data-item]'); if(it){ try{ const [d, n] = JSON.parse(it.dataset.item); openItemDrawer(d, n); }catch(err){} return; }
+    const nb = e.target.closest('[data-nmn]'); if(nb){ NM_N = +nb.dataset.nmn; renderNoMove2(CTX); return; }
     const dr = e.target.closest('.nm2-r'); if(dr){ nmDecDrawer(dr.dataset.dec); return; }
     const db = e.target.closest('.nm3-b'); if(db){ openDepotDrawer(db.dataset.depo); return; }
     const g = e.target.closest('[data-go]'); if(g){ const t = $(g.dataset.go === 'nmtr' ? '#nmTr' : '#nmList'); if(t) t.scrollIntoView({behavior:'smooth', block:'start'}); } }); }
