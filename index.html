@@ -3146,15 +3146,15 @@ body.dw-open{overflow:hidden}
 :root[data-theme] .kb .hdl-t small{color:rgba(255,255,255,.78)!important}
 :root[data-theme] .kb .hdl-t p{color:#fff!important;font-size:15px!important}
 :root[data-theme] .kb .hdl-t p b{color:#fff}
-:root[data-theme] .kb .kpis{display:grid!important;grid-template-columns:repeat(8,minmax(0,1fr))!important;gap:0!important;row-gap:12px!important;margin:0!important;background:transparent!important;padding:0!important}
-@media(max-width:1280px){:root[data-theme] .kb .kpis{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+:root[data-theme] .kb .kpis{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:0!important;row-gap:12px!important;margin:0!important;background:transparent!important;padding:0!important}
+@media(max-width:1280px){:root[data-theme] .kb .kpis{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 @media(max-width:760px){:root[data-theme] .kb .kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 :root[data-theme] .kb .kpi{color:#fff!important;padding:2px 14px 0!important;border-left:0!important;background:transparent!important}
 :root[data-theme] .kb .kpi::after{display:block!important;background:linear-gradient(180deg,transparent,rgba(255,255,255,.28) 20%,rgba(255,255,255,.28) 80%,transparent)!important}
-:root[data-theme] .kb .kpi:nth-child(8n+1)::after{display:none!important}
-@media(max-width:1280px){:root[data-theme] .kb .kpi:nth-child(4n+1)::after{display:none!important}:root[data-theme] .kb .kpi:nth-child(8n+5)::after{display:none!important}}
+:root[data-theme] .kb .kpi:nth-child(6n+1)::after{display:none!important}
+@media(max-width:1280px){:root[data-theme] .kb .kpi:nth-child(3n+1)::after{display:none!important}:root[data-theme] .kb .kpi:nth-child(3n+1)::after{display:none!important}}
 @media(max-width:760px){:root[data-theme] .kb .kpi:nth-child(2n+1)::after{display:none!important}}
-:root[data-theme] .kb .kpi:first-child,:root[data-theme] .kb .kpi:nth-child(8n+1){padding-left:0!important}
+:root[data-theme] .kb .kpi:first-child,:root[data-theme] .kb .kpi:nth-child(6n+1){padding-left:0!important}
 :root[data-theme] .kb .kpi .k-lab{color:rgba(255,255,255,.82)!important}
 :root[data-theme] .kb .kpi .k-ic{background:rgba(255,255,255,.16)!important;color:#fff!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)!important}
 :root[data-theme] .kb .kpi .k-val{color:#fff!important;text-shadow:0 1px 0 rgba(8,25,52,.12)!important}
@@ -3183,8 +3183,8 @@ body.dw-open{overflow:hidden}
 :root[data-theme="dark"] .kb,:root[data-theme="dark"] .kb-flt{background:var(--dk-glass,rgba(255,255,255,.06))}
 @media print{.kb{display:none}}
 :root[data-theme] .kb .kpis > .kpi{padding-left:14px!important}
-@media(min-width:1281px){:root[data-theme] .kb .kpis > .kpi:nth-child(8n+1){padding-left:0!important}}
-@media(min-width:761px) and (max-width:1280px){:root[data-theme] .kb .kpis > .kpi:nth-child(4n+1){padding-left:0!important}}
+@media(min-width:1281px){:root[data-theme] .kb .kpis > .kpi:nth-child(6n+1){padding-left:0!important}}
+@media(min-width:761px) and (max-width:1280px){:root[data-theme] .kb .kpis > .kpi:nth-child(3n+1){padding-left:0!important}}
 @media(max-width:760px){:root[data-theme] .kb .kpis > .kpi:nth-child(2n+1){padding-left:0!important}:root[data-theme] .kb .kpis > .kpi{padding-right:6px!important}}
 </style>
 </head>
@@ -4745,8 +4745,6 @@ function renderKPIs(ctx){
     {lab:'Toplam Kalan', ic:'box', n:M.kal, f:'m', v:FMT(M.kal), d:deltaBadge(M.kal, P.kal, 'neutral'), pv:prevTxt(P.kal, FMTc), foot:{c:'var(--gold)', t:`${nf0.format(M.items)} kalem · GIT ${PCT(M.kal ? M.git/M.kal*100 : 0)}`}, sp:ser('kal')},
     {lab:'Çıkan · Tüketim', ic:'out', n:M.cik, f:'m', v:FMT(M.cik), d:deltaBadge(M.cik, P.cik, 'up'), pv:prevTxt(P.cik, FMTc), foot:{c:'var(--gold)', t:`Ort. aylık (${SETTINGS.avgMonths} ay): ${FMTc(M.doh ? M.kal/M.doh*30 : null)}`}, sp:ser('cik')},
     {lab:'Giren', ic:'in', n:M.gir, f:'m', v:FMT(M.gir), d:deltaBadge(M.gir, P.gir, 'neutral'), pv:prevTxt(P.gir, FMTc), foot:{c:M.gir > M.cik ? 'var(--warn)' : 'var(--pos)', t:`Net ${M.gir - M.cik >= 0 ? 'artış' : 'azalış'}: ${FMTc(Math.abs(M.gir - M.cik))}`}, sp:ser('gir')},
-    {lab:'Stok Devir Hızı', ic:'turn', n:M.turn, f:'x', v:M.turn != null ? nf1.format(M.turn) + '×' : '—', d:deltaBadge(M.turn, P.turn, 'up', 'x'), pv:prevTxt(P.turn, v => nf1.format(v) + '×'), foot:tgt('turn', `Hedef ≥ ${SETTINGS.kpi.turn.target}×`), sp:ser('turn')},
-    {lab:'Stok Gün Kapsamı', ic:'clock', n:M.doh, f:'d', v:M.doh != null ? nf0.format(Math.round(M.doh)) + ' gün' : '—', d:deltaBadge(M.doh, P.doh, 'down', 'd'), pv:prevTxt(P.doh, v => nf0.format(Math.round(v)) + ' g'), foot:tgt('doh', `Hedef ≤ ${SETTINGS.kpi.doh.target} gün`), sp:ser('doh')},
     {lab:'Min Altı Açık', ic:'down', n:M.belowGap, f:'m', v:FMT(M.belowGap), d:deltaBadge(M.belowGap, P.belowGap, 'down'), pv:`${nf0.format(M.belowN)} kalem`, foot:tgt('stockout', `Oran ${PCT(M.sMin*100)} · hedef ≤ %${SETTINGS.kpi.stockout.target}`), sp:ser('belowGap')},
     {lab:'Max Üstü Fazla', ic:'up', n:M.aboveGap, f:'m', v:FMT(M.aboveGap), d:deltaBadge(M.aboveGap, P.aboveGap, 'down'), pv:`${nf0.format(M.aboveN)} kalem`, foot:tgt('excess', `Stoğun ${PCT(M.sMax*100)}'i · hedef ≤ %${SETTINGS.kpi.excess.target}`), sp:ser('aboveGap')},
     {lab:'Hareketsiz Stok', ic:'pause', n:M.deadV, f:'m', v:FMT(M.deadV), d:deltaBadge(M.deadV, P.deadV, 'down'), pv:`${nf0.format(M.deadN)} kalem`, foot:tgt('dead', `Stoğun ${PCT(M.sDead*100)}'i · hedef ≤ %${SETTINGS.kpi.dead.target}`), sp:ser('deadV')},
@@ -5119,10 +5117,10 @@ function dwItems(rows, ctx, valFn, valLab, n){
 }
 /* KPI kartı → detay */
 function openKpiDrawer(i){
-  const ctx = CTX; if(!ctx) return; const R = {5:'min', 6:'max', 7:'dead'}; if(R[i]) return openRiskDrawer(R[i]);
+  const ctx = CTX; if(!ctx) return; const R = {3:'min', 4:'max', 5:'dead'}; if(R[i]) return openRiskDrawer(R[i]);
   const c = ctx.c, M = ctx.M, P = ctx.P || {}, rows = ctx.monthRows;
   const cls = new Map(); rows.forEach(r => { if(r.Depo && !cls.has(r.Depo)) cls.set(r.Depo, r.DepoSinifi); });
-  if(i === 3 || i === 4){ const L = depotMatrix(ctx).filter(o => !o.git), isT = i === 3, f = isT ? (o => o.turn) : (o => o.doh), fm = v => v == null ? '—' : isT ? nf1.format(v) + '×' : nf0.format(Math.round(v)) + ' gün';
+  if(i === 'turn' || i === 'doh'){ const L = depotMatrix(ctx).filter(o => !o.git), isT = i === 'turn', f = isT ? (o => o.turn) : (o => o.doh), fm = v => v == null ? '—' : isT ? nf1.format(v) + '×' : nf0.format(Math.round(v)) + ' gün';
     const tg = isT ? SETTINGS.kpi.turn.target : SETTINGS.kpi.doh.target, srt = L.slice().sort((a, b) => isT ? (f(a) ?? 99) - (f(b) ?? 99) : (f(b) ?? -1) - (f(a) ?? -1)), mx = Math.max(1, ...L.map(o => f(o) || 0));
     return dwShow(isT ? 'Stok devir hızı' : 'Stok gün kapsamı', dwHero(`${esc(fmtMonth(ctx.cur))} · hedef ${isT ? '≥ ' + tg + '×' : '≤ ' + tg + ' gün'}`, esc(fm(isT ? M.turn : M.doh)), `önceki ay ${esc(fm(isT ? P.turn : P.doh))}`)
       + dwSum([['Hedefte olan depo', `${L.filter(o => f(o) != null && (isT ? f(o) >= tg : f(o) <= tg)).length} / ${L.length}`], ['En iyi depo', esc(srt[srt.length - 1]?.Ad || '—')], ['En zayıf depo', esc(srt[0]?.Ad || '—')]])
@@ -5628,11 +5626,6 @@ function coverCountryHTML(ctx){
           <div class="cv-c-sp">${sparkline(trend, col, 220)}
             ${tv.length > 1 ? `<div class="cv-c-sx"><span>${esc(fmtMonth(tv[0][0]))}</span><span>${esc(fmtMonth(tv[tv.length-1][0]))}</span></div>
             <div class="cv-c-hl"><span>En yüksek <b>${esc(FMTc(hi[1]))}</b> · ${esc(fmtMonth(hi[0]))}</span><span>En düşük <b>${esc(FMTc(lo[1]))}</b> · ${esc(fmtMonth(lo[0]))}</span></div>` : ''}</div>
-        </div>
-        <div class="cv-c-kpi">
-          <div><small>Aylık çıkan ${multi ? rankChip(rankOf(L, u, y => y.M.cik, 'high')) : ''}</small><b>${esc(FMTc(M.cik))}</b><em>${deltaBadge(M.cik, P?.cik, 'up')}</em></div>
-          <div class="st-${doh == null ? 'na' : stat(doh <= K.doh.target, doh <= SETTINGS.covMax)}"><small>Gün kapsamı ${multi ? rankChip(rankOf(L, u, y => y.M.doh, 'low')) : ''}</small><b>${doh != null ? nf0.format(Math.round(doh)) + ' gün' : '—'}</b><em>Hedef ≤ ${K.doh.target}${!multi && P?.doh != null && doh != null ? ` · önceki ${nf0.format(Math.round(P.doh))}` : ''}</em></div>
-          <div class="st-${turn == null ? 'na' : stat(turn >= K.turn.target, turn >= K.turn.target / 2)}"><small>Devir hızı ${multi ? rankChip(rankOf(L, u, y => y.M.turn, 'high')) : ''}</small><b>${turn != null ? nf1.format(turn) + '×' : '—'}</b><em>Hedef ≥ ${K.turn.target}×${!multi && P?.turn != null && turn != null ? ` · önceki ${nf1.format(P.turn)}×` : ''}</em></div>
         </div>
         <div class="cv-c-risk">
           <div class="cv-c-rt">Risk maruziyeti <span>stoğa oranı · önceki aya göre</span></div>
