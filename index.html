@@ -3215,6 +3215,17 @@ body.dw-open{overflow:hidden}
 #riskNoMove .nm-sec + .controls{margin-top:4px}
 #riskNoMove .nm-sec.mt16{margin-top:30px}
 .nm-lg{display:flex;flex-wrap:wrap;gap:4px 14px;margin-bottom:8px;font-size:11.5px;color:var(--ink-2)} .nm-lg span{display:inline-flex;align-items:center;gap:5px} .nm-lg i{width:9px;height:9px;border-radius:3px} .nm-lg b{color:var(--navy)}
+
+.nm2-h{display:flex;align-items:center;gap:22px;margin:12px 0 18px}
+.nm2-h>b{font-size:40px;font-weight:800;color:var(--navy);letter-spacing:-.03em}
+.nm2-h p{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink-2)} .nm2-h p b{color:var(--navy)} .nm2-h .pos{color:#12A37A}
+.nm2-d{border-top:1px solid var(--line)}
+.nm2-r{display:grid;grid-template-columns:10px minmax(0,1fr) 80px 100px 14px;gap:14px;align-items:center;padding:14px 6px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:10px}
+.nm2-r:hover{background:rgba(42,98,168,.05)}
+.nm2-r>i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.nm2-r b{display:block;font-size:14px;color:var(--ink)} .nm2-r small{font-size:12px;color:var(--muted)}
+.nm2-r>span{font-size:12px;color:var(--muted);text-align:right} .nm2-r strong{font-size:16px;color:var(--navy);text-align:right} .nm2-r>em{font-style:normal;color:var(--muted);font-size:18px}
+@media(max-width:760px){.nm2-h{flex-direction:column;align-items:flex-start;gap:4px}.nm2-h>b{font-size:30px}.nm2-r{grid-template-columns:10px minmax(0,1fr) auto 12px}.nm2-r>span{display:none}}
 </style>
 </head>
 <body class="auth-lock">
@@ -5114,6 +5125,7 @@ function dwShow(title, body){
   const close = () => { el.classList.remove('on'); document.body.classList.remove('dw-open'); };
   el.onclick = e => {
     if(e.target.closest('[data-close]')) return close();
+    const dr = e.target.closest('.nm2-r'); if(dr){ nmDecDrawer(dr.dataset.dec); return; }
     const g = e.target.closest('[data-go]'); if(g){ close(); setTab(g.dataset.go); window.scrollTo({top:0, behavior:'smooth'}); return; }
     const f = e.target.closest('[data-fx]'); if(f){ close(); try{ crossFilter(JSON.parse(f.dataset.fx)); }catch(err){} return; }
     const it = e.target.closest('[data-item]'); if(it){ try{ const [d, n] = JSON.parse(it.dataset.item); openItemDrawer(d, n); }catch(err){} return; }
@@ -5804,6 +5816,12 @@ function nmTreemap(el, L, W, H){
   const lg = el.previousElementSibling && el.previousElementSibling.classList.contains('nm-lg') ? el.previousElementSibling : null; if(lg) lg.remove();
   if(NARROW) el.insertAdjacentHTML('beforebegin', `<div class="nm-lg">${groups.map(g => `<span><i style="background:${NM_DEC[g.k][1]}"></i>${esc(NM_DEC[g.k][0])} <b>${esc(FMTc(sum(g.a, 'v')))}</b> · ${g.a.length}</span>`).join('')}</div>`);
 }
+function nmDecDrawer(k){
+  const ctx = CTX; if(!ctx) return; const L = nmDecisions(ctx).filter(x => x.dec === k), v = sum(L, 'v'), t = {transfer:'Başka depoya transfer et', sell:'Tasfiye / satış', stop:'Alımı durdur', watch:'Yedek mi, kontrol et'}[k];
+  dwShow(t, dwHero(`Hareketsiz stok · ${esc(fmtMonth(ctx.cur))}`, esc(FMTc(v)), `${nf0.format(L.length)} kalem`)
+    + `<div class="dw-sec"><div class="dw-h">Kalemler <span>tıklayınca kalem detayı</span></div><div class="dw-t"><div class="dw-th"><span>Stok / depo</span><span>${k === 'transfer' ? 'Nereye' : 'Bekleme'}</span><span>Tutar</span></div>
+    ${L.map(x => `<div class="dw-tr dw-clk" data-item="${esc(JSON.stringify([x.d, x.n]))}"><div><b>${esc(x.n)}</b><small>${esc(x.d)}</small></div><span>${k === 'transfer' ? esc(x.to) : (x.mo >= 12 ? '12+ ay' : x.mo + ' ay')}</span><b>${esc(FMTc(x.v))}</b></div>`).join('')}</div></div>`);
+}
 function renderNoMove2(ctx){
   renderRisk('nomove');
   const el = $('#riskNoMove'); if(!el || !ctx) return;
@@ -5813,28 +5831,20 @@ function renderNoMove2(ctx){
   const lo = Math.min(...tr), loI = tr.indexOf(lo), chg = lo ? (tr[tr.length - 1]/lo - 1)*100 : null;
   const daily = M.doh ? M.kal/M.doh : 0, freed = gv('sell') + gv('transfer'), doh2 = daily ? (M.kal - gv('sell'))/daily : null, s15 = sum(G('sell').slice(0, 15), 'v');
   const ctrl = el.querySelector('.controls'), keep = []; let n = ctrl; while(n){ keep.push(n); n = n.nextElementSibling; }
-  const head = `<div class="card-h"><div><div class="eyebrow">Hareketsiz stoklar · ${esc(fmtMonth(ctx.cur))}</div><div class="card-t">En az işle en çok sermayeyi nereden kurtarırız?</div>
-      <div class="card-s">Son ${SETTINGS.deadMonths} ay giriş ve çıkışı olmayan kalemler · GIT hariç · başka depoda tüketiliyorsa transfer, 12+ ay hareketsizse tasfiye önerilir</div></div></div>
-    <div class="nm-st">
-      <div><small>Hareketsiz stok</small><b>${esc(FMTc(tot))}</b><span>${nf0.format(L.length)} kalem · stoğun ${PCT(M.kal ? tot/M.kal*100 : 0)}'i${chg != null && chg > 5 ? ` · <em class="neg">▲ ${esc(fmtMonth(ctx.trendMonths[loI], true))} → bugün +${PCT(chg, 0)}</em>` : ''}</span></div>
-      <div><small>Odak</small><b>${foc} kalem</b><span>değerin %80'i bu kalemlerde</span></div>
-      <div><small>Yıllık taşıma maliyeti</small><b class="neg">${esc(FMTc(tot*NM_CARRY))}</b><span>%${NM_CARRY*100} varsayımla · ayda ${esc(FMTc(tot*NM_CARRY/12))}</span></div>
-      <div class="imp"><small>Plan uygulanırsa</small><b>${esc(FMTc(tot))}<i>→</i><em class="pos">${esc(FMTc(tot - freed))}</em></b><span>hareketsiz stok −${PCT(tot ? freed/tot*100 : 0)}${doh2 ? ` · gün kapsamı ${nf0.format(Math.round(M.doh))} → <em class="pos">${nf0.format(Math.round(doh2))} gün</em>` : ''}</span></div>
-    </div>
-    <div class="nm-g"><div><div class="nm-sec">Karar haritası <em>kutu büyüklüğü = tutar · tıklayınca kalem detayı</em></div><div class="nm-tm" id="nmTm"></div></div>
-      <div><div class="nm-sec">Bu ay yapılacak işler</div>
-        ${G('transfer').length ? `<div class="nm-job" style="--c:#2A62A8" data-go="nmtr"><span class="nm-jn">1</span><div><b class="t">${G('transfer').length} kalemi transfer et</b><p>Aynı kalemler başka depolarda tüketiliyor; satın alma yerine iç transferle karşılanır.</p><small>Sorumlu: Depo · Planlama · 2 hafta</small></div><div class="nm-jv"><b>${esc(FMTc(gv('transfer')))}</b><span>nakit çıkışı yok</span></div></div>` : ''}
-        ${G('sell').length ? `<div class="nm-job" style="--c:#E5484D"><span class="nm-jn">2</span><div><b class="t">İlk ${Math.min(15, G('sell').length)} kalem için tasfiye kararı</b><p>12+ aydır hareketsiz, hiçbir depoda tüketim yok. Bu kalemler tasfiye grubunun ${PCT(gv('sell') ? s15/gv('sell')*100 : 0)}'ini oluşturuyor.</p><small>Sorumlu: Satın alma · Finans · 30 gün</small></div><div class="nm-jv"><b>${esc(FMTc(s15))}</b><span>${G('sell').length} kalemden ${Math.min(15, G('sell').length)}'i</span></div></div>` : ''}
-        ${G('stop').length ? `<div class="nm-job" style="--c:#E89A2C"><span class="nm-jn">!</span><div><b class="t">${G('stop').length} kalemde alımı durdur</b><p>Kullanılmadığı halde son 12 ayda giriş yapılmış.</p><small>Sorumlu: Satın alma · bu hafta</small></div><div class="nm-jv"><b>${esc(FMTc(gv('stop')))}</b><span>açık siparişler</span></div></div>` : ''}
-        ${G('watch').length ? `<div class="nm-job" style="--c:#8a97ab"><span class="nm-jn">3</span><div><b class="t">${G('watch').length} kalemi yedek olarak doğrula</b><p>Kritik yedek parça ise işaretlenir ve listeden çıkar; değilse tasfiyeye alınır.</p><small>Sorumlu: Bakım · 30 gün</small></div><div class="nm-jv"><b>${esc(FMTc(gv('watch')))}</b><span>karar bekliyor</span></div></div>` : ''}
-      </div></div>
-    ${G('transfer').length ? `<div class="nm-sec mt16" id="nmTr">Transfer eşleşmeleri <em>nereden → nereye · ilk ${Math.min(8, G('transfer').length)} / ${G('transfer').length}</em></div>
-      ${G('transfer').slice(0, 8).map(x => `<div class="nm-mr" data-item="${esc(JSON.stringify([x.d, x.n]))}"><b>${esc(x.n)}</b><span class="fr">${esc(x.d)}</span><span class="ar">→</span><span class="to">${esc(x.to)}</span><small>orada son 3 ayda ${nf0.format(x.tq)} adet</small><b class="mv">${esc(FMTc(x.v))}</b></div>`).join('')}` : ''}
-    <div class="nm-sec mt16" id="nmList">Tüm hareketsiz kalemler <em>arama · Excel · gruplar</em></div>`;
+  const D = [['transfer', 'Başka depoya transfer et', 'Aynı kalem başka depoda kullanılıyor · para harcamadan çözülür'],
+             ['sell', 'Tasfiye / satış', '12+ aydır hareket yok, hiçbir depoda kullanılmıyor'],
+             ['stop', 'Alımı durdur', 'Kullanılmadığı halde alınmaya devam edilmiş'],
+             ['watch', 'Yedek mi, kontrol et', 'Kritik yedek parça olabilir']].filter(([k]) => G(k).length);
+  const head = `<div class="card-h"><div><div class="eyebrow">Hareketsiz stoklar · ${esc(fmtMonth(ctx.cur))}</div><div class="card-t">Hareketsiz stok</div>
+      <div class="card-s">Son ${SETTINGS.deadMonths} ay giriş ve çıkışı olmayan kalemler · GIT hariç</div></div></div>
+    <div class="nm2-h"><b>${esc(FMTc(tot))}</b><p><b>${nf0.format(L.length)} kalem</b> · stoğun ${PCT(M.kal ? tot/M.kal*100 : 0)}'i bekliyor.<br>
+      Önerilen kararlar uygulanırsa <b class="pos">${esc(FMTc(freed))}</b> serbest kalır.</p></div>
+    <div class="nm2-d">${D.map(([k, t, sub]) => `<div class="nm2-r" data-dec="${k}" style="--c:${NM_DEC[k][1]}"><i></i><div><b>${t}</b><small>${sub}</small></div><span>${G(k).length} kalem</span><strong>${esc(FMTc(gv(k)))}</strong><em>›</em></div>`).join('')}</div>
+    <div class="nm-sec mt16" id="nmList">Tüm hareketsiz kalemler</div>`;
   el.innerHTML = head; keep.forEach(k => el.appendChild(k));
-  const tm = $('#nmTm'); if(tm) nmTreemap(tm, L, Math.max(300, tm.clientWidth || 700), tm.clientWidth < 560 ? 300 : 380);
   if(!el._nmw){ el._nmw = 1; el.addEventListener('click', e => {
     const it = e.target.closest('[data-item]'); if(it){ try{ const [d, n] = JSON.parse(it.dataset.item); openItemDrawer(d, n); }catch(err){} return; }
+    const dr = e.target.closest('.nm2-r'); if(dr){ nmDecDrawer(dr.dataset.dec); return; }
     const g = e.target.closest('[data-go]'); if(g){ const t = $(g.dataset.go === 'nmtr' ? '#nmTr' : '#nmList'); if(t) t.scrollIntoView({behavior:'smooth', block:'start'}); } }); }
 }
 function renderRisk(key){
