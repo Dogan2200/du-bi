@@ -3186,6 +3186,34 @@ body.dw-open{overflow:hidden}
 @media(min-width:1281px){:root[data-theme] .kb .kpis > .kpi:nth-child(6n+1){padding-left:0!important}}
 @media(min-width:761px) and (max-width:1280px){:root[data-theme] .kb .kpis > .kpi:nth-child(3n+1){padding-left:0!important}}
 @media(max-width:760px){:root[data-theme] .kb .kpis > .kpi:nth-child(2n+1){padding-left:0!important}:root[data-theme] .kb .kpis > .kpi{padding-right:6px!important}}
+
+/* ===== Hareketsiz v2 ===== */
+.nm-st{display:grid;grid-template-columns:1.25fr 1fr 1fr 1.35fr;margin:16px 0 24px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.nm-st>div{padding:0 20px;min-width:0} .nm-st>div:first-child{padding-left:0} .nm-st>div+div{border-left:1px solid var(--line)}
+.nm-st small{display:block;font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.nm-st b{display:block;font-size:26px;font-weight:800;color:var(--navy);letter-spacing:-.02em;margin:5px 0 3px} .nm-st span{font-size:12px;color:var(--ink-2)}
+.nm-st .neg{color:#E5484D;font-style:normal} .nm-st .pos{color:#12A37A;font-style:normal}
+.nm-st .imp b{font-size:19px} .nm-st .imp b i{font-style:normal;color:var(--muted);font-weight:600;margin:0 6px}
+@media(max-width:1000px){.nm-st{grid-template-columns:1fr 1fr;row-gap:16px}.nm-st>div:nth-child(3){padding-left:0;border-left:0}}
+.nm-g{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:32px}
+@media(max-width:1000px){.nm-g{grid-template-columns:1fr}}
+.nm-sec{font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.nm-sec em{font-style:normal;letter-spacing:0;text-transform:none;font-weight:600}
+.nm-tm{position:relative} .nm-tc{position:absolute;top:0;bottom:0} .nm-th{font-size:11.5px;font-weight:750;height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .nm-th b{color:var(--navy)}
+.nm-tb{position:absolute;border-radius:8px;padding:6px 9px;color:#fff;overflow:hidden;box-sizing:border-box;opacity:.9;cursor:pointer;transition:opacity .15s,transform .15s}
+.nm-tb:hover{opacity:1;transform:scale(1.015);z-index:2}
+.nm-tb b{display:block;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .nm-tb span{display:block;font-size:10.5px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .nm-tb.more{opacity:.55}
+.nm-job{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
+.nm-job[data-go]{cursor:pointer}
+.nm-jn{width:28px;height:28px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px}
+.nm-job b.t{font-size:13.5px;color:var(--navy)} .nm-job p{margin:3px 0 4px;font-size:12px;color:var(--ink-2);line-height:1.45} .nm-job small{font-size:11px;color:var(--muted)}
+.nm-jv{text-align:right} .nm-jv b{display:block;font-size:16px;color:var(--navy);white-space:nowrap} .nm-jv span{font-size:11px;font-weight:700;color:var(--c);white-space:nowrap}
+.nm-mr{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 18px minmax(0,1fr) 150px 84px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px;cursor:pointer}
+.nm-mr:hover{background:rgba(42,98,168,.04)} .nm-mr b{color:var(--ink)} .nm-mr .fr{color:var(--muted)} .nm-mr .ar{color:#2A62A8;font-weight:800;text-align:center} .nm-mr .to{color:#2A62A8;font-weight:650}
+.nm-mr small{color:var(--muted);font-size:11px} .nm-mr .mv{text-align:right;color:var(--navy)}
+@media(max-width:760px){.nm-mr{grid-template-columns:minmax(0,1fr) auto;row-gap:2px}.nm-mr .fr,.nm-mr .ar,.nm-mr small{display:none}.nm-mr .to{grid-column:1/2;font-size:11.5px}.nm-st b{font-size:21px}}
+#riskNoMove .nm-sec + .controls{margin-top:4px}
+#riskNoMove .nm-sec.mt16{margin-top:30px}
 </style>
 </head>
 <body class="auth-lock">
@@ -4679,7 +4707,7 @@ function renderAll(){
 function renderPanel(tab){
   if(!CTX || !DIRTY[tab]) return; DIRTY[tab] = false;
   try{
-    ({cover:renderCover, overview:renderOverview, compare:renderCompare, nomove:() => renderRisk('nomove'), min:() => renderRisk('min'),
+    ({cover:renderCover, overview:renderOverview, compare:renderCompare, nomove:() => renderNoMove2(CTX), min:() => renderRisk('min'),
       max:() => renderRisk('max'), excess:() => renderRisk('excess'), pareto:renderPareto, anom:renderAnom, ai:renderReport}[tab] || (()=>{}))(CTX);
   }catch(err){ console.error(err); const p = $('#panel-' + tab); if(p) p.insertAdjacentHTML('afterbegin', `<div class="empty">Bu bölüm çizilirken hata oluştu: ${esc(err.message)}</div>`); }
 }
@@ -5742,6 +5770,70 @@ const RISK_CFG = {
 };
 const RISK_PACKS = {};
 const searchIco = '<svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
+/* =====================================================================
+   Hareketsiz stoklar v2 — karar sayfası
+   ===================================================================== */
+const NM_CARRY = .20;   // yıllık taşıma maliyeti varsayımı
+function nmDecisions(ctx){
+  const c = ctx.c, A = ctx.allMonths, ci = A.indexOf(ctx.cur), all = (insights(ctx).packs.nm.all || []);
+  const age = new Map(agingList(ctx, true).map(x => [x.depo + ' • ' + x.name, x]));
+  const cons = new Map(); for(const m of A.slice(Math.max(0, ci - 2), ci + 1)) for(const r of (ctx.byMonth.get(m) || [])) if((r[c.cik] || 0) > 0){ const o = cons.get(r.StokAdi) || new Map(); o.set(r.Depo, (o.get(r.Depo) || 0) + (r.CikanM || 0)); cons.set(r.StokAdi, o); }
+  const gin = new Set(); for(const m of A.slice(Math.max(0, ci - 11), ci + 1)) for(const r of (ctx.byMonth.get(m) || [])) if((r[c.gir] || 0) > 0) gin.add(r.Depo + ' • ' + r.StokAdi);
+  return all.map(x => { const k = x.Depo + ' • ' + x.StokAdi, a = age.get(k), mo = a ? a.months : SETTINGS.deadMonths, o = cons.get(x.StokAdi); let to = null;
+    if(o) for(const [d, q] of o) if(d !== x.Depo && q > 0 && (!to || q > to[1])) to = [d, q];
+    const dec = to ? 'transfer' : gin.has(k) && mo < 12 ? 'stop' : mo >= 12 ? 'sell' : 'watch';
+    return {n:x.StokAdi, d:x.Depo, v:x.Bal, mo, dec, to:to ? to[0] : null, tq:to ? Math.round(to[1]) : 0}; }).sort((a, b) => b.v - a.v);
+}
+const NM_DEC = {sell:['Tasfiye / satış', '#E5484D'], transfer:['Transfer', '#2A62A8'], watch:['İzle · yedek', '#8a97ab'], stop:['Alımı durdur', '#E89A2C']};
+function nmTreemap(el, L, W, H){
+  const groups = ['sell', 'transfer', 'stop', 'watch'].map(k => ({k, a:L.filter(x => x.dec === k)})).filter(g => g.a.length), tot = sum(L, 'v') || 1;
+  let x0 = 0, out = '';
+  groups.forEach(g => { const gv = sum(g.a, 'v'), w = W*gv/tot, col = NM_DEC[g.k][1], tiles = [];
+    const split = (it, x, y, w2, h2) => { const tv = sum(it, 'v'); if(it.length === 1 || w2*h2 < 2600){ tiles.push([it, x, y, w2, h2]); return; }
+      let acc = 0, k = 0; for(; k < it.length; k++){ acc += it[k].v; if(acc >= tv/2) break; }
+      const A_ = it.slice(0, k + 1), B_ = it.slice(k + 1); if(!B_.length){ tiles.push([it, x, y, w2, h2]); return; }
+      const fa = sum(A_, 'v')/tv; if(w2 >= h2){ split(A_, x, y, w2*fa, h2); split(B_, x + w2*fa, y, w2*(1 - fa), h2); } else { split(A_, x, y, w2, h2*fa); split(B_, x, y + h2*fa, w2, h2*(1 - fa)); } };
+    split(g.a, 0, 24, w - 3, H - 24);
+    out += `<div class="nm-tc" style="left:${x0}px;width:${w - 3}px"><div class="nm-th" style="color:${col}">${esc(NM_DEC[g.k][0])} <b>${esc(FMTc(gv))}</b> · ${g.a.length}</div>`
+      + tiles.map(([it, x, y, tw, th]) => { const one = it.length === 1, v = sum(it, 'v'), lab = one ? it[0].n.replace(/^\S+\s/, '') : `+${it.length} kalem`;
+          return `<div class="nm-tb${one ? '' : ' more'}" ${one ? `data-item="${esc(JSON.stringify([it[0].d, it[0].n]))}"` : `data-go="nmlist"`} style="left:${x}px;top:${y}px;width:${Math.max(0, tw - 3)}px;height:${Math.max(0, th - 3)}px;background:${col}" title="${esc(one ? it[0].n + ' · ' + it[0].d + ' · ' + FMTc(v) : FMTc(v))}">${tw > 70 && th > 34 ? `<b>${esc(lab)}</b><span>${one ? esc(it[0].d) + ' · ' : ''}${esc(FMTc(v))}</span>` : ''}</div>`; }).join('') + '</div>';
+    x0 += w; });
+  el.innerHTML = out; el.style.height = H + 'px';
+}
+function renderNoMove2(ctx){
+  renderRisk('nomove');
+  const el = $('#riskNoMove'); if(!el || !ctx) return;
+  const L = nmDecisions(ctx), tot = sum(L, 'v'), M = ctx.M, G = k => L.filter(x => x.dec === k), gv = k => sum(G(k), 'v');
+  let run = 0, foc = 0; for(const x of L){ run += x.v; foc++; if(run >= tot*.8) break; }
+  const tr = ctx.trendMonths.map(m => sum(buildNoMovePack(Object.assign({}, ctx, {cur:m, monthRows:ctx.byMonth.get(m) || []})).all, 'Bal'));
+  const lo = Math.min(...tr), loI = tr.indexOf(lo), chg = lo ? (tr[tr.length - 1]/lo - 1)*100 : null;
+  const daily = M.doh ? M.kal/M.doh : 0, freed = gv('sell') + gv('transfer'), doh2 = daily ? (M.kal - gv('sell'))/daily : null, s15 = sum(G('sell').slice(0, 15), 'v');
+  const ctrl = el.querySelector('.controls'), keep = []; let n = ctrl; while(n){ keep.push(n); n = n.nextElementSibling; }
+  const head = `<div class="card-h"><div><div class="eyebrow">Hareketsiz stoklar · ${esc(fmtMonth(ctx.cur))}</div><div class="card-t">En az işle en çok sermayeyi nereden kurtarırız?</div>
+      <div class="card-s">Son ${SETTINGS.deadMonths} ay giriş ve çıkışı olmayan kalemler · GIT hariç · başka depoda tüketiliyorsa transfer, 12+ ay hareketsizse tasfiye önerilir</div></div></div>
+    <div class="nm-st">
+      <div><small>Hareketsiz stok</small><b>${esc(FMTc(tot))}</b><span>${nf0.format(L.length)} kalem · stoğun ${PCT(M.kal ? tot/M.kal*100 : 0)}'i${chg != null && chg > 5 ? ` · <em class="neg">▲ ${esc(fmtMonth(ctx.trendMonths[loI], true))} → bugün +${PCT(chg, 0)}</em>` : ''}</span></div>
+      <div><small>Odak</small><b>${foc} kalem</b><span>değerin %80'i bu kalemlerde</span></div>
+      <div><small>Yıllık taşıma maliyeti</small><b class="neg">${esc(FMTc(tot*NM_CARRY))}</b><span>%${NM_CARRY*100} varsayımla · ayda ${esc(FMTc(tot*NM_CARRY/12))}</span></div>
+      <div class="imp"><small>Plan uygulanırsa</small><b>${esc(FMTc(tot))}<i>→</i><em class="pos">${esc(FMTc(tot - freed))}</em></b><span>hareketsiz stok −${PCT(tot ? freed/tot*100 : 0)}${doh2 ? ` · gün kapsamı ${nf0.format(Math.round(M.doh))} → <em class="pos">${nf0.format(Math.round(doh2))} gün</em>` : ''}</span></div>
+    </div>
+    <div class="nm-g"><div><div class="nm-sec">Karar haritası <em>kutu büyüklüğü = tutar · tıklayınca kalem detayı</em></div><div class="nm-tm" id="nmTm"></div></div>
+      <div><div class="nm-sec">Bu ay yapılacak işler</div>
+        ${G('transfer').length ? `<div class="nm-job" style="--c:#2A62A8" data-go="nmtr"><span class="nm-jn">1</span><div><b class="t">${G('transfer').length} kalemi transfer et</b><p>Aynı kalemler başka depolarda tüketiliyor; satın alma yerine iç transferle karşılanır.</p><small>Sorumlu: Depo · Planlama · 2 hafta</small></div><div class="nm-jv"><b>${esc(FMTc(gv('transfer')))}</b><span>nakit çıkışı yok</span></div></div>` : ''}
+        ${G('sell').length ? `<div class="nm-job" style="--c:#E5484D"><span class="nm-jn">2</span><div><b class="t">İlk ${Math.min(15, G('sell').length)} kalem için tasfiye kararı</b><p>12+ aydır hareketsiz, hiçbir depoda tüketim yok. Bu kalemler tasfiye grubunun ${PCT(gv('sell') ? s15/gv('sell')*100 : 0)}'ini oluşturuyor.</p><small>Sorumlu: Satın alma · Finans · 30 gün</small></div><div class="nm-jv"><b>${esc(FMTc(s15))}</b><span>${G('sell').length} kalemden ${Math.min(15, G('sell').length)}'i</span></div></div>` : ''}
+        ${G('stop').length ? `<div class="nm-job" style="--c:#E89A2C"><span class="nm-jn">!</span><div><b class="t">${G('stop').length} kalemde alımı durdur</b><p>Kullanılmadığı halde son 12 ayda giriş yapılmış.</p><small>Sorumlu: Satın alma · bu hafta</small></div><div class="nm-jv"><b>${esc(FMTc(gv('stop')))}</b><span>açık siparişler</span></div></div>` : ''}
+        ${G('watch').length ? `<div class="nm-job" style="--c:#8a97ab"><span class="nm-jn">3</span><div><b class="t">${G('watch').length} kalemi yedek olarak doğrula</b><p>Kritik yedek parça ise işaretlenir ve listeden çıkar; değilse tasfiyeye alınır.</p><small>Sorumlu: Bakım · 30 gün</small></div><div class="nm-jv"><b>${esc(FMTc(gv('watch')))}</b><span>karar bekliyor</span></div></div>` : ''}
+      </div></div>
+    ${G('transfer').length ? `<div class="nm-sec mt16" id="nmTr">Transfer eşleşmeleri <em>nereden → nereye · ilk ${Math.min(8, G('transfer').length)} / ${G('transfer').length}</em></div>
+      ${G('transfer').slice(0, 8).map(x => `<div class="nm-mr" data-item="${esc(JSON.stringify([x.d, x.n]))}"><b>${esc(x.n)}</b><span class="fr">${esc(x.d)}</span><span class="ar">→</span><span class="to">${esc(x.to)}</span><small>orada son 3 ayda ${nf0.format(x.tq)} adet</small><b class="mv">${esc(FMTc(x.v))}</b></div>`).join('')}` : ''}
+    <div class="nm-sec mt16" id="nmList">Tüm hareketsiz kalemler <em>arama · Excel · gruplar</em></div>`;
+  el.innerHTML = head; keep.forEach(k => el.appendChild(k));
+  const tm = $('#nmTm'); if(tm) nmTreemap(tm, L, Math.max(300, tm.clientWidth || 700), tm.clientWidth < 560 ? 300 : 380);
+  if(!el._nmw){ el._nmw = 1; el.addEventListener('click', e => {
+    const it = e.target.closest('[data-item]'); if(it){ try{ const [d, n] = JSON.parse(it.dataset.item); openItemDrawer(d, n); }catch(err){} return; }
+    const g = e.target.closest('[data-go]'); if(g){ const t = $(g.dataset.go === 'nmtr' ? '#nmTr' : '#nmList'); if(t) t.scrollIntoView({behavior:'smooth', block:'start'}); } }); }
+}
 function renderRisk(key){
   const cfg = RISK_CFG[key], el = $('#' + cfg.mount), ctx = CTX, pack = cfg.build(ctx); RISK_PACKS[key] = pack;
   const ui = RISK_UI[key], all = pack.all, tot = sum(all, 'Impact');
