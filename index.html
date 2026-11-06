@@ -5679,7 +5679,6 @@ function renderCover(ctx){
         <div class="cv-meta"><span><b>Dönem</b> ${esc(fmtMonth(ctx.cur))}</span><span><b>Karşılaştırma</b> ${ctx.prev ? esc(fmtMonth(ctx.prev)) : '—'}</span><span><b>Ülke</b> ${esc(countryScope().join(', ') || DEFAULT_COUNTRY)}</span><span><b>Görünüm</b> ${tm('Tutarsal','Miktarsal')}</span><span><b>Kapsam</b> ${filt.length ? esc(filt.join(' · ')) : 'Tüm depolar'}</span></div></div></div>
       <div class="cv-side"><div><small>Rapor tarihi</small><b>${esc(today)}</b></div>${s ? `<div><small>Hazırlayan</small><b>${esc(s.username)}</b></div>` : ''}<button class="btn no-print" type="button" id="cvPrint">Yazdır / PDF</button></div>
     </div>
-    <div class="cv-hero">${hero.map(([t,v,d,sub]) => `<div class="cv-h"><small>${t}</small><b>${esc(v)}</b><div class="cv-d">${d}<span>${esc(sub)}</span></div></div>`).join('')}</div>
     ${coverCountryHTML(ctx)}
     <div class="cv-foot"><span>D/U BI · Stok Performans Raporu · ${esc(countryScope().join(' · '))} · ${esc(fmtMonth(ctx.cur))}</span><span>Gizli — yalnızca şirket içi kullanım</span></div>
   </div>`;
