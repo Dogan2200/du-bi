@@ -592,7 +592,7 @@ table.dm td:first-child b{white-space:normal!important}
 #pgViz .pg-list-h{display:grid;grid-template-columns:minmax(0,1fr) 56px auto;min-height:30px;align-items:center;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line)}
 @media(max-width:1060px){#mmViz{padding-right:0}#pgViz .pg{padding-left:0}}
 /* ===== KAPAK ===== */
-body.on-cover #kpis{display:none}
+
 .cv{background:#fff;border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--shadow);padding:30px 32px;position:relative;overflow:hidden}
 :root[data-theme="dark"] .cv{background:var(--surface)}
 .cv::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:linear-gradient(90deg,#5A9BD8,#2A62A8)}
@@ -2735,7 +2735,7 @@ details.grp[open]>.grp-b{animation:vhFade .42s var(--vh-ease) both}
 @media (prefers-reduced-motion: reduce){.k-spark .sp-line{stroke-dasharray:none!important;stroke-dashoffset:0!important;animation:none!important}}
 
 /* ===== sadeleştirme ===== */
-body:not([data-tab="overview"]) #kpis{display:none!important}
+
 .status-line:has(.dot.ok){display:none!important}
 .brief2:has(.brief-col.hl){grid-template-columns:1fr!important}
 .brief-col.hl ul{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -2770,7 +2770,7 @@ body:not([data-tab="overview"]) #kpis{display:none!important}
 .rk-adv>span{flex:none;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#2A62A8;margin-top:2px}
 .rk-adv ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:4px 22px}
 .rk-adv li::before{content:"•";color:#2A62A8;margin-right:6px}
-body:not([data-tab="overview"]) #headline{display:none}
+
 .hdl{display:flex;align-items:center;gap:20px;margin:22px 0 6px}
 .hdl-t{flex:1;min-width:0}
 .hdl-t small{display:block;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#2A62A8;margin-bottom:4px}
@@ -3135,6 +3135,57 @@ body.dw-open{overflow:hidden}
 #agingViz [data-age]{cursor:pointer} #agingViz .ag-r[data-age]{border-radius:8px;transition:background .15s} #agingViz .ag-r[data-age]:hover{background:rgba(42,98,168,.06)}
 #chDepo .bar-row,#chMtrl .bar-row,#paretoViz .pr-row{cursor:pointer}
 #panel-cover .cv-c{cursor:pointer}
+
+/* ===== KPI bandı: her sayfada, bütçe raporu tarzı mavi panel ===== */
+.kb{margin-top:14px;border-radius:22px;overflow:visible;background:#fff;box-shadow:0 1px 2px rgba(16,42,84,.06),0 24px 48px -30px rgba(16,42,84,.45)}
+.kb-band{position:relative;border-radius:22px 22px 0 0;padding:20px 24px 18px;color:#fff;overflow:hidden;
+  background:radial-gradient(800px 260px at 10% 0%,rgba(255,255,255,.12),transparent 60%),
+  linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px) 0 0/48px 48px,
+  linear-gradient(180deg,#3c8dbc,#3584b4 70%,#4c9bc9)}
+:root[data-theme] .kb .hdl{margin:0 0 12px!important}
+:root[data-theme] .kb .hdl-t small{color:rgba(255,255,255,.78)!important}
+:root[data-theme] .kb .hdl-t p{color:#fff!important;font-size:15px!important}
+:root[data-theme] .kb .hdl-t p b{color:#fff}
+:root[data-theme] .kb .kpis{display:grid!important;grid-template-columns:repeat(8,minmax(0,1fr))!important;gap:0!important;row-gap:12px!important;margin:0!important;background:transparent!important;padding:0!important}
+@media(max-width:1280px){:root[data-theme] .kb .kpis{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+@media(max-width:760px){:root[data-theme] .kb .kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+:root[data-theme] .kb .kpi{color:#fff!important;padding:2px 14px 0!important;border-left:0!important;background:transparent!important}
+:root[data-theme] .kb .kpi::after{display:block!important;background:linear-gradient(180deg,transparent,rgba(255,255,255,.28) 20%,rgba(255,255,255,.28) 80%,transparent)!important}
+:root[data-theme] .kb .kpi:nth-child(8n+1)::after{display:none!important}
+@media(max-width:1280px){:root[data-theme] .kb .kpi:nth-child(4n+1)::after{display:none!important}:root[data-theme] .kb .kpi:nth-child(8n+5)::after{display:none!important}}
+@media(max-width:760px){:root[data-theme] .kb .kpi:nth-child(2n+1)::after{display:none!important}}
+:root[data-theme] .kb .kpi:first-child,:root[data-theme] .kb .kpi:nth-child(8n+1){padding-left:0!important}
+:root[data-theme] .kb .kpi .k-lab{color:rgba(255,255,255,.82)!important}
+:root[data-theme] .kb .kpi .k-ic{background:rgba(255,255,255,.16)!important;color:#fff!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)!important}
+:root[data-theme] .kb .kpi .k-val{color:#fff!important;text-shadow:0 1px 0 rgba(8,25,52,.12)!important}
+:root[data-theme] .kb .kpi .k-pv{color:rgba(255,255,255,.72)!important}
+:root[data-theme] .kb .kpi .delta{background:rgba(255,255,255,.16)!important;color:#fff!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)!important}
+:root[data-theme] .kb .kpi .delta .dg{background:rgba(255,255,255,.28)!important;color:#fff!important}
+:root[data-theme] .kb .kpi .delta.good{background:rgba(18,163,122,.38)!important;color:#eafff6!important;box-shadow:inset 0 0 0 1px rgba(120,240,200,.4)!important}
+:root[data-theme] .kb .kpi .delta.bad{background:rgba(229,72,77,.38)!important;color:#fff0f1!important;box-shadow:inset 0 0 0 1px rgba(255,170,175,.42)!important}
+:root[data-theme] .kb .kpi .delta.good .dg{background:#12A37A!important} :root[data-theme] .kb .kpi .delta.bad .dg{background:#E5484D!important}
+:root[data-theme] .kb .kpi .k-spark stop{stop-color:#fff!important} :root[data-theme] .kb .kpi .k-spark .sp-halo,:root[data-theme] .kb .kpi .k-spark .sp-dot{stroke:#fff!important}
+:root[data-theme] .kb .kpi .k-spark-w::after{background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent)!important}
+:root[data-theme] .kb .kpi .k-foot{color:rgba(255,255,255,.88)!important;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;font-size:10px!important}
+:root[data-theme] .kb .kpi .k-foot i{background:#fff!important;box-shadow:0 0 0 3px rgba(255,255,255,.18)!important}
+:root[data-theme] .kb .kpi:hover .k-lab{color:#fff!important}
+/* alt beyaz bölüm: filtreler */
+.kb-flt .btn-clear{height:auto!important;min-height:38px;padding:0 12px!important}
+.kb-flt{padding:14px 20px 16px;border-radius:0 0 22px 22px;background:#fff}
+.kb-flt .f-toggle{display:none!important}
+.kb-flt .filters{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:10px!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important}
+.kb-flt .filters .ddbox[style*="display:none"]{display:none!important}
+@media(max-width:760px){
+  .kb{margin-left:-14px;margin-right:-14px;border-radius:0}.kb-band{border-radius:0;padding:16px 14px}.kb-flt{border-radius:0;padding:10px 14px 12px}
+  .kb-flt .f-toggle{display:flex!important;margin:0!important}
+  .kb-flt .filters{display:none!important}.kb-flt .filters.m-open{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:8px!important}
+}
+:root[data-theme="dark"] .kb,:root[data-theme="dark"] .kb-flt{background:var(--dk-glass,rgba(255,255,255,.06))}
+@media print{.kb{display:none}}
+:root[data-theme] .kb .kpis > .kpi{padding-left:14px!important}
+@media(min-width:1281px){:root[data-theme] .kb .kpis > .kpi:nth-child(8n+1){padding-left:0!important}}
+@media(min-width:761px) and (max-width:1280px){:root[data-theme] .kb .kpis > .kpi:nth-child(4n+1){padding-left:0!important}}
+@media(max-width:760px){:root[data-theme] .kb .kpis > .kpi:nth-child(2n+1){padding-left:0!important}:root[data-theme] .kb .kpis > .kpi{padding-right:6px!important}}
 </style>
 </head>
 <body class="auth-lock">
@@ -3277,9 +3328,13 @@ body.dw-open{overflow:hidden}
 
   <!-- HERO -->
 
+  <div class="kb" id="kpiBand">
+  <div class="kb-band">
   <section class="hdl" id="headline" aria-live="polite"></section>
   <!-- KPI (mavi şerit) -->
   <section class="kpis" id="kpis"></section>
+  </div>
+  <div class="kb-flt">
 
   <!-- FİLTRELER -->
   <button type="button" class="f-toggle" id="fToggle" aria-expanded="false" aria-controls="filters"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Filtreler</span><em id="fToggleN"></em><i>▾</i></button>
@@ -3294,6 +3349,7 @@ body.dw-open{overflow:hidden}
     <div class="ddbox" data-key="AltGrup"><button type="button"><b>Alt Grup</b><span class="lab">Tümü</span></button><div class="dd"></div></div>
     <button class="btn ghost btn-clear" id="btnClear" type="button">Temizle</button>
   </div>
+  </div></div>
 
   <!-- ÇAPRAZ FİLTRE ŞERİDİ -->
   <div class="xf-bar" id="xfBar" hidden></div>
