@@ -3214,6 +3214,7 @@ body.dw-open{overflow:hidden}
 @media(max-width:760px){.nm-mr{grid-template-columns:minmax(0,1fr) auto;row-gap:2px}.nm-mr .fr,.nm-mr .ar,.nm-mr small{display:none}.nm-mr .to{grid-column:1/2;font-size:11.5px}.nm-st b{font-size:21px}}
 #riskNoMove .nm-sec + .controls{margin-top:4px}
 #riskNoMove .nm-sec.mt16{margin-top:30px}
+.nm-lg{display:flex;flex-wrap:wrap;gap:4px 14px;margin-bottom:8px;font-size:11.5px;color:var(--ink-2)} .nm-lg span{display:inline-flex;align-items:center;gap:5px} .nm-lg i{width:9px;height:9px;border-radius:3px} .nm-lg b{color:var(--navy)}
 </style>
 </head>
 <body class="auth-lock">
@@ -5788,18 +5789,20 @@ function nmDecisions(ctx){
 const NM_DEC = {sell:['Tasfiye / satış', '#E5484D'], transfer:['Transfer', '#2A62A8'], watch:['İzle · yedek', '#8a97ab'], stop:['Alımı durdur', '#E89A2C']};
 function nmTreemap(el, L, W, H){
   const groups = ['sell', 'transfer', 'stop', 'watch'].map(k => ({k, a:L.filter(x => x.dec === k)})).filter(g => g.a.length), tot = sum(L, 'v') || 1;
-  let x0 = 0, out = '';
+  let x0 = 0, out = ''; const NARROW = W < 640, T0 = NARROW ? 0 : 24;
   groups.forEach(g => { const gv = sum(g.a, 'v'), w = W*gv/tot, col = NM_DEC[g.k][1], tiles = [];
     const split = (it, x, y, w2, h2) => { const tv = sum(it, 'v'); if(it.length === 1 || w2*h2 < 2600){ tiles.push([it, x, y, w2, h2]); return; }
       let acc = 0, k = 0; for(; k < it.length; k++){ acc += it[k].v; if(acc >= tv/2) break; }
       const A_ = it.slice(0, k + 1), B_ = it.slice(k + 1); if(!B_.length){ tiles.push([it, x, y, w2, h2]); return; }
       const fa = sum(A_, 'v')/tv; if(w2 >= h2){ split(A_, x, y, w2*fa, h2); split(B_, x + w2*fa, y, w2*(1 - fa), h2); } else { split(A_, x, y, w2, h2*fa); split(B_, x, y + h2*fa, w2, h2*(1 - fa)); } };
-    split(g.a, 0, 24, w - 3, H - 24);
-    out += `<div class="nm-tc" style="left:${x0}px;width:${w - 3}px"><div class="nm-th" style="color:${col}">${esc(NM_DEC[g.k][0])} <b>${esc(FMTc(gv))}</b> · ${g.a.length}</div>`
+    split(g.a, 0, T0, w - 3, H - T0);
+    out += `<div class="nm-tc" style="left:${x0}px;width:${w - 3}px">${NARROW ? '' : `<div class="nm-th" style="color:${col}">${esc(NM_DEC[g.k][0])} <b>${esc(FMTc(gv))}</b> · ${g.a.length}</div>`}`
       + tiles.map(([it, x, y, tw, th]) => { const one = it.length === 1, v = sum(it, 'v'), lab = one ? it[0].n.replace(/^\S+\s/, '') : `+${it.length} kalem`;
           return `<div class="nm-tb${one ? '' : ' more'}" ${one ? `data-item="${esc(JSON.stringify([it[0].d, it[0].n]))}"` : `data-go="nmlist"`} style="left:${x}px;top:${y}px;width:${Math.max(0, tw - 3)}px;height:${Math.max(0, th - 3)}px;background:${col}" title="${esc(one ? it[0].n + ' · ' + it[0].d + ' · ' + FMTc(v) : FMTc(v))}">${tw > 70 && th > 34 ? `<b>${esc(lab)}</b><span>${one ? esc(it[0].d) + ' · ' : ''}${esc(FMTc(v))}</span>` : ''}</div>`; }).join('') + '</div>';
     x0 += w; });
   el.innerHTML = out; el.style.height = H + 'px';
+  const lg = el.previousElementSibling && el.previousElementSibling.classList.contains('nm-lg') ? el.previousElementSibling : null; if(lg) lg.remove();
+  if(NARROW) el.insertAdjacentHTML('beforebegin', `<div class="nm-lg">${groups.map(g => `<span><i style="background:${NM_DEC[g.k][1]}"></i>${esc(NM_DEC[g.k][0])} <b>${esc(FMTc(sum(g.a, 'v')))}</b> · ${g.a.length}</span>`).join('')}</div>`);
 }
 function renderNoMove2(ctx){
   renderRisk('nomove');
