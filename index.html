@@ -3226,6 +3226,19 @@ body.dw-open{overflow:hidden}
 .nm2-r b{display:block;font-size:14px;color:var(--ink)} .nm2-r small{font-size:12px;color:var(--muted)}
 .nm2-r>span{font-size:12px;color:var(--muted);text-align:right} .nm2-r strong{font-size:16px;color:var(--navy);text-align:right} .nm2-r>em{font-style:normal;color:var(--muted);font-size:18px}
 @media(max-width:760px){.nm2-h{flex-direction:column;align-items:flex-start;gap:4px}.nm2-h>b{font-size:30px}.nm2-r{grid-template-columns:10px minmax(0,1fr) auto 12px}.nm2-r>span{display:none}}
+
+.nm3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px;margin-top:26px}
+@media(max-width:1000px){.nm3{grid-template-columns:1fr;gap:22px}}
+.nm3-b{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) 70px;gap:10px;align-items:center;padding:6px 0;font-size:12.5px;cursor:pointer}
+.nm3-b:hover span{color:#2A62A8} .nm3-b span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.nm3-b i{height:7px;border-radius:9px;background:#e8edf5;overflow:hidden} .nm3-b u{display:block;height:100%;border-radius:9px;background:#E89A2C}
+.nm3-b b{text-align:right;color:var(--navy)} .nm3-more{font-size:11px;color:var(--muted);padding-top:4px}
+.nm3-bar{display:flex;gap:3px;height:12px;border-radius:99px;overflow:hidden;margin:4px 0 12px} .nm3-bar i{display:block}
+.nm3-r{display:grid;grid-template-columns:minmax(0,1fr) 70px 72px 36px;gap:8px;align-items:center;padding:6px 0;font-size:12.5px;border-bottom:1px dashed var(--line)}
+.nm3-r span{display:inline-flex;align-items:center;gap:7px;color:var(--ink)} .nm3-r span i{width:8px;height:8px;border-radius:50%} .nm3-r em{font-style:normal;color:var(--muted);font-size:11.5px;text-align:right}
+.nm3-r b{text-align:right;color:var(--navy)} .nm3-r small{text-align:right;color:var(--muted)}
+.nm3-sv{display:block;width:100%;height:110px} .nm3-tl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)} .nm3-tl b{color:var(--navy)}
+.nm-sec em .neg{color:#E5484D;font-weight:700}
 </style>
 </head>
 <body class="auth-lock">
@@ -5125,7 +5138,6 @@ function dwShow(title, body){
   const close = () => { el.classList.remove('on'); document.body.classList.remove('dw-open'); };
   el.onclick = e => {
     if(e.target.closest('[data-close]')) return close();
-    const dr = e.target.closest('.nm2-r'); if(dr){ nmDecDrawer(dr.dataset.dec); return; }
     const g = e.target.closest('[data-go]'); if(g){ close(); setTab(g.dataset.go); window.scrollTo({top:0, behavior:'smooth'}); return; }
     const f = e.target.closest('[data-fx]'); if(f){ close(); try{ crossFilter(JSON.parse(f.dataset.fx)); }catch(err){} return; }
     const it = e.target.closest('[data-item]'); if(it){ try{ const [d, n] = JSON.parse(it.dataset.item); openItemDrawer(d, n); }catch(err){} return; }
@@ -5840,11 +5852,20 @@ function renderNoMove2(ctx){
     <div class="nm2-h"><b>${esc(FMTc(tot))}</b><p><b>${nf0.format(L.length)} kalem</b> · stoğun ${PCT(M.kal ? tot/M.kal*100 : 0)}'i bekliyor.<br>
       Önerilen kararlar uygulanırsa <b class="pos">${esc(FMTc(freed))}</b> serbest kalır.</p></div>
     <div class="nm2-d">${D.map(([k, t, sub]) => `<div class="nm2-r" data-dec="${k}" style="--c:${NM_DEC[k][1]}"><i></i><div><b>${t}</b><small>${sub}</small></div><span>${G(k).length} kalem</span><strong>${esc(FMTc(gv(k)))}</strong><em>›</em></div>`).join('')}</div>
+    <div class="nm3">
+      <div><div class="nm-sec">Depolara göre</div>${(() => { const m = new Map(); L.forEach(x => m.set(x.d, (m.get(x.d) || 0) + x.v)); const a = [...m.entries()].sort((p, q) => q[1] - p[1]), mx = Math.max(1, ...a.map(x => x[1]));
+          return a.slice(0, 6).map(([d, v]) => `<div class="nm3-b" data-depo="${esc(d)}"><span>${esc(d)}</span><i><u style="width:${v/mx*100}%"></u></i><b>${esc(FMTc(v))}</b></div>`).join('') + (a.length > 6 ? `<div class="nm3-more">+${a.length - 6} depo · ${esc(FMTc(sum(a.slice(6), x => x[1])))}</div>` : ''); })()}</div>
+      <div><div class="nm-sec">Bekleme süresi</div>${(() => { const B = [['6–8 ay', x => x.mo < 9, '#E8B04A'], ['9–11 ay', x => x.mo >= 9 && x.mo < 12, '#E89A2C'], ['12+ ay', x => x.mo >= 12, '#E5484D']].map(([t, f, c]) => { const a = L.filter(f); return {t, c, v:sum(a, 'v'), n:a.length}; }).filter(x => x.n);
+          return `<div class="nm3-bar">${B.map(x => `<i style="flex:${x.v};background:${x.c}"></i>`).join('')}</div>` + B.map(x => `<div class="nm3-r"><span><i style="background:${x.c}"></i>${x.t}</span><em>${x.n} kalem</em><b>${esc(FMTc(x.v))}</b><small>${PCT(tot ? x.v/tot*100 : 0, 0)}</small></div>`).join(''); })()}</div>
+      <div><div class="nm-sec">Son 12 ay <em>${chg != null && chg > 5 ? `<span class="neg">▲ ${esc(fmtMonth(ctx.trendMonths[loI], true))} → bugün +${PCT(chg, 0)}</span>` : ''}</em></div>${(() => { const W = 300, H = 110, mx = Math.max(1, ...tr), X = i => 4 + i*(W - 8)/Math.max(1, tr.length - 1), Y = v => H - 18 - v/mx*(H - 30), d = tr.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(' ');
+          return `<svg class="nm3-sv" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><path d="${d} L${X(tr.length - 1)} ${H - 18} L${X(0)} ${H - 18} Z" fill="rgba(229,72,77,.08)"/><path d="${d}" fill="none" stroke="#E5484D" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><div class="nm3-tl"><span>${esc(fmtMonth(ctx.trendMonths[0], true))} · <b>${esc(FMTc(tr[0]))}</b></span><span>${esc(fmtMonth(ctx.cur, true))} · <b>${esc(FMTc(tr[tr.length - 1]))}</b></span></div>`; })()}</div>
+    </div>
     <div class="nm-sec mt16" id="nmList">Tüm hareketsiz kalemler</div>`;
   el.innerHTML = head; keep.forEach(k => el.appendChild(k));
   if(!el._nmw){ el._nmw = 1; el.addEventListener('click', e => {
     const it = e.target.closest('[data-item]'); if(it){ try{ const [d, n] = JSON.parse(it.dataset.item); openItemDrawer(d, n); }catch(err){} return; }
     const dr = e.target.closest('.nm2-r'); if(dr){ nmDecDrawer(dr.dataset.dec); return; }
+    const db = e.target.closest('.nm3-b'); if(db){ openDepotDrawer(db.dataset.depo); return; }
     const g = e.target.closest('[data-go]'); if(g){ const t = $(g.dataset.go === 'nmtr' ? '#nmTr' : '#nmList'); if(t) t.scrollIntoView({behavior:'smooth', block:'start'}); } }); }
 }
 function renderRisk(key){
